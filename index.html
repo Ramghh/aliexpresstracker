@@ -109,11 +109,21 @@
           <p id="deliveredCount" class="text-3xl font-bold text-green-600 dark:text-green-400">0</p>
         </div>
       </div>
-      <div class="card-stat bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5 flex items-center gap-4 transition-smooth">
-        <div class="bg-purple-100 dark:bg-purple-900/50 p-3 rounded-full text-2xl">💰</div>
-        <div>
-          <p class="text-sm text-gray-500 dark:text-slate-400">الميزانية الإجمالية</p>
-          <p id="totalBudget" class="text-3xl font-bold text-purple-600 dark:text-purple-400">$0.00</p>
+      <!-- بطاقة الميزانية الإجمالية مع دعم العملتين -->
+      <div class="card-stat bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5 transition-smooth">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="bg-purple-100 dark:bg-purple-900/50 p-2 rounded-full text-xl">💰</div>
+          <p class="text-sm text-gray-500 dark:text-slate-400 font-medium">الميزانية الإجمالية</p>
+        </div>
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-500 dark:text-slate-400">🇺🇸 دولار</span>
+            <span id="totalBudgetUSD" class="text-lg font-bold text-purple-600 dark:text-purple-400">$0.00</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-gray-500 dark:text-slate-400">🇪🇺 يورو</span>
+            <span id="totalBudgetEUR" class="text-lg font-bold text-purple-600 dark:text-purple-400">€0.00</span>
+          </div>
         </div>
       </div>
     </section>
@@ -154,18 +164,26 @@
           <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">اسم المنتج *</label>
           <input type="text" id="productName" required placeholder="مثال: ساعة ذكية" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
         </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">السعر ($)</label>
+        <!-- صف السعر والعملة -->
+        <div class="grid grid-cols-5 gap-2">
+          <div class="col-span-3">
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">السعر</label>
             <input type="number" id="price" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
           </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">الحالة</label>
-            <select id="statusSelect" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
-              <option value="In Transit">🚚 في الطريق</option>
-              <option value="Delivered">✅ تم التوصيل</option>
+          <div class="col-span-2">
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">العملة</label>
+            <select id="currencySelect" class="w-full px-3 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
+              <option value="USD">$ دولار</option>
+              <option value="EUR">€ يورو</option>
             </select>
           </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">الحالة</label>
+          <select id="statusSelect" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
+            <option value="In Transit">🚚 في الطريق</option>
+            <option value="Delivered">✅ تم التوصيل</option>
+          </select>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">رقم التتبع *</label>
@@ -193,7 +211,6 @@
 
   <script>
     (function() {
-      // ---------- الثوابت ----------
       const STORAGE_KEY = 'aliexpress_orders';
       let orders = [];
       let currentEditId = null;
@@ -203,7 +220,8 @@
       const emptyState = document.getElementById('emptyState');
       const inTransitCountEl = document.getElementById('inTransitCount');
       const deliveredCountEl = document.getElementById('deliveredCount');
-      const totalBudgetEl = document.getElementById('totalBudget');
+      const totalBudgetUSDEl = document.getElementById('totalBudgetUSD');
+      const totalBudgetEUREl = document.getElementById('totalBudgetEUR');
       const searchInput = document.getElementById('searchInput');
       const orderModal = document.getElementById('orderModal');
       const orderForm = document.getElementById('orderForm');
@@ -211,6 +229,7 @@
       const orderIdInput = document.getElementById('orderId');
       const productNameInput = document.getElementById('productName');
       const priceInput = document.getElementById('price');
+      const currencySelect = document.getElementById('currencySelect');
       const statusSelect = document.getElementById('statusSelect');
       const trackingNumberInput = document.getElementById('trackingNumber');
       const notesInput = document.getElementById('notes');
@@ -236,6 +255,10 @@
         try {
           const stored = localStorage.getItem(STORAGE_KEY);
           orders = stored ? JSON.parse(stored) : [];
+          // ضمان وجود حقل العملة في الطلبات القديمة
+          orders.forEach(o => {
+            if (!o.currency) o.currency = 'USD';
+          });
         } catch (e) {
           orders = [];
         }
@@ -248,10 +271,22 @@
       function updateStats() {
         const inTransit = orders.filter(o => o.status === 'In Transit').length;
         const delivered = orders.filter(o => o.status === 'Delivered').length;
-        const total = orders.reduce((sum, o) => sum + (parseFloat(o.price) || 0), 0);
+        
+        let totalUSD = 0;
+        let totalEUR = 0;
+        orders.forEach(o => {
+          const amount = parseFloat(o.price) || 0;
+          if (o.currency === 'EUR') {
+            totalEUR += amount;
+          } else {
+            totalUSD += amount;
+          }
+        });
+
         inTransitCountEl.textContent = inTransit;
         deliveredCountEl.textContent = delivered;
-        totalBudgetEl.textContent = `$${total.toFixed(2)}`;
+        totalBudgetUSDEl.textContent = `$${totalUSD.toFixed(2)}`;
+        totalBudgetEUREl.textContent = `€${totalEUR.toFixed(2)}`;
       }
 
       function formatDate(dateString) {
@@ -268,16 +303,9 @@
         }
       }
 
-      // تصحيح دالة escapeHTML
       function escapeHTML(str) {
         return String(str).replace(/[&<>"']/g, function(m) {
-          const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-          };
+          const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
           return map[m];
         });
       }
@@ -286,7 +314,14 @@
         return Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
       }
 
-      // ربط الأحداث للأزرار الديناميكية (لأننا نستخدم innerHTML)
+      // عرض سعر مع العملة المناسبة
+      function formatPrice(price, currency) {
+        if (price === undefined || price === null || price === '') return '';
+        const num = parseFloat(price).toFixed(2);
+        if (currency === 'EUR') return `€${num}`;
+        return `$${num}`;
+      }
+
       function attachOrderEvents(orderEl, orderId) {
         orderEl.querySelector('.toggle-status-btn')?.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -302,7 +337,6 @@
         });
       }
 
-      // عرض الطلبات
       function renderOrders(filterText = '') {
         const filterLower = filterText.trim().toLowerCase();
         const filteredOrders = filterLower === '' 
@@ -328,11 +362,13 @@
           orderEl.className = 'grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 md:px-6 py-4 items-center hover:bg-gray-50 dark:hover:bg-slate-750 transition-smooth';
           orderEl.setAttribute('data-order-id', order.id);
           
+          const priceDisplay = order.price ? formatPrice(order.price, order.currency) : '';
+          
           orderEl.innerHTML = `
             <div class="flex flex-col">
               <span class="text-sm text-gray-400 dark:text-slate-500 md:hidden font-medium">المنتج</span>
               <span class="font-semibold text-gray-800 dark:text-slate-100 truncate max-w-[200px]">${escapeHTML(order.productName)}</span>
-              ${order.price ? `<span class="text-xs text-gray-500 dark:text-slate-400">${escapeHTML('$'+parseFloat(order.price).toFixed(2))}</span>` : ''}
+              ${priceDisplay ? `<span class="text-xs text-gray-500 dark:text-slate-400">${escapeHTML(priceDisplay)}</span>` : ''}
             </div>
             <div class="flex flex-col">
               <span class="text-sm text-gray-400 dark:text-slate-500 md:hidden font-medium">رقم التتبع</span>
@@ -360,7 +396,6 @@
         updateStats();
       }
 
-      // وظائف التعديل والحذف وتغيير الحالة
       function deleteOrder(orderId) {
         if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
           orders = orders.filter(o => o.id !== orderId);
@@ -377,6 +412,7 @@
         orderIdInput.value = order.id;
         productNameInput.value = order.productName || '';
         priceInput.value = order.price || '';
+        currencySelect.value = order.currency || 'USD';
         statusSelect.value = order.status || 'In Transit';
         trackingNumberInput.value = order.trackingNumber || '';
         notesInput.value = order.notes || '';
@@ -400,6 +436,7 @@
         currentEditId = null;
         modalTitle.textContent = 'إضافة طلب جديد';
         statusSelect.value = 'In Transit';
+        currencySelect.value = 'USD';
       }
 
       function openAddModal() {
@@ -414,7 +451,6 @@
         resetForm();
       }
 
-      // حفظ الطلب (إضافة أو تعديل)
       function saveOrder(e) {
         e.preventDefault();
         const productName = productNameInput.value.trim();
@@ -424,6 +460,7 @@
           return;
         }
         const price = parseFloat(priceInput.value) || 0;
+        const currency = currencySelect.value;
         const status = statusSelect.value;
         const notes = notesInput.value.trim();
         const date = new Date().toISOString();
@@ -431,7 +468,7 @@
         if (currentEditId) {
           const index = orders.findIndex(o => o.id === currentEditId);
           if (index > -1) {
-            orders[index] = { ...orders[index], productName, price, status, trackingNumber, notes };
+            orders[index] = { ...orders[index], productName, price, currency, status, trackingNumber, notes };
             showToast('✅ تم تحديث الطلب بنجاح');
           }
         } else {
@@ -439,6 +476,7 @@
             id: generateId(),
             productName,
             price,
+            currency,
             status,
             trackingNumber,
             notes,
@@ -452,7 +490,6 @@
         closeModal();
       }
 
-      // تصدير JSON
       function exportToJSON() {
         if (orders.length === 0) {
           showToast('⚠️ لا توجد بيانات لتصديرها');
@@ -471,7 +508,6 @@
         showToast('📥 تم تصدير البيانات بنجاح');
       }
 
-      // استيراد JSON
       function importFromJSON(file) {
         const reader = new FileReader();
         reader.onload = function(e) {
@@ -480,6 +516,7 @@
             if (!Array.isArray(imported)) throw new Error('تنسيق خاطئ');
             let addedCount = 0;
             imported.forEach(impOrder => {
+              if (!impOrder.currency) impOrder.currency = 'USD';
               const exists = orders.some(o => 
                 o.trackingNumber === impOrder.trackingNumber && 
                 o.productName === impOrder.productName &&
@@ -538,7 +575,6 @@
         }
       }
 
-      // ربط الأحداث العامة
       function bindEvents() {
         document.getElementById('openAddModalBtn').addEventListener('click', openAddModal);
         document.getElementById('closeModalBtn').addEventListener('click', closeModal);
@@ -562,7 +598,6 @@
         });
       }
 
-      // بدء التشغيل
       function init() {
         initDarkMode();
         loadOrders();
