@@ -2,7 +2,6 @@
 <html lang="fr" dir="ltr" class="light">
 <head>
   <meta charset="UTF-8">
-  <!-- تم تعديل viewport للسماح بـ pinch to zoom -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AliExpress Tracker | Suivi de commandes</title>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -20,12 +19,21 @@
     .warm-card { background-color: #fefcf8; border-color: #e7e0d6; }
     .dark .warm-card { background-color: #1e293b; border-color: #334155; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
+    /* إزالة hover و active تمامًا من صفوف الطلبات */
+    .order-row {
+      background-color: transparent;
+    }
+    .order-row:hover,
+    .order-row:active {
+      background-color: transparent !important;
+    }
   </style>
 </head>
 <body class="bg-stone-100/90 text-stone-800 dark:bg-slate-900 dark:text-slate-200 min-h-screen transition-smooth">
 
   <!-- NAVBAR -->
   <nav class="warm-card bg-[#fefcf8] dark:bg-slate-800 shadow-md sticky top-0 z-30 border-b border-stone-200 dark:border-slate-700 transition-smooth">
+    <!-- محتوى الـ navbar كما هو دون تعديل -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center gap-3">
@@ -56,10 +64,10 @@
     </div>
   </nav>
 
-  <!-- CONTENU PRINCIPAL -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <!-- Dashboard -->
     <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <!-- كما هو -->
       <div class="warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4">
         <div class="bg-blue-100/80 p-3 rounded-full text-2xl">✈️</div>
         <div><p class="text-sm text-stone-500 dark:text-slate-400">En transit</p><p id="inTransitCount" class="text-3xl font-bold text-blue-600 dark:text-blue-400">0</p></div>
@@ -87,9 +95,13 @@
       <div id="noCardsMessage" class="text-center text-stone-400 dark:text-slate-500 py-4 text-sm hidden">Aucune carte ajoutée</div>
     </section>
 
-    <!-- Barre de recherche -->
-    <div class="relative mb-6">
-      <input type="text" id="searchInput" placeholder="🔍  Rechercher par produit ou N° de suivi..." class="w-full px-5 py-3 rounded-xl border border-stone-200 dark:border-slate-600 bg-[#fefcf8] dark:bg-slate-800 text-stone-800 dark:text-slate-200 shadow-sm focus:ring-2 focus:ring-orange-400 outline-none transition-smooth text-sm sm:text-base" autocomplete="off">
+    <!-- Barre de recherche + filtre carte -->
+    <div class="relative mb-6 flex flex-col sm:flex-row gap-3">
+      <input type="text" id="searchInput" placeholder="🔍  Rechercher par produit ou N° de suivi..." class="flex-1 px-5 py-3 rounded-xl border border-stone-200 dark:border-slate-600 bg-[#fefcf8] dark:bg-slate-800 text-stone-800 dark:text-slate-200 shadow-sm focus:ring-2 focus:ring-orange-400 outline-none transition-smooth text-sm sm:text-base" autocomplete="off">
+      <div id="activeCardFilter" class="hidden items-center gap-2 text-sm bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 px-4 py-2 rounded-lg border border-amber-300 dark:border-amber-700 whitespace-nowrap">
+        <span id="activeCardFilterText"></span>
+        <button id="clearCardFilterBtn" class="font-bold text-amber-600 hover:text-red-600 dark:hover:text-red-400 ml-2">✕</button>
+      </div>
     </div>
 
     <!-- Tableau des commandes -->
@@ -104,7 +116,7 @@
     </div>
   </main>
 
-  <!-- MODAL COMMANDE -->
+  <!-- MODALS (كما هي بدون تغيير) -->
   <div id="orderModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden transition-smooth">
     <div class="bg-[#fefcf8] dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 border border-stone-200 dark:border-slate-700 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-5">
@@ -113,40 +125,27 @@
       </div>
       <form id="orderForm" class="space-y-4">
         <input type="hidden" id="orderId" value="">
-        <div>
-          <label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Produit *</label>
-          <input type="text" id="productName" required placeholder="Ex: Montre connectée" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-stone-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none">
-        </div>
+        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Produit *</label><input type="text" id="productName" required placeholder="Ex: Montre connectée" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
         <div class="grid grid-cols-5 gap-2">
           <div class="col-span-3"><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Prix</label><input type="number" id="price" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
           <div class="col-span-2"><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Devise</label><select id="currencySelect" class="w-full px-3 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"><option value="USD">$ Dollar</option><option value="EUR">€ Euro</option></select></div>
         </div>
-        <!-- Sélection de la carte (affichée uniquement pour EUR) -->
         <div id="cardSelectionRow" class="hidden">
           <label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Carte utilisée *</label>
-          <select id="cardSelect" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-stone-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none">
-            <!-- rempli dynamiquement -->
-          </select>
+          <select id="cardSelect" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></select>
           <p id="noCardWarning" class="text-xs text-red-500 mt-1 hidden">Veuillez d'abord ajouter une carte dans "Cartes virtuelles"</p>
         </div>
         <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Statut</label><select id="statusSelect" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"><option value="In Transit">🚚 En transit</option><option value="Delivered">✅ Livré</option></select></div>
         <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">N° de suivi *</label><input type="text" id="trackingNumber" required placeholder="Ex: LP000123456789" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
         <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Notes</label><textarea id="notes" rows="2" placeholder="Notes supplémentaires..." class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700 resize-none"></textarea></div>
-        <div class="flex gap-3 pt-2">
-          <button type="button" id="cancelModalBtn" class="flex-1 py-3 rounded-lg border border-stone-200 dark:border-slate-600 text-stone-600 dark:text-slate-300 hover:bg-stone-50 dark:hover:bg-slate-700">Annuler</button>
-          <button type="submit" class="flex-1 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-md">💾 Enregistrer</button>
-        </div>
+        <div class="flex gap-3 pt-2"><button type="button" id="cancelModalBtn" class="flex-1 py-3 rounded-lg border border-stone-200 dark:border-slate-600 text-stone-600">Annuler</button><button type="submit" class="flex-1 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold">💾 Enregistrer</button></div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL CARTE -->
   <div id="cardModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden transition-smooth">
     <div class="bg-[#fefcf8] dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 border border-stone-200 dark:border-slate-700">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-bold text-stone-800 dark:text-slate-100">Ajouter une carte</h2>
-        <button id="closeCardModalBtn" class="text-stone-400 hover:text-red-500 text-2xl p-1">&times;</button>
-      </div>
+      <div class="flex justify-between items-center mb-4"><h2 class="text-lg font-bold text-stone-800 dark:text-slate-100">Ajouter une carte</h2><button id="closeCardModalBtn" class="text-stone-400 hover:text-red-500 text-2xl p-1">&times;</button></div>
       <form id="cardForm" class="space-y-4">
         <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Personne *</label><input type="text" id="cardPersonName" required placeholder="Ex: Ahmed" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
         <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Montant (€) *</label><input type="number" id="cardAmount" step="0.01" min="0.01" required placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
@@ -155,7 +154,6 @@
     </div>
   </div>
 
-  <!-- TOAST -->
   <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-800 dark:bg-slate-700 text-white px-5 py-3 rounded-full shadow-lg text-sm font-medium z-50 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2">
     <span id="toastMessage"></span>
   </div>
@@ -169,8 +167,9 @@
       let orders = [];
       let cards = [];
       let currentEditId = null;
+      let currentCardFilter = null; // id de la carte pour filtrage
 
-      // DOM Elements
+      // DOM
       const ordersContainer = document.getElementById('ordersContainer');
       const emptyState = document.getElementById('emptyState');
       const inTransitCountEl = document.getElementById('inTransitCount');
@@ -202,6 +201,9 @@
       const cardForm = document.getElementById('cardForm');
       const cardPersonName = document.getElementById('cardPersonName');
       const cardAmount = document.getElementById('cardAmount');
+      const activeCardFilter = document.getElementById('activeCardFilter');
+      const activeCardFilterText = document.getElementById('activeCardFilterText');
+      const clearCardFilterBtn = document.getElementById('clearCardFilterBtn');
 
       function showToast(msg, dur=2500) {
         toastMessage.textContent = msg;
@@ -253,6 +255,34 @@
         }
       }
 
+      function updateCardFilterUI() {
+        if (currentCardFilter) {
+          const card = cards.find(c => c.id === currentCardFilter);
+          if (card) {
+            activeCardFilterText.textContent = `Achats de : ${card.personName}`;
+            activeCardFilter.classList.remove('hidden');
+          } else {
+            currentCardFilter = null;
+            activeCardFilter.classList.add('hidden');
+          }
+        } else {
+          activeCardFilter.classList.add('hidden');
+        }
+      }
+
+      function applyCardFilter(cardId) {
+        currentCardFilter = cardId;
+        updateCardFilterUI();
+        renderOrders(searchInput.value);
+        showToast(`🔎 Filtré par carte`);
+      }
+
+      function clearCardFilter() {
+        currentCardFilter = null;
+        updateCardFilterUI();
+        renderOrders(searchInput.value);
+      }
+
       function renderCards() {
         cardsContainer.innerHTML = '';
         if (cards.length === 0) {
@@ -262,22 +292,30 @@
           cards.forEach(card => {
             const balance = getCardBalance(card.id);
             const cardEl = document.createElement('div');
-            cardEl.className = 'warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-sm border p-4 flex flex-col gap-2 transition-smooth';
+            cardEl.className = 'warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-sm border p-4 flex flex-col gap-2 transition-smooth cursor-pointer';
             cardEl.innerHTML = `
               <div class="flex justify-between items-start">
                 <span class="font-bold text-stone-700 dark:text-slate-200">👤 ${escapeHTML(card.personName)}</span>
-                <button class="delete-card-btn text-red-400 hover:text-red-600 text-sm" data-card-id="${card.id}">🗑️</button>
+                <button class="delete-card-btn text-red-400 hover:text-red-600 text-sm z-10" data-card-id="${card.id}">🗑️</button>
               </div>
               <div class="text-sm text-stone-500 dark:text-slate-400">
                 <p>💰 Montant : <span class="font-semibold text-stone-700 dark:text-slate-300">€${card.amount.toFixed(2)}</span></p>
                 <p>💸 Reste : <span class="font-bold ${balance > 0 ? 'text-emerald-600' : 'text-red-500'}">€${balance.toFixed(2)}</span></p>
               </div>
             `;
+            // النقر على البطاقة (باستثناء زر الحذف) يقوم بتفعيل الفلتر
+            cardEl.addEventListener('click', (e) => {
+              if (!e.target.closest('.delete-card-btn')) {
+                applyCardFilter(card.id);
+              }
+            });
             cardEl.querySelector('.delete-card-btn').addEventListener('click', (e) => {
               e.stopPropagation();
-              if (confirm('Supprimer cette carte ? Les commandes associées seront conservées.')) {
+              if (confirm('Supprimer cette carte ?')) {
                 cards = cards.filter(c => c.id !== card.id);
-                saveCards(); renderCards(); updateStats(); showToast('🗑️ Carte supprimée');
+                saveCards(); 
+                if (currentCardFilter === card.id) clearCardFilter();
+                renderCards(); updateStats(); showToast('🗑️ Carte supprimée');
               }
             });
             cardsContainer.appendChild(cardEl);
@@ -314,18 +352,28 @@
       }
 
       function renderOrders(filter='') {
+        let filtered = orders;
+        // تطبيق فلتر البطاقة أولاً
+        if (currentCardFilter) {
+          filtered = filtered.filter(o => o.cardId === currentCardFilter);
+        }
+        // ثم فلتر البحث النصي
         const f = filter.trim().toLowerCase();
-        const filtered = f==='' ? orders : orders.filter(o=> o.productName.toLowerCase().includes(f) || o.trackingNumber.toLowerCase().includes(f));
+        if (f !== '') {
+          filtered = filtered.filter(o => o.productName.toLowerCase().includes(f) || o.trackingNumber.toLowerCase().includes(f));
+        }
+
         ordersContainer.innerHTML = '';
-        if(filtered.length===0) {
+        if (filtered.length === 0) {
           emptyState.classList.remove('hidden');
-          emptyState.innerHTML = f!=='' ? '<span class="text-5xl">🔍</span><p class="text-lg font-medium">Aucun résultat</p>' : '<span class="text-5xl">📭</span><p class="text-lg font-medium">Aucune commande</p>';
+          emptyState.innerHTML = (f!=='' || currentCardFilter) ? '<span class="text-5xl">🔍</span><p class="text-lg font-medium">Aucun résultat</p>' : '<span class="text-5xl">📭</span><p class="text-lg font-medium">Aucune commande</p>';
         } else {
           emptyState.classList.add('hidden');
         }
+
         filtered.forEach(order => {
           const el = document.createElement('div');
-          el.className = 'grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 md:px-6 py-4 items-center hover:bg-stone-50 dark:hover:bg-slate-750 transition-smooth';
+          el.className = 'order-row grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 md:px-6 py-4 items-center';
           const priceDisp = order.price ? formatPrice(order.price, order.currency) : '';
           el.innerHTML = `
             <div class="flex flex-col"><span class="text-sm text-stone-400 md:hidden">Produit</span><span class="font-semibold text-stone-800 dark:text-slate-100 truncate">${escapeHTML(order.productName)}</span>${priceDisp?`<span class="text-xs text-stone-500">${priceDisp}</span>`:''}</div>
@@ -382,7 +430,7 @@
         const currency = currencySelect.value;
         let cardId = null;
         if(currency === 'EUR') {
-          if(cards.length === 0) { showToast('⚠️ Veuillez dʼabord ajouter une carte dans "Cartes virtuelles"'); return; }
+          if(cards.length === 0) { showToast('⚠️ Veuillez dʼabord ajouter une carte'); return; }
           cardId = cardSelect.value;
           if(!cardId) { showToast('⚠️ Sélectionnez une carte'); return; }
           const bal = getCardBalance(cardId);
@@ -411,7 +459,6 @@
         saveCards(); renderCards(); closeCardModal(); showToast('💳 Carte ajoutée');
       }
 
-      // Dark Mode
       function applyDarkMode(isDark) {
         document.documentElement.classList.toggle('dark', isDark);
         darkIcon.textContent = isDark?'☀️':'🌙';
@@ -423,14 +470,13 @@
         applyDarkMode(saved===null ? window.matchMedia('(prefers-color-scheme: dark)').matches : saved==='true');
       }
 
-      // Export/Import
       function exportToJSON() {
         if(!orders.length && !cards.length) { showToast('⚠️ Aucune donnée'); return; }
         const data = { orders, cards };
         const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
         const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
         a.download = `suivi-commandes-${new Date().toISOString().slice(0,10)}.json`; a.click();
-        showToast('📥 Export réussi (commandes + cartes)');
+        showToast('📥 Export réussi');
       }
 
       function importFromJSON(file) {
@@ -438,20 +484,18 @@
         reader.onload = e => {
           try {
             const data = JSON.parse(e.target.result);
-            if(data.orders && Array.isArray(data.orders)) {
-              let addedO = 0;
+            if(data.orders) {
               data.orders.forEach(o => {
                 if(!o.currency) o.currency='USD'; if(!o.cardId) o.cardId=null;
                 if(!orders.some(x=>x.trackingNumber===o.trackingNumber && x.productName===o.productName && x.date===o.date)) {
-                  if(!o.id) o.id = generateId(); orders.push(o); addedO++;
+                  if(!o.id) o.id = generateId(); orders.push(o);
                 }
               });
-              if(addedO) { saveOrders(); showToast(`✅ ${addedO} commande(s) importée(s)`); }
+              saveOrders();
             }
-            if(data.cards && Array.isArray(data.cards)) {
-              let addedC = 0;
-              data.cards.forEach(c => { if(!cards.some(x=>x.id===c.id)) { cards.push(c); addedC++; } });
-              if(addedC) { saveCards(); showToast(`💳 ${addedC} carte(s) importée(s)`); }
+            if(data.cards) {
+              data.cards.forEach(c => { if(!cards.some(x=>x.id===c.id)) cards.push(c); });
+              saveCards();
             }
             renderOrders(searchInput.value); renderCards();
           } catch { showToast('❌ Échec de lʼimport'); }
@@ -460,7 +504,6 @@
       }
       function triggerImport() { importFileInput.click(); }
 
-      // Événements
       function bindEvents() {
         document.getElementById('openAddModalBtn').addEventListener('click', openAddModal);
         document.getElementById('closeModalBtn').addEventListener('click', closeOrderModal);
@@ -484,11 +527,13 @@
         document.addEventListener('keydown', e => { if(e.key==='Escape' && !cardModal.classList.contains('hidden')) closeCardModal(); });
 
         currencySelect.addEventListener('change', toggleCardField);
+        clearCardFilterBtn.addEventListener('click', clearCardFilter);
       }
 
       window.addEventListener('DOMContentLoaded', () => {
         initDarkMode(); loadData(); bindEvents();
         renderCards(); renderOrders();
+        updateCardFilterUI();
       });
     })();
   </script>
