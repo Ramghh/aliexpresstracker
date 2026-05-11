@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>AliExpress Tracker | متتبع مشتريات AliExpress</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Tajawal', sans-serif;
+    }
+    .transition-smooth {
+      transition: all 0.25s ease;
+    }
+    .table-container::-webkit-scrollbar {
+      height: 6px;
+    }
+    .table-container::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 6px;
+    }
+    .dark .table-container::-webkit-scrollbar-thumb {
+      background-color: #475569;
+    }
+    .dark .card-stat {
+      background-color: #1e293b;
+      border-color: #334155;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-slate-200 min-h-screen transition-smooth">
+
+  <!-- NAVBAR -->
+  <nav class="bg-white dark:bg-slate-800 shadow-md sticky top-0 z-30 border-b border-gray-200 dark:border-slate-700 transition-smooth">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center gap-3">
+          <span class="text-3xl">📦</span>
+          <h1 class="text-xl sm:text-2xl font-bold text-orange-500 dark:text-orange-400 tracking-tight">
+            AliExpress Tracker
+          </h1>
+        </div>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="hidden sm:flex items-center gap-1">
+            <button id="exportBtn" title="تصدير البيانات (JSON)" class="p-2 rounded-lg text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 dark:text-slate-400 dark:hover:text-emerald-400 dark:hover:bg-slate-700 transition-smooth">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" />
+              </svg>
+            </button>
+            <button id="importBtn" title="استيراد بيانات (JSON)" class="p-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:text-slate-400 dark:hover:text-blue-400 dark:hover:bg-slate-700 transition-smooth">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" />
+              </svg>
+            </button>
+          </div>
+          <button id="darkModeToggle" class="p-2 rounded-lg text-gray-500 hover:text-yellow-500 hover:bg-gray-100 dark:text-slate-400 dark:hover:text-yellow-300 dark:hover:bg-slate-700 transition-smooth" title="تبديل الوضع الداكن">
+            <span id="darkIcon" class="text-xl">🌙</span>
+          </button>
+          <button id="openAddModalBtn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium shadow-md hover:shadow-lg transition-smooth flex items-center gap-2 text-sm sm:text-base">
+            <span class="text-lg leading-none">➕</span>
+            <span class="hidden sm:inline">إضافة طلب</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="flex sm:hidden justify-center gap-4 pb-2 bg-white dark:bg-slate-800 border-t border-gray-100 dark:border-slate-700 pt-2">
+      <button id="exportBtnMobile" class="text-xs flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" />
+        </svg>
+        تصدير
+      </button>
+      <button id="importBtnMobile" class="text-xs flex items-center gap-1 text-blue-600 dark:text-blue-400 font-medium px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" />
+        </svg>
+        استيراد
+      </button>
+    </div>
+  </nav>
+
+  <!-- المحتوى الرئيسي -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Dashboard -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div class="card-stat bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5 flex items-center gap-4 transition-smooth">
+        <div class="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-full text-2xl">✈️</div>
+        <div>
+          <p class="text-sm text-gray-500 dark:text-slate-400">في الطريق</p>
+          <p id="inTransitCount" class="text-3xl font-bold text-blue-600 dark:text-blue-400">0</p>
+        </div>
+      </div>
+      <div class="card-stat bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5 flex items-center gap-4 transition-smooth">
+        <div class="bg-green-100 dark:bg-green-900/50 p-3 rounded-full text-2xl">✅</div>
+        <div>
+          <p class="text-sm text-gray-500 dark:text-slate-400">تم التوصيل</p>
+          <p id="deliveredCount" class="text-3xl font-bold text-green-600 dark:text-green-400">0</p>
+        </div>
+      </div>
+      <div class="card-stat bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5 flex items-center gap-4 transition-smooth">
+        <div class="bg-purple-100 dark:bg-purple-900/50 p-3 rounded-full text-2xl">💰</div>
+        <div>
+          <p class="text-sm text-gray-500 dark:text-slate-400">الميزانية الإجمالية</p>
+          <p id="totalBudget" class="text-3xl font-bold text-purple-600 dark:text-purple-400">$0.00</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- شريط البحث -->
+    <div class="relative mb-6">
+      <input type="text" id="searchInput" placeholder="🔍  بحث باسم المنتج أو رقم التتبع..." class="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-200 shadow-sm focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition-smooth text-sm sm:text-base" autocomplete="off">
+    </div>
+
+    <!-- جدول / قائمة الطلبات -->
+    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden transition-smooth">
+      <div class="hidden md:grid grid-cols-5 gap-4 px-6 py-4 bg-gray-50 dark:bg-slate-700/50 text-sm font-semibold text-gray-600 dark:text-slate-300 border-b border-gray-100 dark:border-slate-600">
+        <div>المنتج</div>
+        <div>رقم التتبع</div>
+        <div>الحالة</div>
+        <div>تاريخ الطلب</div>
+        <div>إجراءات</div>
+      </div>
+      <div id="ordersContainer" class="divide-y divide-gray-100 dark:divide-slate-700"></div>
+      <div id="emptyState" class="px-6 py-16 text-center text-gray-400 dark:text-slate-500 flex flex-col items-center gap-3">
+        <span class="text-5xl">📭</span>
+        <p class="text-lg font-medium">لا توجد طلبات حتى الآن</p>
+        <p class="text-sm">اضغط على "إضافة طلب" لبدء تتبع مشترياتك</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- مودال إضافة / تعديل طلب -->
+  <div id="orderModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden transition-smooth">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 border border-gray-100 dark:border-slate-700">
+      <div class="flex justify-between items-center mb-5">
+        <h2 id="modalTitle" class="text-xl font-bold text-gray-800 dark:text-slate-100">إضافة طلب جديد</h2>
+        <button id="closeModalBtn" class="text-gray-400 hover:text-red-500 dark:hover:text-red-400 text-2xl leading-none p-1">&times;</button>
+      </div>
+      <form id="orderForm" class="space-y-4">
+        <input type="hidden" id="orderId" value="">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">اسم المنتج *</label>
+          <input type="text" id="productName" required placeholder="مثال: ساعة ذكية" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">السعر ($)</label>
+            <input type="number" id="price" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">الحالة</label>
+            <select id="statusSelect" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
+              <option value="In Transit">🚚 في الطريق</option>
+              <option value="Delivered">✅ تم التوصيل</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">رقم التتبع *</label>
+          <input type="text" id="trackingNumber" required placeholder="مثال: LP000123456789" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">ملاحظات</label>
+          <textarea id="notes" rows="2" placeholder="ملاحظات إضافية..." class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth resize-none"></textarea>
+        </div>
+        <div class="flex gap-3 pt-2">
+          <button type="button" id="cancelModalBtn" class="flex-1 py-3 rounded-lg border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 font-medium transition-smooth">إلغاء</button>
+          <button type="submit" class="flex-1 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-md transition-smooth">💾 حفظ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-800 dark:bg-slate-700 text-white px-5 py-3 rounded-full shadow-lg text-sm font-medium z-50 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2">
+    <span id="toastMessage"></span>
+  </div>
+
+  <!-- ملف مخفي للاستيراد -->
+  <input type="file" id="importFileInput" accept=".json" class="hidden">
+
+  <script>
+    (function() {
+      // ---------- الثوابت ----------
+      const STORAGE_KEY = 'aliexpress_orders';
+      let orders = [];
+      let currentEditId = null;
+
+      // عناصر DOM
+      const ordersContainer = document.getElementById('ordersContainer');
+      const emptyState = document.getElementById('emptyState');
+      const inTransitCountEl = document.getElementById('inTransitCount');
+      const deliveredCountEl = document.getElementById('deliveredCount');
+      const totalBudgetEl = document.getElementById('totalBudget');
+      const searchInput = document.getElementById('searchInput');
+      const orderModal = document.getElementById('orderModal');
+      const orderForm = document.getElementById('orderForm');
+      const modalTitle = document.getElementById('modalTitle');
+      const orderIdInput = document.getElementById('orderId');
+      const productNameInput = document.getElementById('productName');
+      const priceInput = document.getElementById('price');
+      const statusSelect = document.getElementById('statusSelect');
+      const trackingNumberInput = document.getElementById('trackingNumber');
+      const notesInput = document.getElementById('notes');
+      const darkModeToggle = document.getElementById('darkModeToggle');
+      const darkIcon = document.getElementById('darkIcon');
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      const importFileInput = document.getElementById('importFileInput');
+
+      // ---------- دوال مساعدة ----------
+      function showToast(message, duration = 2500) {
+        toastMessage.textContent = message;
+        toast.classList.remove('opacity-0');
+        toast.classList.add('opacity-100');
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => {
+          toast.classList.remove('opacity-100');
+          toast.classList.add('opacity-0');
+        }, duration);
+      }
+
+      function loadOrders() {
+        try {
+          const stored = localStorage.getItem(STORAGE_KEY);
+          orders = stored ? JSON.parse(stored) : [];
+        } catch (e) {
+          orders = [];
+        }
+      }
+
+      function saveOrders() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      }
+
+      function updateStats() {
+        const inTransit = orders.filter(o => o.status === 'In Transit').length;
+        const delivered = orders.filter(o => o.status === 'Delivered').length;
+        const total = orders.reduce((sum, o) => sum + (parseFloat(o.price) || 0), 0);
+        inTransitCountEl.textContent = inTransit;
+        deliveredCountEl.textContent = delivered;
+        totalBudgetEl.textContent = `$${total.toFixed(2)}`;
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return '—';
+        const d = new Date(dateString);
+        return d.toLocaleDateString('ar-SA', { year: 'numeric', month: 'short', day: 'numeric' });
+      }
+
+      function getStatusBadge(status) {
+        if (status === 'In Transit') {
+          return '<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">✈️ في الطريق</span>';
+        } else {
+          return '<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300">✅ تم التوصيل</span>';
+        }
+      }
+
+      // تصحيح دالة escapeHTML
+      function escapeHTML(str) {
+        return String(str).replace(/[&<>"']/g, function(m) {
+          const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+          };
+          return map[m];
+        });
+      }
+
+      function generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
+      }
+
+      // ربط الأحداث للأزرار الديناميكية (لأننا نستخدم innerHTML)
+      function attachOrderEvents(orderEl, orderId) {
+        orderEl.querySelector('.toggle-status-btn')?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleOrderStatus(orderId);
+        });
+        orderEl.querySelector('.edit-order-btn')?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openEditModal(orderId);
+        });
+        orderEl.querySelector('.delete-order-btn')?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteOrder(orderId);
+        });
+      }
+
+      // عرض الطلبات
+      function renderOrders(filterText = '') {
+        const filterLower = filterText.trim().toLowerCase();
+        const filteredOrders = filterLower === '' 
+          ? orders 
+          : orders.filter(o => 
+              o.productName.toLowerCase().includes(filterLower) || 
+              o.trackingNumber.toLowerCase().includes(filterLower)
+            );
+
+        ordersContainer.innerHTML = '';
+
+        if (filteredOrders.length === 0) {
+          emptyState.classList.remove('hidden');
+          emptyState.innerHTML = filterLower !== '' 
+            ? `<span class="text-5xl">🔍</span><p class="text-lg font-medium">لا توجد نتائج للبحث</p><p class="text-sm">جرب كلمات أخرى</p>`
+            : `<span class="text-5xl">📭</span><p class="text-lg font-medium">لا توجد طلبات حتى الآن</p><p class="text-sm">اضغط على "إضافة طلب" لبدء تتبع مشترياتك</p>`;
+        } else {
+          emptyState.classList.add('hidden');
+        }
+
+        filteredOrders.forEach(order => {
+          const orderEl = document.createElement('div');
+          orderEl.className = 'grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 md:px-6 py-4 items-center hover:bg-gray-50 dark:hover:bg-slate-750 transition-smooth';
+          orderEl.setAttribute('data-order-id', order.id);
+          
+          orderEl.innerHTML = `
+            <div class="flex flex-col">
+              <span class="text-sm text-gray-400 dark:text-slate-500 md:hidden font-medium">المنتج</span>
+              <span class="font-semibold text-gray-800 dark:text-slate-100 truncate max-w-[200px]">${escapeHTML(order.productName)}</span>
+              ${order.price ? `<span class="text-xs text-gray-500 dark:text-slate-400">${escapeHTML('$'+parseFloat(order.price).toFixed(2))}</span>` : ''}
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm text-gray-400 dark:text-slate-500 md:hidden font-medium">رقم التتبع</span>
+              <span class="text-sm font-mono text-gray-600 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded inline-block max-w-fit">${escapeHTML(order.trackingNumber)}</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm text-gray-400 dark:text-slate-500 md:hidden font-medium">الحالة</span>
+              ${getStatusBadge(order.status)}
+            </div>
+            <div class="flex flex-col">
+              <span class="text-sm text-gray-400 dark:text-slate-500 md:hidden font-medium">تاريخ الطلب</span>
+              <span class="text-sm text-gray-600 dark:text-slate-400">${formatDate(order.date)}</span>
+            </div>
+            <div class="flex items-center gap-2 md:justify-end mt-2 md:mt-0">
+              <button class="toggle-status-btn text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-300 transition-smooth flex items-center gap-1" title="تغيير الحالة">🔄</button>
+              <button class="edit-order-btn text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/50 text-blue-600 dark:text-blue-400 transition-smooth flex items-center gap-1" title="تعديل">✏️</button>
+              <button class="delete-order-btn text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-800/50 text-red-600 dark:text-red-400 transition-smooth flex items-center gap-1" title="حذف">🗑️</button>
+            </div>
+          `;
+          
+          attachOrderEvents(orderEl, order.id);
+          ordersContainer.appendChild(orderEl);
+        });
+
+        updateStats();
+      }
+
+      // وظائف التعديل والحذف وتغيير الحالة
+      function deleteOrder(orderId) {
+        if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
+          orders = orders.filter(o => o.id !== orderId);
+          saveOrders();
+          renderOrders(searchInput.value);
+          showToast('🗑️ تم حذف الطلب');
+        }
+      }
+
+      function openEditModal(orderId) {
+        const order = orders.find(o => o.id === orderId);
+        if (!order) return;
+        currentEditId = orderId;
+        orderIdInput.value = order.id;
+        productNameInput.value = order.productName || '';
+        priceInput.value = order.price || '';
+        statusSelect.value = order.status || 'In Transit';
+        trackingNumberInput.value = order.trackingNumber || '';
+        notesInput.value = order.notes || '';
+        modalTitle.textContent = 'تعديل الطلب';
+        orderModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function toggleOrderStatus(orderId) {
+        const order = orders.find(o => o.id === orderId);
+        if (!order) return;
+        order.status = order.status === 'In Transit' ? 'Delivered' : 'In Transit';
+        saveOrders();
+        renderOrders(searchInput.value);
+        showToast(`🔄 تم تغيير الحالة إلى: ${order.status === 'In Transit' ? 'في الطريق' : 'تم التوصيل'}`);
+      }
+
+      function resetForm() {
+        orderForm.reset();
+        orderIdInput.value = '';
+        currentEditId = null;
+        modalTitle.textContent = 'إضافة طلب جديد';
+        statusSelect.value = 'In Transit';
+      }
+
+      function openAddModal() {
+        resetForm();
+        orderModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        orderModal.classList.add('hidden');
+        document.body.style.overflow = '';
+        resetForm();
+      }
+
+      // حفظ الطلب (إضافة أو تعديل)
+      function saveOrder(e) {
+        e.preventDefault();
+        const productName = productNameInput.value.trim();
+        const trackingNumber = trackingNumberInput.value.trim();
+        if (!productName || !trackingNumber) {
+          showToast('⚠️ يرجى ملء اسم المنتج ورقم التتبع على الأقل');
+          return;
+        }
+        const price = parseFloat(priceInput.value) || 0;
+        const status = statusSelect.value;
+        const notes = notesInput.value.trim();
+        const date = new Date().toISOString();
+
+        if (currentEditId) {
+          const index = orders.findIndex(o => o.id === currentEditId);
+          if (index > -1) {
+            orders[index] = { ...orders[index], productName, price, status, trackingNumber, notes };
+            showToast('✅ تم تحديث الطلب بنجاح');
+          }
+        } else {
+          orders.unshift({
+            id: generateId(),
+            productName,
+            price,
+            status,
+            trackingNumber,
+            notes,
+            date,
+          });
+          showToast('🎉 تمت إضافة الطلب بنجاح');
+        }
+
+        saveOrders();
+        renderOrders(searchInput.value);
+        closeModal();
+      }
+
+      // تصدير JSON
+      function exportToJSON() {
+        if (orders.length === 0) {
+          showToast('⚠️ لا توجد بيانات لتصديرها');
+          return;
+        }
+        const dataStr = JSON.stringify(orders, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `aliexpress-orders-${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('📥 تم تصدير البيانات بنجاح');
+      }
+
+      // استيراد JSON
+      function importFromJSON(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const imported = JSON.parse(e.target.result);
+            if (!Array.isArray(imported)) throw new Error('تنسيق خاطئ');
+            let addedCount = 0;
+            imported.forEach(impOrder => {
+              const exists = orders.some(o => 
+                o.trackingNumber === impOrder.trackingNumber && 
+                o.productName === impOrder.productName &&
+                o.date === impOrder.date
+              );
+              if (!exists) {
+                if (!impOrder.id) impOrder.id = generateId();
+                orders.push(impOrder);
+                addedCount++;
+              }
+            });
+            if (addedCount > 0) {
+              saveOrders();
+              renderOrders(searchInput.value);
+              showToast(`✅ تم استيراد ${addedCount} طلب جديد بنجاح`);
+            } else {
+              showToast('ℹ️ لم يتم إضافة طلبات جديدة (جميعها موجودة مسبقاً)');
+            }
+          } catch (error) {
+            showToast('❌ فشل استيراد الملف. تأكد من أنه ملف JSON صالح');
+          }
+        };
+        reader.readAsText(file);
+      }
+
+      function triggerImport() {
+        importFileInput.click();
+      }
+
+      // Dark Mode
+      function applyDarkMode(isDark) {
+        const html = document.documentElement;
+        if (isDark) {
+          html.classList.add('dark');
+          darkIcon.textContent = '☀️';
+          localStorage.setItem('darkMode', 'true');
+        } else {
+          html.classList.remove('dark');
+          darkIcon.textContent = '🌙';
+          localStorage.setItem('darkMode', 'false');
+        }
+      }
+
+      function toggleDarkMode() {
+        const isDark = document.documentElement.classList.contains('dark');
+        applyDarkMode(!isDark);
+      }
+
+      function initDarkMode() {
+        const saved = localStorage.getItem('darkMode');
+        if (saved === null) {
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          applyDarkMode(prefersDark);
+        } else {
+          applyDarkMode(saved === 'true');
+        }
+      }
+
+      // ربط الأحداث العامة
+      function bindEvents() {
+        document.getElementById('openAddModalBtn').addEventListener('click', openAddModal);
+        document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+        document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
+        orderModal.addEventListener('click', (e) => { if (e.target === orderModal) closeModal(); });
+        orderForm.addEventListener('submit', saveOrder);
+        searchInput.addEventListener('input', (e) => renderOrders(e.target.value));
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+        document.getElementById('exportBtn').addEventListener('click', exportToJSON);
+        document.getElementById('exportBtnMobile').addEventListener('click', exportToJSON);
+        document.getElementById('importBtn').addEventListener('click', triggerImport);
+        document.getElementById('importBtnMobile').addEventListener('click', triggerImport);
+        importFileInput.addEventListener('change', (e) => {
+          if (e.target.files && e.target.files[0]) {
+            importFromJSON(e.target.files[0]);
+            importFileInput.value = '';
+          }
+        });
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !orderModal.classList.contains('hidden')) closeModal();
+        });
+      }
+
+      // بدء التشغيل
+      function init() {
+        initDarkMode();
+        loadOrders();
+        bindEvents();
+        renderOrders();
+      }
+
+      window.addEventListener('DOMContentLoaded', init);
+    })();
+  </script>
+</body>
+</html>
