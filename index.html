@@ -21,7 +21,6 @@
     button:disabled { opacity: 0.5; cursor: not-allowed; }
     .order-row { background-color: transparent; }
     .order-row:hover, .order-row:active { background-color: transparent !important; }
-    /* نخفي light mode تماماً */
     body { background-color: #0f172a; color: #e2e8f0; }
   </style>
 </head>
@@ -120,7 +119,7 @@
     </div>
   </main>
 
-  <!-- MODAL CONFIRMATION SUPPRESSION -->
+  <!-- MODAL CONFIRMATION -->
   <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
     <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 border border-slate-700">
       <p id="confirmMessage" class="text-slate-200 text-center mb-4">Êtes-vous sûr de vouloir supprimer ?</p>
@@ -327,9 +326,7 @@
             responsive: true,
             maintainAspectRatio: true,
             plugins: {
-              legend: {
-                labels: { color: '#cbd5e1' }
-              }
+              legend: { labels: { color: '#cbd5e1' } }
             }
           }
         });
@@ -359,18 +356,10 @@
             responsive: true,
             maintainAspectRatio: true,
             scales: {
-              y: {
-                beginAtZero: true,
-                ticks: { color: '#94a3b8' },
-                grid: { color: '#334155' }
-              },
-              x: {
-                ticks: { color: '#94a3b8' }
-              }
+              y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
+              x: { ticks: { color: '#94a3b8' } }
             },
-            plugins: {
-              legend: { display: false }
-            }
+            plugins: { legend: { display: false } }
           }
         });
       }
@@ -403,6 +392,11 @@
         renderOrders(searchInput.value);
       }
 
+      function isTunisianTracking(number) {
+        const up = number.toUpperCase();
+        return (up.startsWith('UA') && up.endsWith('VU')) || (up.startsWith('RR') && up.endsWith('AE'));
+      }
+
       function renderCards() {
         cardsContainer.innerHTML = '';
         if (cards.length === 0) {
@@ -424,9 +418,7 @@
               </div>
             `;
             cardEl.addEventListener('click', (e) => {
-              if (!e.target.closest('.delete-card-btn')) {
-                applyCardFilter(card.id);
-              }
+              if (!e.target.closest('.delete-card-btn')) applyCardFilter(card.id);
             });
             cardEl.querySelector('.delete-card-btn').addEventListener('click', (e) => {
               e.stopPropagation();
@@ -470,10 +462,37 @@
       function formatPrice(price, currency) { if(price===undefined||price===null||price==='') return ''; const n=parseFloat(price).toFixed(2); if(currency==='EUR') return `€${n}`; if(currency==='TND') return `${n} DT`; return `$${n}`; }
 
       function attachOrderEvents(el, id) {
-        el.querySelector('.toggle-status-btn')?.addEventListener('click', e=>{e.stopPropagation(); toggleOrderStatus(id);});
-        el.querySelector('.edit-order-btn')?.addEventListener('click', e=>{e.stopPropagation(); openEditModal(id);});
-        el.querySelector('.delete-order-btn')?.addEventListener('click', e=>{e.stopPropagation(); deleteOrder(id);});
+        el.querySelector('.toggle-status-btn')?.addEventListener('click', e=>{ e.stopPropagation(); toggleOrderStatus(id); });
+        el.querySelector('.edit-order-btn')?.addEventListener('click', e=>{ e.stopPropagation(); openEditModal(id); });
+        el.querySelector('.delete-order-btn')?.addEventListener('click', e=>{ e.stopPropagation(); deleteOrder(id); });
       }
+
+      // Gestion des clics sur les boutons de tracking et copie
+      ordersContainer.addEventListener('click', (e) => {
+        const copyBtn = e.target.closest('.copy-tracking-btn');
+        const trackBtn = e.target.closest('.track-btn');
+        if (copyBtn) {
+          e.stopPropagation();
+          const trackingEl = copyBtn.parentElement.querySelector('span.font-mono');
+          const trackingNumber = trackingEl ? trackingEl.textContent.trim() : '';
+          if (trackingNumber) {
+            navigator.clipboard.writeText(trackingNumber).then(() => showToast('📋 Numéro copié'));
+          }
+          return;
+        }
+        if (trackBtn) {
+          e.stopPropagation();
+          const trackingEl = trackBtn.parentElement.querySelector('span.font-mono');
+          const trackingNumber = trackingEl ? trackingEl.textContent.trim() : '';
+          if (trackingNumber) {
+            navigator.clipboard.writeText(trackingNumber).then(() => {
+              window.open('http://www.e-suivi.poste.tn/fr/suivi.html', '_blank');
+              showToast('🔍 Numéro copié, collez-le sur le site poste.tn');
+            });
+          }
+          return;
+        }
+      });
 
       function renderOrders(filter='') {
         let filtered = orders;
@@ -497,9 +516,17 @@
           const el = document.createElement('div');
           el.className = 'order-row grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 md:px-6 py-4 items-center';
           const priceDisp = order.price ? formatPrice(order.price, order.currency) : '';
+          const showTrackBtn = isTunisianTracking(order.trackingNumber);
           el.innerHTML = `
             <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Produit</span><span class="font-semibold text-slate-100 truncate">${escapeHTML(order.productName)}</span>${priceDisp?`<span class="text-xs text-slate-400">${priceDisp}</span>`:''}</div>
-            <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">N° suivi</span><span class="text-sm font-mono bg-slate-700 px-2 py-1 rounded text-slate-300">${escapeHTML(order.trackingNumber)}</span></div>
+            <div class="flex flex-col">
+              <span class="text-sm text-slate-400 md:hidden">N° suivi</span>
+              <div class="flex items-center gap-1">
+                <span class="text-sm font-mono bg-slate-700 px-2 py-1 rounded text-slate-300">${escapeHTML(order.trackingNumber)}</span>
+                <button class="copy-tracking-btn text-slate-400 hover:text-slate-200 text-xs" title="Copier">📋</button>
+                ${showTrackBtn ? '<button class="track-btn text-blue-400 hover:text-blue-300 text-xs" title="Suivre sur poste.tn">🔍</button>' : ''}
+              </div>
+            </div>
             <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Statut</span>${getStatusBadge(order.status)}</div>
             <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Date</span><span class="text-sm text-slate-400">${formatDate(order.date)}</span></div>
             <div class="flex gap-2 md:justify-end mt-2 md:mt-0">
