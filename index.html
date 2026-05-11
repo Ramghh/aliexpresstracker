@@ -14,80 +14,44 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
-    * {
-      font-family: 'Tajawal', sans-serif;
-    }
-    .transition-smooth {
-      transition: all 0.25s ease;
-    }
-    .table-container::-webkit-scrollbar {
-      height: 6px;
-    }
-    .table-container::-webkit-scrollbar-thumb {
-      background-color: #cbd5e1;
-      border-radius: 6px;
-    }
-    .dark .table-container::-webkit-scrollbar-thumb {
-      background-color: #475569;
-    }
-    .dark .card-stat {
-      background-color: #1e293b;
-      border-color: #334155;
-    }
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+    * { font-family: 'Tajawal', sans-serif; }
+    .transition-smooth { transition: all 0.25s ease; }
+    .warm-card { background-color: #fefcf8; border-color: #e7e0d6; }
+    .dark .warm-card { background-color: #1e293b; border-color: #334155; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-slate-200 min-h-screen transition-smooth">
+<body class="bg-stone-100/90 text-stone-800 dark:bg-slate-900 dark:text-slate-200 min-h-screen transition-smooth">
 
   <!-- NAVBAR -->
-  <nav class="bg-white dark:bg-slate-800 shadow-md sticky top-0 z-30 border-b border-gray-200 dark:border-slate-700 transition-smooth">
+  <nav class="warm-card bg-[#fefcf8] dark:bg-slate-800 shadow-md sticky top-0 z-30 border-b border-stone-200 dark:border-slate-700 transition-smooth">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center gap-3">
           <span class="text-3xl">📦</span>
-          <h1 class="text-xl sm:text-2xl font-bold text-orange-500 dark:text-orange-400 tracking-tight">
-            AliExpress Tracker
-          </h1>
+          <h1 class="text-xl sm:text-2xl font-bold text-orange-500 dark:text-orange-400 tracking-tight">AliExpress Tracker</h1>
         </div>
         <div class="flex items-center gap-2 sm:gap-3">
           <div class="hidden sm:flex items-center gap-1">
-            <button id="exportBtn" title="تصدير البيانات (JSON)" class="p-2 rounded-lg text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 dark:text-slate-400 dark:hover:text-emerald-400 dark:hover:bg-slate-700 transition-smooth">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" />
-              </svg>
+            <button id="exportBtn" title="تصدير البيانات (JSON)" class="p-2 rounded-lg text-stone-500 hover:text-emerald-600 hover:bg-emerald-50 dark:text-slate-400 dark:hover:text-emerald-400 dark:hover:bg-slate-700 transition-smooth">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" /></svg>
             </button>
-            <button id="importBtn" title="استيراد بيانات (JSON)" class="p-2 rounded-lg text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:text-slate-400 dark:hover:text-blue-400 dark:hover:bg-slate-700 transition-smooth">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" />
-              </svg>
+            <button id="importBtn" title="استيراد بيانات (JSON)" class="p-2 rounded-lg text-stone-500 hover:text-blue-600 hover:bg-blue-50 dark:text-slate-400 dark:hover:text-blue-400 dark:hover:bg-slate-700 transition-smooth">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" /></svg>
             </button>
           </div>
-          <button id="darkModeToggle" class="p-2 rounded-lg text-gray-500 hover:text-yellow-500 hover:bg-gray-100 dark:text-slate-400 dark:hover:text-yellow-300 dark:hover:bg-slate-700 transition-smooth" title="تبديل الوضع الداكن">
+          <button id="darkModeToggle" class="p-2 rounded-lg text-stone-500 hover:text-yellow-500 hover:bg-stone-100 dark:text-slate-400 dark:hover:text-yellow-300 dark:hover:bg-slate-700 transition-smooth" title="تبديل الوضع الداكن">
             <span id="darkIcon" class="text-xl">🌙</span>
           </button>
           <button id="openAddModalBtn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium shadow-md hover:shadow-lg transition-smooth flex items-center gap-2 text-sm sm:text-base">
-            <span class="text-lg leading-none">➕</span>
-            <span class="hidden sm:inline">إضافة طلب</span>
+            <span class="text-lg leading-none">➕</span> <span class="hidden sm:inline">إضافة طلب</span>
           </button>
         </div>
       </div>
     </div>
-    <div class="flex sm:hidden justify-center gap-4 pb-2 bg-white dark:bg-slate-800 border-t border-gray-100 dark:border-slate-700 pt-2">
-      <button id="exportBtnMobile" class="text-xs flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" />
-        </svg>
-        تصدير
-      </button>
-      <button id="importBtnMobile" class="text-xs flex items-center gap-1 text-blue-600 dark:text-blue-400 font-medium px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" />
-        </svg>
-        استيراد
-      </button>
+    <div class="flex sm:hidden justify-center gap-4 pb-2 bg-[#fefcf8] dark:bg-slate-800 border-t border-stone-100 dark:border-slate-700 pt-2">
+      <button id="exportBtnMobile" class="text-xs flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" /></svg> تصدير</button>
+      <button id="importBtnMobile" class="text-xs flex items-center gap-1 text-blue-600 dark:text-blue-400 font-medium px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" /></svg> استيراد</button>
     </div>
   </nav>
 
@@ -95,108 +59,94 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <!-- Dashboard -->
     <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-      <div class="card-stat bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5 flex items-center gap-4 transition-smooth">
-        <div class="bg-blue-100 dark:bg-blue-900/50 p-3 rounded-full text-2xl">✈️</div>
-        <div>
-          <p class="text-sm text-gray-500 dark:text-slate-400">في الطريق</p>
-          <p id="inTransitCount" class="text-3xl font-bold text-blue-600 dark:text-blue-400">0</p>
-        </div>
+      <div class="warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4">
+        <div class="bg-blue-100/80 p-3 rounded-full text-2xl">✈️</div>
+        <div><p class="text-sm text-stone-500 dark:text-slate-400">في الطريق</p><p id="inTransitCount" class="text-3xl font-bold text-blue-600 dark:text-blue-400">0</p></div>
       </div>
-      <div class="card-stat bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5 flex items-center gap-4 transition-smooth">
-        <div class="bg-green-100 dark:bg-green-900/50 p-3 rounded-full text-2xl">✅</div>
-        <div>
-          <p class="text-sm text-gray-500 dark:text-slate-400">تم التوصيل</p>
-          <p id="deliveredCount" class="text-3xl font-bold text-green-600 dark:text-green-400">0</p>
-        </div>
+      <div class="warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4">
+        <div class="bg-green-100/80 p-3 rounded-full text-2xl">✅</div>
+        <div><p class="text-sm text-stone-500 dark:text-slate-400">تم التوصيل</p><p id="deliveredCount" class="text-3xl font-bold text-green-600 dark:text-green-400">0</p></div>
       </div>
-      <!-- بطاقة الميزانية الإجمالية مع دعم العملتين -->
-      <div class="card-stat bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5 transition-smooth">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="bg-purple-100 dark:bg-purple-900/50 p-2 rounded-full text-xl">💰</div>
-          <p class="text-sm text-gray-500 dark:text-slate-400 font-medium">الميزانية الإجمالية</p>
-        </div>
-        <div class="space-y-1">
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-gray-500 dark:text-slate-400">🇺🇸 دولار</span>
-            <span id="totalBudgetUSD" class="text-lg font-bold text-purple-600 dark:text-purple-400">$0.00</span>
-          </div>
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-gray-500 dark:text-slate-400">🇪🇺 يورو</span>
-            <span id="totalBudgetEUR" class="text-lg font-bold text-purple-600 dark:text-purple-400">€0.00</span>
-          </div>
-        </div>
+      <div class="warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-md border p-5">
+        <div class="flex items-center gap-3 mb-2"><div class="bg-purple-100/80 p-2 rounded-full text-xl">💰</div><p class="text-sm text-stone-500 dark:text-slate-400 font-medium">الميزانية الإجمالية</p></div>
+        <div class="space-y-1"><div class="flex justify-between"><span class="text-xs text-stone-500">🇺🇸 دولار</span><span id="totalBudgetUSD" class="text-lg font-bold text-purple-600">$0.00</span></div><div class="flex justify-between"><span class="text-xs text-stone-500">🇪🇺 يورو</span><span id="totalBudgetEUR" class="text-lg font-bold text-purple-600">€0.00</span></div></div>
       </div>
+    </section>
+
+    <!-- قسم البطاقات الافتراضية -->
+    <section class="mb-8">
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="text-lg font-bold text-stone-700 dark:text-slate-200 flex items-center gap-2">💳 البطاقات الافتراضية</h2>
+        <button id="openCardModalBtn" class="text-sm bg-stone-200 dark:bg-slate-700 text-stone-700 dark:text-slate-300 px-3 py-2 rounded-lg hover:bg-stone-300 dark:hover:bg-slate-600 transition-smooth flex items-center gap-1">➕ إضافة بطاقة</button>
+      </div>
+      <div id="cardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      <div id="noCardsMessage" class="text-center text-stone-400 dark:text-slate-500 py-4 text-sm hidden">لا توجد بطاقات مضافة بعد</div>
     </section>
 
     <!-- شريط البحث -->
     <div class="relative mb-6">
-      <input type="text" id="searchInput" placeholder="🔍  بحث باسم المنتج أو رقم التتبع..." class="w-full px-5 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-200 shadow-sm focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition-smooth text-sm sm:text-base" autocomplete="off">
+      <input type="text" id="searchInput" placeholder="🔍  بحث باسم المنتج أو رقم التتبع..." class="w-full px-5 py-3 rounded-xl border border-stone-200 dark:border-slate-600 bg-[#fefcf8] dark:bg-slate-800 text-stone-800 dark:text-slate-200 shadow-sm focus:ring-2 focus:ring-orange-400 outline-none transition-smooth text-sm sm:text-base" autocomplete="off">
     </div>
 
     <!-- جدول / قائمة الطلبات -->
-    <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden transition-smooth">
-      <div class="hidden md:grid grid-cols-5 gap-4 px-6 py-4 bg-gray-50 dark:bg-slate-700/50 text-sm font-semibold text-gray-600 dark:text-slate-300 border-b border-gray-100 dark:border-slate-600">
-        <div>المنتج</div>
-        <div>رقم التتبع</div>
-        <div>الحالة</div>
-        <div>تاريخ الطلب</div>
-        <div>إجراءات</div>
+    <div class="warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-md border overflow-hidden transition-smooth">
+      <div class="hidden md:grid grid-cols-5 gap-4 px-6 py-4 bg-stone-100/80 dark:bg-slate-700/50 text-sm font-semibold text-stone-600 dark:text-slate-300 border-b border-stone-200 dark:border-slate-600">
+        <div>المنتج</div><div>رقم التتبع</div><div>الحالة</div><div>تاريخ الطلب</div><div>إجراءات</div>
       </div>
-      <div id="ordersContainer" class="divide-y divide-gray-100 dark:divide-slate-700"></div>
-      <div id="emptyState" class="px-6 py-16 text-center text-gray-400 dark:text-slate-500 flex flex-col items-center gap-3">
-        <span class="text-5xl">📭</span>
-        <p class="text-lg font-medium">لا توجد طلبات حتى الآن</p>
-        <p class="text-sm">اضغط على "إضافة طلب" لبدء تتبع مشترياتك</p>
+      <div id="ordersContainer" class="divide-y divide-stone-200 dark:divide-slate-700"></div>
+      <div id="emptyState" class="px-6 py-16 text-center text-stone-400 dark:text-slate-500 flex flex-col items-center gap-3">
+        <span class="text-5xl">📭</span><p class="text-lg font-medium">لا توجد طلبات حتى الآن</p><p class="text-sm">اضغط على "إضافة طلب" لبدء تتبع مشترياتك</p>
       </div>
     </div>
   </main>
 
   <!-- مودال إضافة / تعديل طلب -->
   <div id="orderModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden transition-smooth">
-    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 border border-gray-100 dark:border-slate-700">
+    <div class="bg-[#fefcf8] dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 border border-stone-200 dark:border-slate-700 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-5">
-        <h2 id="modalTitle" class="text-xl font-bold text-gray-800 dark:text-slate-100">إضافة طلب جديد</h2>
-        <button id="closeModalBtn" class="text-gray-400 hover:text-red-500 dark:hover:text-red-400 text-2xl leading-none p-1">&times;</button>
+        <h2 id="modalTitle" class="text-xl font-bold text-stone-800 dark:text-slate-100">إضافة طلب جديد</h2>
+        <button id="closeModalBtn" class="text-stone-400 hover:text-red-500 dark:hover:text-red-400 text-2xl leading-none p-1">&times;</button>
       </div>
       <form id="orderForm" class="space-y-4">
         <input type="hidden" id="orderId" value="">
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">اسم المنتج *</label>
-          <input type="text" id="productName" required placeholder="مثال: ساعة ذكية" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
+          <label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">اسم المنتج *</label>
+          <input type="text" id="productName" required placeholder="مثال: ساعة ذكية" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-stone-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none">
         </div>
-        <!-- صف السعر والعملة -->
         <div class="grid grid-cols-5 gap-2">
-          <div class="col-span-3">
-            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">السعر</label>
-            <input type="number" id="price" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
-          </div>
-          <div class="col-span-2">
-            <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">العملة</label>
-            <select id="currencySelect" class="w-full px-3 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
-              <option value="USD">$ دولار</option>
-              <option value="EUR">€ يورو</option>
-            </select>
-          </div>
+          <div class="col-span-3"><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">السعر</label><input type="number" id="price" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
+          <div class="col-span-2"><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">العملة</label><select id="currencySelect" class="w-full px-3 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"><option value="USD">$ دولار</option><option value="EUR">€ يورو</option></select></div>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">الحالة</label>
-          <select id="statusSelect" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
-            <option value="In Transit">🚚 في الطريق</option>
-            <option value="Delivered">✅ تم التوصيل</option>
+        <!-- حقل اختيار البطاقة (يظهر فقط عند اختيار اليورو) -->
+        <div id="cardSelectionRow" class="hidden">
+          <label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">البطاقة المستخدمة *</label>
+          <select id="cardSelect" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-stone-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none">
+            <!-- تُملأ ديناميكياً -->
           </select>
+          <p id="noCardWarning" class="text-xs text-red-500 mt-1 hidden">يجب إضافة بطاقة يورو أولاً من قسم "البطاقات الافتراضية"</p>
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">رقم التتبع *</label>
-          <input type="text" id="trackingNumber" required placeholder="مثال: LP000123456789" class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth">
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">ملاحظات</label>
-          <textarea id="notes" rows="2" placeholder="ملاحظات إضافية..." class="w-full px-4 py-3 rounded-lg border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-800 dark:text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none transition-smooth resize-none"></textarea>
-        </div>
+        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">الحالة</label><select id="statusSelect" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"><option value="In Transit">🚚 في الطريق</option><option value="Delivered">✅ تم التوصيل</option></select></div>
+        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">رقم التتبع *</label><input type="text" id="trackingNumber" required placeholder="مثال: LP000123456789" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
+        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">ملاحظات</label><textarea id="notes" rows="2" placeholder="ملاحظات إضافية..." class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700 resize-none"></textarea></div>
         <div class="flex gap-3 pt-2">
-          <button type="button" id="cancelModalBtn" class="flex-1 py-3 rounded-lg border border-gray-200 dark:border-slate-600 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 font-medium transition-smooth">إلغاء</button>
-          <button type="submit" class="flex-1 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-md transition-smooth">💾 حفظ</button>
+          <button type="button" id="cancelModalBtn" class="flex-1 py-3 rounded-lg border border-stone-200 dark:border-slate-600 text-stone-600 dark:text-slate-300 hover:bg-stone-50 dark:hover:bg-slate-700">إلغاء</button>
+          <button type="submit" class="flex-1 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-md">💾 حفظ</button>
         </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- مودال إضافة بطاقة -->
+  <div id="cardModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden transition-smooth">
+    <div class="bg-[#fefcf8] dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 border border-stone-200 dark:border-slate-700">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-bold text-stone-800 dark:text-slate-100">إضافة بطاقة افتراضية</h2>
+        <button id="closeCardModalBtn" class="text-stone-400 hover:text-red-500 text-2xl p-1">&times;</button>
+      </div>
+      <form id="cardForm" class="space-y-4">
+        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">اسم الشخص *</label><input type="text" id="cardPersonName" required placeholder="مثال: أحمد" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
+        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">المبلغ الموضوع (€) *</label><input type="number" id="cardAmount" step="0.01" min="0.01" required placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
+        <div class="flex gap-2"><button type="button" id="cancelCardBtn" class="flex-1 py-2.5 rounded-lg border border-stone-200 dark:border-slate-600 text-stone-600">إلغاء</button><button type="submit" class="flex-1 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold">حفظ البطاقة</button></div>
       </form>
     </div>
   </div>
@@ -206,16 +156,17 @@
     <span id="toastMessage"></span>
   </div>
 
-  <!-- ملف مخفي للاستيراد -->
   <input type="file" id="importFileInput" accept=".json" class="hidden">
 
   <script>
     (function() {
       const STORAGE_KEY = 'aliexpress_orders';
+      const CARDS_KEY = 'virtual_cards';
       let orders = [];
+      let cards = [];
       let currentEditId = null;
 
-      // عناصر DOM
+      // DOM Elements
       const ordersContainer = document.getElementById('ordersContainer');
       const emptyState = document.getElementById('emptyState');
       const inTransitCountEl = document.getElementById('inTransitCount');
@@ -230,6 +181,9 @@
       const productNameInput = document.getElementById('productName');
       const priceInput = document.getElementById('price');
       const currencySelect = document.getElementById('currencySelect');
+      const cardSelect = document.getElementById('cardSelect');
+      const cardSelectionRow = document.getElementById('cardSelectionRow');
+      const noCardWarning = document.getElementById('noCardWarning');
       const statusSelect = document.getElementById('statusSelect');
       const trackingNumberInput = document.getElementById('trackingNumber');
       const notesInput = document.getElementById('notes');
@@ -238,374 +192,303 @@
       const toast = document.getElementById('toast');
       const toastMessage = document.getElementById('toastMessage');
       const importFileInput = document.getElementById('importFileInput');
+      const cardsContainer = document.getElementById('cardsContainer');
+      const noCardsMessage = document.getElementById('noCardsMessage');
+      const cardModal = document.getElementById('cardModal');
+      const cardForm = document.getElementById('cardForm');
+      const cardPersonName = document.getElementById('cardPersonName');
+      const cardAmount = document.getElementById('cardAmount');
 
-      // ---------- دوال مساعدة ----------
-      function showToast(message, duration = 2500) {
-        toastMessage.textContent = message;
-        toast.classList.remove('opacity-0');
-        toast.classList.add('opacity-100');
+      function showToast(msg, dur=2500) {
+        toastMessage.textContent = msg;
+        toast.classList.remove('opacity-0'); toast.classList.add('opacity-100');
         clearTimeout(window.toastTimer);
-        window.toastTimer = setTimeout(() => {
-          toast.classList.remove('opacity-100');
-          toast.classList.add('opacity-0');
-        }, duration);
+        window.toastTimer = setTimeout(() => { toast.classList.remove('opacity-100'); toast.classList.add('opacity-0'); }, dur);
       }
 
-      function loadOrders() {
-        try {
-          const stored = localStorage.getItem(STORAGE_KEY);
-          orders = stored ? JSON.parse(stored) : [];
-          // ضمان وجود حقل العملة في الطلبات القديمة
-          orders.forEach(o => {
-            if (!o.currency) o.currency = 'USD';
+      function loadData() {
+        try { orders = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { orders = []; }
+        orders.forEach(o => { if (!o.currency) o.currency = 'USD'; if (!o.cardId) o.cardId = null; });
+        try { cards = JSON.parse(localStorage.getItem(CARDS_KEY) || '[]'); } catch(e) { cards = []; }
+      }
+
+      function saveOrders() { localStorage.setItem(STORAGE_KEY, JSON.stringify(orders)); }
+      function saveCards() { localStorage.setItem(CARDS_KEY, JSON.stringify(cards)); }
+
+      function getCardBalance(cardId) {
+        const card = cards.find(c => c.id === cardId);
+        if (!card) return 0;
+        const spent = orders.filter(o => o.cardId === cardId).reduce((sum, o) => sum + (parseFloat(o.price)||0), 0);
+        return Math.max(0, card.amount - spent);
+      }
+
+      function populateCardSelect() {
+        cardSelect.innerHTML = '';
+        if (cards.length === 0) {
+          cardSelect.innerHTML = '<option value="">-- لا توجد بطاقات --</option>';
+          noCardWarning.classList.remove('hidden');
+        } else {
+          noCardWarning.classList.add('hidden');
+          cards.forEach(card => {
+            const balance = getCardBalance(card.id);
+            const opt = document.createElement('option');
+            opt.value = card.id;
+            opt.textContent = `${card.personName} (تبقى €${balance.toFixed(2)})`;
+            cardSelect.appendChild(opt);
           });
-        } catch (e) {
-          orders = [];
         }
       }
 
-      function saveOrders() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      // دالة محورية: إظهار/إخفاء حقل البطاقة حسب العملة
+      function toggleCardField() {
+        if (currencySelect.value === 'EUR') {
+          cardSelectionRow.classList.remove('hidden');
+          populateCardSelect();
+        } else {
+          cardSelectionRow.classList.add('hidden');
+          cardSelect.value = '';
+        }
+      }
+
+      function renderCards() {
+        cardsContainer.innerHTML = '';
+        if (cards.length === 0) {
+          noCardsMessage.classList.remove('hidden');
+        } else {
+          noCardsMessage.classList.add('hidden');
+          cards.forEach(card => {
+            const balance = getCardBalance(card.id);
+            const cardEl = document.createElement('div');
+            cardEl.className = 'warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-sm border p-4 flex flex-col gap-2 transition-smooth';
+            cardEl.innerHTML = `
+              <div class="flex justify-between items-start">
+                <span class="font-bold text-stone-700 dark:text-slate-200">👤 ${escapeHTML(card.personName)}</span>
+                <button class="delete-card-btn text-red-400 hover:text-red-600 text-sm" data-card-id="${card.id}">🗑️</button>
+              </div>
+              <div class="text-sm text-stone-500 dark:text-slate-400">
+                <p>💰 المبلغ الموضوع: <span class="font-semibold text-stone-700 dark:text-slate-300">€${card.amount.toFixed(2)}</span></p>
+                <p>💸 المتبقي: <span class="font-bold ${balance > 0 ? 'text-emerald-600' : 'text-red-500'}">€${balance.toFixed(2)}</span></p>
+              </div>
+            `;
+            cardEl.querySelector('.delete-card-btn').addEventListener('click', (e) => {
+              e.stopPropagation();
+              if (confirm('حذف البطاقة؟ قد يؤثر على الطلبات المرتبطة.')) {
+                cards = cards.filter(c => c.id !== card.id);
+                saveCards(); renderCards(); updateStats(); showToast('🗑️ تم حذف البطاقة');
+              }
+            });
+            cardsContainer.appendChild(cardEl);
+          });
+        }
+        populateCardSelect(); // تحديث قائمة البطاقات في المودال أيضاً
       }
 
       function updateStats() {
         const inTransit = orders.filter(o => o.status === 'In Transit').length;
         const delivered = orders.filter(o => o.status === 'Delivered').length;
-        
-        let totalUSD = 0;
-        let totalEUR = 0;
+        let totalUSD = 0, totalEUR = 0;
         orders.forEach(o => {
-          const amount = parseFloat(o.price) || 0;
-          if (o.currency === 'EUR') {
-            totalEUR += amount;
-          } else {
-            totalUSD += amount;
-          }
+          const amt = parseFloat(o.price)||0;
+          if (o.currency === 'EUR') totalEUR += amt;
+          else totalUSD += amt;
         });
-
         inTransitCountEl.textContent = inTransit;
         deliveredCountEl.textContent = delivered;
         totalBudgetUSDEl.textContent = `$${totalUSD.toFixed(2)}`;
         totalBudgetEUREl.textContent = `€${totalEUR.toFixed(2)}`;
       }
 
-      function formatDate(dateString) {
-        if (!dateString) return '—';
-        const d = new Date(dateString);
-        return d.toLocaleDateString('ar-SA', { year: 'numeric', month: 'short', day: 'numeric' });
+      function formatDate(dateString) { return dateString ? new Date(dateString).toLocaleDateString('ar-SA',{year:'numeric',month:'short',day:'numeric'}) : '—'; }
+      function getStatusBadge(s) { return s==='In Transit'?'<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">✈️ في الطريق</span>':'<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300">✅ تم التوصيل</span>'; }
+      function escapeHTML(str) { return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+      function generateId() { return Date.now().toString(36)+Math.random().toString(36).substring(2,7); }
+      function formatPrice(price, currency) { if(price===undefined||price===null||price==='') return ''; const n=parseFloat(price).toFixed(2); return currency==='EUR'?`€${n}`:`$${n}`; }
+
+      function attachOrderEvents(el, id) {
+        el.querySelector('.toggle-status-btn')?.addEventListener('click', e=>{e.stopPropagation(); toggleOrderStatus(id);});
+        el.querySelector('.edit-order-btn')?.addEventListener('click', e=>{e.stopPropagation(); openEditModal(id);});
+        el.querySelector('.delete-order-btn')?.addEventListener('click', e=>{e.stopPropagation(); deleteOrder(id);});
       }
 
-      function getStatusBadge(status) {
-        if (status === 'In Transit') {
-          return '<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">✈️ في الطريق</span>';
-        } else {
-          return '<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300">✅ تم التوصيل</span>';
-        }
-      }
-
-      function escapeHTML(str) {
-        return String(str).replace(/[&<>"']/g, function(m) {
-          const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-          return map[m];
-        });
-      }
-
-      function generateId() {
-        return Date.now().toString(36) + Math.random().toString(36).substring(2, 7);
-      }
-
-      // عرض سعر مع العملة المناسبة
-      function formatPrice(price, currency) {
-        if (price === undefined || price === null || price === '') return '';
-        const num = parseFloat(price).toFixed(2);
-        if (currency === 'EUR') return `€${num}`;
-        return `$${num}`;
-      }
-
-      function attachOrderEvents(orderEl, orderId) {
-        orderEl.querySelector('.toggle-status-btn')?.addEventListener('click', (e) => {
-          e.stopPropagation();
-          toggleOrderStatus(orderId);
-        });
-        orderEl.querySelector('.edit-order-btn')?.addEventListener('click', (e) => {
-          e.stopPropagation();
-          openEditModal(orderId);
-        });
-        orderEl.querySelector('.delete-order-btn')?.addEventListener('click', (e) => {
-          e.stopPropagation();
-          deleteOrder(orderId);
-        });
-      }
-
-      function renderOrders(filterText = '') {
-        const filterLower = filterText.trim().toLowerCase();
-        const filteredOrders = filterLower === '' 
-          ? orders 
-          : orders.filter(o => 
-              o.productName.toLowerCase().includes(filterLower) || 
-              o.trackingNumber.toLowerCase().includes(filterLower)
-            );
-
+      function renderOrders(filter='') {
+        const f = filter.trim().toLowerCase();
+        const filtered = f==='' ? orders : orders.filter(o=> o.productName.toLowerCase().includes(f) || o.trackingNumber.toLowerCase().includes(f));
         ordersContainer.innerHTML = '';
-
-        if (filteredOrders.length === 0) {
+        if(filtered.length===0) {
           emptyState.classList.remove('hidden');
-          emptyState.innerHTML = filterLower !== '' 
-            ? `<span class="text-5xl">🔍</span><p class="text-lg font-medium">لا توجد نتائج للبحث</p><p class="text-sm">جرب كلمات أخرى</p>`
-            : `<span class="text-5xl">📭</span><p class="text-lg font-medium">لا توجد طلبات حتى الآن</p><p class="text-sm">اضغط على "إضافة طلب" لبدء تتبع مشترياتك</p>`;
+          emptyState.innerHTML = f!=='' ? '<span class="text-5xl">🔍</span><p class="text-lg font-medium">لا توجد نتائج</p>' : '<span class="text-5xl">📭</span><p class="text-lg font-medium">لا توجد طلبات</p>';
         } else {
           emptyState.classList.add('hidden');
         }
-
-        filteredOrders.forEach(order => {
-          const orderEl = document.createElement('div');
-          orderEl.className = 'grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 md:px-6 py-4 items-center hover:bg-gray-50 dark:hover:bg-slate-750 transition-smooth';
-          orderEl.setAttribute('data-order-id', order.id);
-          
-          const priceDisplay = order.price ? formatPrice(order.price, order.currency) : '';
-          
-          orderEl.innerHTML = `
-            <div class="flex flex-col">
-              <span class="text-sm text-gray-400 dark:text-slate-500 md:hidden font-medium">المنتج</span>
-              <span class="font-semibold text-gray-800 dark:text-slate-100 truncate max-w-[200px]">${escapeHTML(order.productName)}</span>
-              ${priceDisplay ? `<span class="text-xs text-gray-500 dark:text-slate-400">${escapeHTML(priceDisplay)}</span>` : ''}
-            </div>
-            <div class="flex flex-col">
-              <span class="text-sm text-gray-400 dark:text-slate-500 md:hidden font-medium">رقم التتبع</span>
-              <span class="text-sm font-mono text-gray-600 dark:text-slate-300 bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded inline-block max-w-fit">${escapeHTML(order.trackingNumber)}</span>
-            </div>
-            <div class="flex flex-col">
-              <span class="text-sm text-gray-400 dark:text-slate-500 md:hidden font-medium">الحالة</span>
-              ${getStatusBadge(order.status)}
-            </div>
-            <div class="flex flex-col">
-              <span class="text-sm text-gray-400 dark:text-slate-500 md:hidden font-medium">تاريخ الطلب</span>
-              <span class="text-sm text-gray-600 dark:text-slate-400">${formatDate(order.date)}</span>
-            </div>
-            <div class="flex items-center gap-2 md:justify-end mt-2 md:mt-0">
-              <button class="toggle-status-btn text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-300 transition-smooth flex items-center gap-1" title="تغيير الحالة">🔄</button>
-              <button class="edit-order-btn text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-800/50 text-blue-600 dark:text-blue-400 transition-smooth flex items-center gap-1" title="تعديل">✏️</button>
-              <button class="delete-order-btn text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-800/50 text-red-600 dark:text-red-400 transition-smooth flex items-center gap-1" title="حذف">🗑️</button>
-            </div>
-          `;
-          
-          attachOrderEvents(orderEl, order.id);
-          ordersContainer.appendChild(orderEl);
+        filtered.forEach(order => {
+          const el = document.createElement('div');
+          el.className = 'grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 md:px-6 py-4 items-center hover:bg-stone-50 dark:hover:bg-slate-750 transition-smooth';
+          const priceDisp = order.price ? formatPrice(order.price, order.currency) : '';
+          el.innerHTML = `
+            <div class="flex flex-col"><span class="text-sm text-stone-400 md:hidden">المنتج</span><span class="font-semibold text-stone-800 dark:text-slate-100 truncate">${escapeHTML(order.productName)}</span>${priceDisp?`<span class="text-xs text-stone-500">${priceDisp}</span>`:''}</div>
+            <div class="flex flex-col"><span class="text-sm text-stone-400 md:hidden">رقم التتبع</span><span class="text-sm font-mono bg-stone-100 dark:bg-slate-700 px-2 py-1 rounded">${escapeHTML(order.trackingNumber)}</span></div>
+            <div class="flex flex-col"><span class="text-sm text-stone-400 md:hidden">الحالة</span>${getStatusBadge(order.status)}</div>
+            <div class="flex flex-col"><span class="text-sm text-stone-400 md:hidden">تاريخ الطلب</span><span class="text-sm text-stone-600 dark:text-slate-400">${formatDate(order.date)}</span></div>
+            <div class="flex gap-2 md:justify-end mt-2 md:mt-0">
+              <button class="toggle-status-btn text-xs px-3 py-1.5 rounded-lg bg-stone-100 dark:bg-slate-700 hover:bg-stone-200">🔄</button>
+              <button class="edit-order-btn text-xs px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 text-blue-600">✏️</button>
+              <button class="delete-order-btn text-xs px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/30 hover:bg-red-100 text-red-600">🗑️</button>
+            </div>`;
+          attachOrderEvents(el, order.id);
+          ordersContainer.appendChild(el);
         });
-
         updateStats();
       }
 
-      function deleteOrder(orderId) {
-        if (confirm('هل أنت متأكد من حذف هذا الطلب؟')) {
-          orders = orders.filter(o => o.id !== orderId);
-          saveOrders();
-          renderOrders(searchInput.value);
-          showToast('🗑️ تم حذف الطلب');
-        }
+      function deleteOrder(id) {
+        if(confirm('حذف الطلب؟')) { orders = orders.filter(o=>o.id!==id); saveOrders(); renderOrders(searchInput.value); renderCards(); showToast('🗑️ تم الحذف'); }
       }
 
-      function openEditModal(orderId) {
-        const order = orders.find(o => o.id === orderId);
-        if (!order) return;
-        currentEditId = orderId;
-        orderIdInput.value = order.id;
-        productNameInput.value = order.productName || '';
-        priceInput.value = order.price || '';
-        currencySelect.value = order.currency || 'USD';
-        statusSelect.value = order.status || 'In Transit';
-        trackingNumberInput.value = order.trackingNumber || '';
-        notesInput.value = order.notes || '';
+      function openEditModal(id) {
+        const o = orders.find(o=>o.id===id); if(!o) return;
+        currentEditId = id;
+        orderIdInput.value = o.id; productNameInput.value = o.productName||''; priceInput.value = o.price||'';
+        currencySelect.value = o.currency||'USD'; statusSelect.value = o.status;
+        trackingNumberInput.value = o.trackingNumber||''; notesInput.value = o.notes||'';
+        toggleCardField(); // تفعيل حقل البطاقة إذا كانت العملة يورو
+        if(o.currency==='EUR' && o.cardId) cardSelect.value = o.cardId;
         modalTitle.textContent = 'تعديل الطلب';
-        orderModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
+        orderModal.classList.remove('hidden'); document.body.style.overflow = 'hidden';
       }
 
-      function toggleOrderStatus(orderId) {
-        const order = orders.find(o => o.id === orderId);
-        if (!order) return;
-        order.status = order.status === 'In Transit' ? 'Delivered' : 'In Transit';
-        saveOrders();
-        renderOrders(searchInput.value);
-        showToast(`🔄 تم تغيير الحالة إلى: ${order.status === 'In Transit' ? 'في الطريق' : 'تم التوصيل'}`);
+      function toggleOrderStatus(id) {
+        const o = orders.find(o=>o.id===id); if(!o) return;
+        o.status = o.status==='In Transit'?'Delivered':'In Transit';
+        saveOrders(); renderOrders(searchInput.value); renderCards(); showToast('🔄 تم تغيير الحالة');
       }
 
       function resetForm() {
-        orderForm.reset();
-        orderIdInput.value = '';
-        currentEditId = null;
-        modalTitle.textContent = 'إضافة طلب جديد';
-        statusSelect.value = 'In Transit';
-        currencySelect.value = 'USD';
+        orderForm.reset(); orderIdInput.value = ''; currentEditId = null;
+        modalTitle.textContent = 'إضافة طلب جديد'; statusSelect.value = 'In Transit'; currencySelect.value = 'USD';
+        cardSelectionRow.classList.add('hidden'); cardSelect.value = '';
       }
 
-      function openAddModal() {
-        resetForm();
-        orderModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeModal() {
-        orderModal.classList.add('hidden');
-        document.body.style.overflow = '';
-        resetForm();
-      }
+      function openAddModal() { resetForm(); orderModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+      function closeOrderModal() { orderModal.classList.add('hidden'); document.body.style.overflow = ''; resetForm(); }
 
       function saveOrder(e) {
         e.preventDefault();
-        const productName = productNameInput.value.trim();
-        const trackingNumber = trackingNumberInput.value.trim();
-        if (!productName || !trackingNumber) {
-          showToast('⚠️ يرجى ملء اسم المنتج ورقم التتبع على الأقل');
-          return;
-        }
-        const price = parseFloat(priceInput.value) || 0;
+        const name = productNameInput.value.trim(), track = trackingNumberInput.value.trim();
+        if(!name||!track) { showToast('⚠️ الاسم والتتبع مطلوبان'); return; }
+        const price = parseFloat(priceInput.value)||0;
         const currency = currencySelect.value;
-        const status = statusSelect.value;
-        const notes = notesInput.value.trim();
-        const date = new Date().toISOString();
-
-        if (currentEditId) {
-          const index = orders.findIndex(o => o.id === currentEditId);
-          if (index > -1) {
-            orders[index] = { ...orders[index], productName, price, currency, status, trackingNumber, notes };
-            showToast('✅ تم تحديث الطلب بنجاح');
-          }
+        let cardId = null;
+        if(currency === 'EUR') {
+          if(cards.length === 0) { showToast('⚠️ يجب إضافة بطاقة يورو أولاً من قسم البطاقات'); return; }
+          cardId = cardSelect.value;
+          if(!cardId) { showToast('⚠️ الرجاء اختيار البطاقة المستخدمة'); return; }
+          const bal = getCardBalance(cardId);
+          if(price > bal) { showToast('⚠️ رصيد البطاقة لا يكفي'); return; }
+        }
+        const status = statusSelect.value, notes = notesInput.value.trim();
+        if(currentEditId) {
+          const idx = orders.findIndex(o=>o.id===currentEditId);
+          if(idx>-1) { orders[idx] = {...orders[idx], productName:name, price, currency, cardId, status, trackingNumber:track, notes}; showToast('✅ تم التحديث'); }
         } else {
-          orders.unshift({
-            id: generateId(),
-            productName,
-            price,
-            currency,
-            status,
-            trackingNumber,
-            notes,
-            date,
-          });
-          showToast('🎉 تمت إضافة الطلب بنجاح');
+          orders.unshift({ id:generateId(), productName:name, price, currency, cardId, status, trackingNumber:track, notes, date: new Date().toISOString() });
+          showToast('🎉 تمت الإضافة');
         }
-
-        saveOrders();
-        renderOrders(searchInput.value);
-        closeModal();
+        saveOrders(); renderOrders(searchInput.value); renderCards(); closeOrderModal();
       }
 
-      function exportToJSON() {
-        if (orders.length === 0) {
-          showToast('⚠️ لا توجد بيانات لتصديرها');
-          return;
-        }
-        const dataStr = JSON.stringify(orders, null, 2);
-        const blob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `aliexpress-orders-${new Date().toISOString().slice(0,10)}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        showToast('📥 تم تصدير البيانات بنجاح');
-      }
+      function openCardModal() { cardModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+      function closeCardModal() { cardModal.classList.add('hidden'); document.body.style.overflow = ''; cardForm.reset(); }
 
-      function importFromJSON(file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          try {
-            const imported = JSON.parse(e.target.result);
-            if (!Array.isArray(imported)) throw new Error('تنسيق خاطئ');
-            let addedCount = 0;
-            imported.forEach(impOrder => {
-              if (!impOrder.currency) impOrder.currency = 'USD';
-              const exists = orders.some(o => 
-                o.trackingNumber === impOrder.trackingNumber && 
-                o.productName === impOrder.productName &&
-                o.date === impOrder.date
-              );
-              if (!exists) {
-                if (!impOrder.id) impOrder.id = generateId();
-                orders.push(impOrder);
-                addedCount++;
-              }
-            });
-            if (addedCount > 0) {
-              saveOrders();
-              renderOrders(searchInput.value);
-              showToast(`✅ تم استيراد ${addedCount} طلب جديد بنجاح`);
-            } else {
-              showToast('ℹ️ لم يتم إضافة طلبات جديدة (جميعها موجودة مسبقاً)');
-            }
-          } catch (error) {
-            showToast('❌ فشل استيراد الملف. تأكد من أنه ملف JSON صالح');
-          }
-        };
-        reader.readAsText(file);
-      }
-
-      function triggerImport() {
-        importFileInput.click();
+      function addCard(e) {
+        e.preventDefault();
+        const person = cardPersonName.value.trim();
+        const amount = parseFloat(cardAmount.value);
+        if(!person || isNaN(amount) || amount <= 0) { showToast('⚠️ بيانات غير صحيحة'); return; }
+        cards.push({ id: generateId(), personName: person, amount });
+        saveCards(); renderCards(); closeCardModal(); showToast('💳 تمت إضافة البطاقة');
       }
 
       // Dark Mode
       function applyDarkMode(isDark) {
-        const html = document.documentElement;
-        if (isDark) {
-          html.classList.add('dark');
-          darkIcon.textContent = '☀️';
-          localStorage.setItem('darkMode', 'true');
-        } else {
-          html.classList.remove('dark');
-          darkIcon.textContent = '🌙';
-          localStorage.setItem('darkMode', 'false');
-        }
+        document.documentElement.classList.toggle('dark', isDark);
+        darkIcon.textContent = isDark?'☀️':'🌙';
+        localStorage.setItem('darkMode', isDark);
       }
-
-      function toggleDarkMode() {
-        const isDark = document.documentElement.classList.contains('dark');
-        applyDarkMode(!isDark);
-      }
-
+      function toggleDarkMode() { applyDarkMode(!document.documentElement.classList.contains('dark')); }
       function initDarkMode() {
         const saved = localStorage.getItem('darkMode');
-        if (saved === null) {
-          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          applyDarkMode(prefersDark);
-        } else {
-          applyDarkMode(saved === 'true');
-        }
+        applyDarkMode(saved===null ? window.matchMedia('(prefers-color-scheme: dark)').matches : saved==='true');
       }
 
+      // Export/Import
+      function exportToJSON() {
+        if(!orders.length && !cards.length) { showToast('⚠️ لا توجد بيانات'); return; }
+        const data = { orders, cards };
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+        a.download = `tracker-${new Date().toISOString().slice(0,10)}.json`; a.click();
+        showToast('📥 تم التصدير (طلبات + بطاقات)');
+      }
+
+      function importFromJSON(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          try {
+            const data = JSON.parse(e.target.result);
+            if(data.orders && Array.isArray(data.orders)) {
+              let addedO = 0;
+              data.orders.forEach(o => {
+                if(!o.currency) o.currency='USD'; if(!o.cardId) o.cardId=null;
+                if(!orders.some(x=>x.trackingNumber===o.trackingNumber && x.productName===o.productName && x.date===o.date)) {
+                  if(!o.id) o.id = generateId(); orders.push(o); addedO++;
+                }
+              });
+              if(addedO) { saveOrders(); showToast(`✅ أضيف ${addedO} طلب`); }
+            }
+            if(data.cards && Array.isArray(data.cards)) {
+              let addedC = 0;
+              data.cards.forEach(c => { if(!cards.some(x=>x.id===c.id)) { cards.push(c); addedC++; } });
+              if(addedC) { saveCards(); showToast(`💳 أضيف ${addedC} بطاقة`); }
+            }
+            renderOrders(searchInput.value); renderCards();
+          } catch { showToast('❌ فشل الاستيراد'); }
+        };
+        reader.readAsText(file);
+      }
+      function triggerImport() { importFileInput.click(); }
+
+      // ربط الأحداث
       function bindEvents() {
         document.getElementById('openAddModalBtn').addEventListener('click', openAddModal);
-        document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-        document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
-        orderModal.addEventListener('click', (e) => { if (e.target === orderModal) closeModal(); });
+        document.getElementById('closeModalBtn').addEventListener('click', closeOrderModal);
+        document.getElementById('cancelModalBtn').addEventListener('click', closeOrderModal);
+        orderModal.addEventListener('click', e => { if(e.target===orderModal) closeOrderModal(); });
         orderForm.addEventListener('submit', saveOrder);
-        searchInput.addEventListener('input', (e) => renderOrders(e.target.value));
+        searchInput.addEventListener('input', e => renderOrders(e.target.value));
         darkModeToggle.addEventListener('click', toggleDarkMode);
         document.getElementById('exportBtn').addEventListener('click', exportToJSON);
         document.getElementById('exportBtnMobile').addEventListener('click', exportToJSON);
         document.getElementById('importBtn').addEventListener('click', triggerImport);
         document.getElementById('importBtnMobile').addEventListener('click', triggerImport);
-        importFileInput.addEventListener('change', (e) => {
-          if (e.target.files && e.target.files[0]) {
-            importFromJSON(e.target.files[0]);
-            importFileInput.value = '';
-          }
-        });
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && !orderModal.classList.contains('hidden')) closeModal();
-        });
+        importFileInput.addEventListener('change', e => { if(e.target.files[0]) { importFromJSON(e.target.files[0]); importFileInput.value=''; } });
+        document.addEventListener('keydown', e => { if(e.key==='Escape' && !orderModal.classList.contains('hidden')) closeOrderModal(); });
+
+        // البطاقات
+        document.getElementById('openCardModalBtn').addEventListener('click', openCardModal);
+        document.getElementById('closeCardModalBtn').addEventListener('click', closeCardModal);
+        document.getElementById('cancelCardBtn').addEventListener('click', closeCardModal);
+        cardModal.addEventListener('click', e => { if(e.target===cardModal) closeCardModal(); });
+        cardForm.addEventListener('submit', addCard);
+        document.addEventListener('keydown', e => { if(e.key==='Escape' && !cardModal.classList.contains('hidden')) closeCardModal(); });
+
+        // حدث تغيير العملة: يظهر/يخفي حقل البطاقة فوراً
+        currencySelect.addEventListener('change', toggleCardField);
       }
 
-      function init() {
-        initDarkMode();
-        loadOrders();
-        bindEvents();
-        renderOrders();
-      }
-
-      window.addEventListener('DOMContentLoaded', init);
+      window.addEventListener('DOMContentLoaded', () => {
+        initDarkMode(); loadData(); bindEvents();
+        renderCards(); renderOrders();
+      });
     })();
   </script>
 </body>
