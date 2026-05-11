@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" dir="ltr" class="light">
+<html lang="fr" dir="ltr" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,148 +13,164 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     * { font-family: 'Tajawal', sans-serif; }
     .transition-smooth { transition: all 0.25s ease; }
-    .warm-card { background-color: #fefcf8; border-color: #e7e0d6; }
-    .dark .warm-card { background-color: #1e293b; border-color: #334155; }
+    .warm-card { background-color: #1e293b; border-color: #334155; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
-    /* إزالة hover و active تمامًا من صفوف الطلبات */
-    .order-row {
-      background-color: transparent;
-    }
-    .order-row:hover,
-    .order-row:active {
-      background-color: transparent !important;
-    }
+    .order-row { background-color: transparent; }
+    .order-row:hover, .order-row:active { background-color: transparent !important; }
+    /* نخفي light mode تماماً */
+    body { background-color: #0f172a; color: #e2e8f0; }
   </style>
 </head>
-<body class="bg-stone-100/90 text-stone-800 dark:bg-slate-900 dark:text-slate-200 min-h-screen transition-smooth">
+<body class="bg-slate-900 text-slate-200 min-h-screen transition-smooth">
 
   <!-- NAVBAR -->
-  <nav class="warm-card bg-[#fefcf8] dark:bg-slate-800 shadow-md sticky top-0 z-30 border-b border-stone-200 dark:border-slate-700 transition-smooth">
-    <!-- محتوى الـ navbar كما هو دون تعديل -->
+  <nav class="warm-card bg-slate-800 shadow-md sticky top-0 z-30 border-b border-slate-700 transition-smooth">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center gap-3">
           <span class="text-3xl">📦</span>
-          <h1 class="text-xl sm:text-2xl font-bold text-orange-500 dark:text-orange-400 tracking-tight">AliExpress Tracker</h1>
+          <h1 class="text-xl sm:text-2xl font-bold text-orange-400 tracking-tight">AliExpress Tracker</h1>
         </div>
         <div class="flex items-center gap-2 sm:gap-3">
           <div class="hidden sm:flex items-center gap-1">
-            <button id="exportBtn" title="Exporter les données (JSON)" class="p-2 rounded-lg text-stone-500 hover:text-emerald-600 hover:bg-emerald-50 dark:text-slate-400 dark:hover:text-emerald-400 dark:hover:bg-slate-700 transition-smooth">
+            <button id="exportBtn" title="Exporter les données (JSON)" class="p-2 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-slate-700 transition-smooth">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" /></svg>
             </button>
-            <button id="importBtn" title="Importer des données (JSON)" class="p-2 rounded-lg text-stone-500 hover:text-blue-600 hover:bg-blue-50 dark:text-slate-400 dark:hover:text-blue-400 dark:hover:bg-slate-700 transition-smooth">
+            <button id="importBtn" title="Importer des données (JSON)" class="p-2 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-slate-700 transition-smooth">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" /></svg>
             </button>
           </div>
-          <button id="darkModeToggle" class="p-2 rounded-lg text-stone-500 hover:text-yellow-500 hover:bg-stone-100 dark:text-slate-400 dark:hover:text-yellow-300 dark:hover:bg-slate-700 transition-smooth" title="Mode sombre">
-            <span id="darkIcon" class="text-xl">🌙</span>
-          </button>
           <button id="openAddModalBtn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium shadow-md hover:shadow-lg transition-smooth flex items-center gap-2 text-sm sm:text-base">
             <span class="text-lg leading-none">➕</span> <span class="hidden sm:inline">Ajouter</span>
           </button>
         </div>
       </div>
     </div>
-    <div class="flex sm:hidden justify-center gap-4 pb-2 bg-[#fefcf8] dark:bg-slate-800 border-t border-stone-100 dark:border-slate-700 pt-2">
-      <button id="exportBtnMobile" class="text-xs flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-medium px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" /></svg> Export</button>
-      <button id="importBtnMobile" class="text-xs flex items-center gap-1 text-blue-600 dark:text-blue-400 font-medium px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/30"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" /></svg> Import</button>
+    <div class="flex sm:hidden justify-center gap-4 pb-2 bg-slate-800 border-t border-slate-700 pt-2">
+      <button id="exportBtnMobile" class="text-xs flex items-center gap-1 text-emerald-400 font-medium px-3 py-1 rounded-full bg-emerald-900/30"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" /></svg> Export</button>
+      <button id="importBtnMobile" class="text-xs flex items-center gap-1 text-blue-400 font-medium px-3 py-1 rounded-full bg-blue-900/30"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" /></svg> Import</button>
     </div>
   </nav>
 
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <!-- Dashboard -->
     <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-      <!-- كما هو -->
-      <div class="warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4">
-        <div class="bg-blue-100/80 p-3 rounded-full text-2xl">✈️</div>
-        <div><p class="text-sm text-stone-500 dark:text-slate-400">En transit</p><p id="inTransitCount" class="text-3xl font-bold text-blue-600 dark:text-blue-400">0</p></div>
+      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4">
+        <div class="bg-blue-900/50 p-3 rounded-full text-2xl">✈️</div>
+        <div><p class="text-sm text-slate-400">En transit</p><p id="inTransitCount" class="text-3xl font-bold text-blue-400">0</p></div>
       </div>
-      <div class="warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4">
-        <div class="bg-green-100/80 p-3 rounded-full text-2xl">✅</div>
-        <div><p class="text-sm text-stone-500 dark:text-slate-400">Livré</p><p id="deliveredCount" class="text-3xl font-bold text-green-600 dark:text-green-400">0</p></div>
+      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4">
+        <div class="bg-green-900/50 p-3 rounded-full text-2xl">✅</div>
+        <div><p class="text-sm text-slate-400">Livré</p><p id="deliveredCount" class="text-3xl font-bold text-green-400">0</p></div>
       </div>
-      <div class="warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-md border p-5">
-        <div class="flex items-center gap-3 mb-2"><div class="bg-purple-100/80 p-2 rounded-full text-xl">💰</div><p class="text-sm text-stone-500 dark:text-slate-400 font-medium">Budget total</p></div>
-        <div class="space-y-1">
-          <div class="flex justify-between"><span class="text-xs text-stone-500">🇺🇸 Dollar</span><span id="totalBudgetUSD" class="text-lg font-bold text-purple-600">$0.00</span></div>
-          <div class="flex justify-between"><span class="text-xs text-stone-500">🇪🇺 Euro</span><span id="totalBudgetEUR" class="text-lg font-bold text-purple-600">€0.00</span></div>
+      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5">
+        <div class="flex items-center gap-3 mb-2"><div class="bg-purple-900/50 p-2 rounded-full text-xl">💰</div><p class="text-sm text-slate-400 font-medium">Budget total</p></div>
+        <div class="space-y-1 text-sm">
+          <div class="flex justify-between"><span class="text-xs text-slate-400">🇺🇸 Dollar</span><span id="totalBudgetUSD" class="font-bold text-purple-400">$0.00</span></div>
+          <div class="flex justify-between"><span class="text-xs text-slate-400">🇪🇺 Euro</span><span id="totalBudgetEUR" class="font-bold text-purple-400">€0.00</span></div>
+          <div class="flex justify-between"><span class="text-xs text-slate-400">🇹🇳 TND</span><span id="totalBudgetTND" class="font-bold text-purple-400">0.00 DT</span></div>
         </div>
+      </div>
+    </section>
+
+    <!-- Charts -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-4">
+        <h3 class="text-md font-semibold text-slate-200 mb-3">Statut des commandes</h3>
+        <canvas id="statusChart" height="200"></canvas>
+      </div>
+      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-4">
+        <h3 class="text-md font-semibold text-slate-200 mb-3">Dépenses par devise</h3>
+        <canvas id="currencyChart" height="200"></canvas>
       </div>
     </section>
 
     <!-- Cartes virtuelles -->
     <section class="mb-8">
       <div class="flex justify-between items-center mb-3">
-        <h2 class="text-lg font-bold text-stone-700 dark:text-slate-200 flex items-center gap-2">💳 Cartes virtuelles</h2>
-        <button id="openCardModalBtn" class="text-sm bg-stone-200 dark:bg-slate-700 text-stone-700 dark:text-slate-300 px-3 py-2 rounded-lg hover:bg-stone-300 dark:hover:bg-slate-600 transition-smooth flex items-center gap-1">➕ Ajouter</button>
+        <h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">💳 Cartes virtuelles</h2>
+        <button id="openCardModalBtn" class="text-sm bg-slate-700 text-slate-300 px-3 py-2 rounded-lg hover:bg-slate-600 transition-smooth flex items-center gap-1">➕ Ajouter</button>
       </div>
       <div id="cardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-      <div id="noCardsMessage" class="text-center text-stone-400 dark:text-slate-500 py-4 text-sm hidden">Aucune carte ajoutée</div>
+      <div id="noCardsMessage" class="text-center text-slate-500 py-4 text-sm hidden">Aucune carte ajoutée</div>
     </section>
 
     <!-- Barre de recherche + filtre carte -->
     <div class="relative mb-6 flex flex-col sm:flex-row gap-3">
-      <input type="text" id="searchInput" placeholder="🔍  Rechercher par produit ou N° de suivi..." class="flex-1 px-5 py-3 rounded-xl border border-stone-200 dark:border-slate-600 bg-[#fefcf8] dark:bg-slate-800 text-stone-800 dark:text-slate-200 shadow-sm focus:ring-2 focus:ring-orange-400 outline-none transition-smooth text-sm sm:text-base" autocomplete="off">
-      <div id="activeCardFilter" class="hidden items-center gap-2 text-sm bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 px-4 py-2 rounded-lg border border-amber-300 dark:border-amber-700 whitespace-nowrap">
+      <input type="text" id="searchInput" placeholder="🔍  Rechercher par produit ou N° de suivi..." class="flex-1 px-5 py-3 rounded-xl border border-slate-600 bg-slate-800 text-slate-200 shadow-sm focus:ring-2 focus:ring-orange-400 outline-none transition-smooth text-sm sm:text-base" autocomplete="off">
+      <div id="activeCardFilter" class="hidden items-center gap-2 text-sm bg-amber-900/40 text-amber-200 px-4 py-2 rounded-lg border border-amber-700 whitespace-nowrap">
         <span id="activeCardFilterText"></span>
-        <button id="clearCardFilterBtn" class="font-bold text-amber-600 hover:text-red-600 dark:hover:text-red-400 ml-2">✕</button>
+        <button id="clearCardFilterBtn" class="font-bold text-amber-400 hover:text-red-400 ml-2">✕</button>
       </div>
     </div>
 
     <!-- Tableau des commandes -->
-    <div class="warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-md border overflow-hidden transition-smooth">
-      <div class="hidden md:grid grid-cols-5 gap-4 px-6 py-4 bg-stone-100/80 dark:bg-slate-700/50 text-sm font-semibold text-stone-600 dark:text-slate-300 border-b border-stone-200 dark:border-slate-600">
+    <div class="warm-card bg-slate-800 rounded-xl shadow-md border overflow-hidden transition-smooth">
+      <div class="hidden md:grid grid-cols-5 gap-4 px-6 py-4 bg-slate-700/50 text-sm font-semibold text-slate-300 border-b border-slate-600">
         <div>Produit</div><div>N° de suivi</div><div>Statut</div><div>Date</div><div>Actions</div>
       </div>
-      <div id="ordersContainer" class="divide-y divide-stone-200 dark:divide-slate-700"></div>
-      <div id="emptyState" class="px-6 py-16 text-center text-stone-400 dark:text-slate-500 flex flex-col items-center gap-3">
+      <div id="ordersContainer" class="divide-y divide-slate-700"></div>
+      <div id="emptyState" class="px-6 py-16 text-center text-slate-500 flex flex-col items-center gap-3">
         <span class="text-5xl">📭</span><p class="text-lg font-medium">Aucune commande</p><p class="text-sm">Cliquez sur "Ajouter" pour suivre vos achats</p>
       </div>
     </div>
   </main>
 
-  <!-- MODALS (كما هي بدون تغيير) -->
+  <!-- MODAL CONFIRMATION SUPPRESSION -->
+  <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 border border-slate-700">
+      <p id="confirmMessage" class="text-slate-200 text-center mb-4">Êtes-vous sûr de vouloir supprimer ?</p>
+      <div class="flex gap-3 justify-center">
+        <button id="confirmCancelBtn" class="px-5 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-700">Annuler</button>
+        <button id="confirmOkBtn" class="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-bold">Supprimer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL COMMANDE -->
   <div id="orderModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden transition-smooth">
-    <div class="bg-[#fefcf8] dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 border border-stone-200 dark:border-slate-700 max-h-[90vh] overflow-y-auto">
+    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 border border-slate-700 max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-5">
-        <h2 id="modalTitle" class="text-xl font-bold text-stone-800 dark:text-slate-100">Ajouter une commande</h2>
-        <button id="closeModalBtn" class="text-stone-400 hover:text-red-500 dark:hover:text-red-400 text-2xl leading-none p-1">&times;</button>
+        <h2 id="modalTitle" class="text-xl font-bold text-slate-100">Ajouter une commande</h2>
+        <button id="closeModalBtn" class="text-slate-400 hover:text-red-400 text-2xl leading-none p-1">&times;</button>
       </div>
       <form id="orderForm" class="space-y-4">
         <input type="hidden" id="orderId" value="">
-        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Produit *</label><input type="text" id="productName" required placeholder="Ex: Montre connectée" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
+        <div><label class="block text-sm font-medium text-slate-300 mb-1">Produit *</label><input type="text" id="productName" required placeholder="Ex: Montre connectée" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none"></div>
         <div class="grid grid-cols-5 gap-2">
-          <div class="col-span-3"><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Prix</label><input type="number" id="price" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
-          <div class="col-span-2"><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Devise</label><select id="currencySelect" class="w-full px-3 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"><option value="USD">$ Dollar</option><option value="EUR">€ Euro</option></select></div>
+          <div class="col-span-3"><label class="block text-sm font-medium text-slate-300 mb-1">Prix</label><input type="number" id="price" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div>
+          <div class="col-span-2"><label class="block text-sm font-medium text-slate-300 mb-1">Devise</label><select id="currencySelect" class="w-full px-3 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"><option value="USD">$ Dollar</option><option value="EUR">€ Euro</option><option value="TND">DT TND</option></select></div>
         </div>
         <div id="cardSelectionRow" class="hidden">
-          <label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Carte utilisée *</label>
-          <select id="cardSelect" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></select>
-          <p id="noCardWarning" class="text-xs text-red-500 mt-1 hidden">Veuillez d'abord ajouter une carte dans "Cartes virtuelles"</p>
+          <label class="block text-sm font-medium text-slate-300 mb-1">Carte utilisée (EUR uniquement)</label>
+          <select id="cardSelect" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></select>
+          <p id="noCardWarning" class="text-xs text-red-400 mt-1 hidden">Veuillez d'abord ajouter une carte dans "Cartes virtuelles"</p>
         </div>
-        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Statut</label><select id="statusSelect" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"><option value="In Transit">🚚 En transit</option><option value="Delivered">✅ Livré</option></select></div>
-        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">N° de suivi *</label><input type="text" id="trackingNumber" required placeholder="Ex: LP000123456789" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
-        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Notes</label><textarea id="notes" rows="2" placeholder="Notes supplémentaires..." class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700 resize-none"></textarea></div>
-        <div class="flex gap-3 pt-2"><button type="button" id="cancelModalBtn" class="flex-1 py-3 rounded-lg border border-stone-200 dark:border-slate-600 text-stone-600">Annuler</button><button type="submit" class="flex-1 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold">💾 Enregistrer</button></div>
+        <div><label class="block text-sm font-medium text-slate-300 mb-1">Statut</label><select id="statusSelect" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"><option value="In Transit">🚚 En transit</option><option value="Delivered">✅ Livré</option></select></div>
+        <div><label class="block text-sm font-medium text-slate-300 mb-1">N° de suivi *</label><input type="text" id="trackingNumber" required placeholder="Ex: LP000123456789" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div>
+        <div><label class="block text-sm font-medium text-slate-300 mb-1">Notes</label><textarea id="notes" rows="2" placeholder="Notes supplémentaires..." class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 resize-none"></textarea></div>
+        <div class="flex gap-3 pt-2"><button type="button" id="cancelModalBtn" class="flex-1 py-3 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-700">Annuler</button><button type="submit" class="flex-1 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-md">💾 Enregistrer</button></div>
       </form>
     </div>
   </div>
 
+  <!-- MODAL CARTE -->
   <div id="cardModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden transition-smooth">
-    <div class="bg-[#fefcf8] dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 border border-stone-200 dark:border-slate-700">
-      <div class="flex justify-between items-center mb-4"><h2 class="text-lg font-bold text-stone-800 dark:text-slate-100">Ajouter une carte</h2><button id="closeCardModalBtn" class="text-stone-400 hover:text-red-500 text-2xl p-1">&times;</button></div>
+    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 border border-slate-700">
+      <div class="flex justify-between items-center mb-4"><h2 class="text-lg font-bold text-slate-100">Ajouter une carte</h2><button id="closeCardModalBtn" class="text-slate-400 hover:text-red-400 text-2xl p-1">&times;</button></div>
       <form id="cardForm" class="space-y-4">
-        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Personne *</label><input type="text" id="cardPersonName" required placeholder="Ex: Ahmed" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
-        <div><label class="block text-sm font-medium text-stone-700 dark:text-slate-300 mb-1">Montant (€) *</label><input type="number" id="cardAmount" step="0.01" min="0.01" required placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-stone-200 dark:border-slate-600 bg-white dark:bg-slate-700"></div>
-        <div class="flex gap-2"><button type="button" id="cancelCardBtn" class="flex-1 py-2.5 rounded-lg border border-stone-200 dark:border-slate-600 text-stone-600">Annuler</button><button type="submit" class="flex-1 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold">Enregistrer</button></div>
+        <div><label class="block text-sm font-medium text-slate-300 mb-1">Personne *</label><input type="text" id="cardPersonName" required placeholder="Ex: Ahmed" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div>
+        <div><label class="block text-sm font-medium text-slate-300 mb-1">Montant (€) *</label><input type="number" id="cardAmount" step="0.01" min="0.01" required placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div>
+        <div class="flex gap-2"><button type="button" id="cancelCardBtn" class="flex-1 py-2.5 rounded-lg border border-slate-600 text-slate-300">Annuler</button><button type="submit" class="flex-1 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold">Enregistrer</button></div>
       </form>
     </div>
   </div>
 
-  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-800 dark:bg-slate-700 text-white px-5 py-3 rounded-full shadow-lg text-sm font-medium z-50 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2">
+  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-700 text-white px-5 py-3 rounded-full shadow-lg text-sm font-medium z-50 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2">
     <span id="toastMessage"></span>
   </div>
 
@@ -167,7 +183,37 @@
       let orders = [];
       let cards = [];
       let currentEditId = null;
-      let currentCardFilter = null; // id de la carte pour filtrage
+      let currentCardFilter = null;
+
+      // Confirmation modal
+      let confirmCallback = null;
+      const confirmModal = document.getElementById('confirmModal');
+      const confirmMessage = document.getElementById('confirmMessage');
+      const confirmOkBtn = document.getElementById('confirmOkBtn');
+      const confirmCancelBtn = document.getElementById('confirmCancelBtn');
+
+      function customConfirm(message, callback) {
+        confirmMessage.textContent = message;
+        confirmCallback = callback;
+        confirmModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+      function closeConfirmModal() {
+        confirmModal.classList.add('hidden');
+        document.body.style.overflow = '';
+        confirmCallback = null;
+      }
+      confirmOkBtn.addEventListener('click', () => {
+        if (confirmCallback) confirmCallback(true);
+        closeConfirmModal();
+      });
+      confirmCancelBtn.addEventListener('click', () => {
+        if (confirmCallback) confirmCallback(false);
+        closeConfirmModal();
+      });
+      confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) closeConfirmModal();
+      });
 
       // DOM
       const ordersContainer = document.getElementById('ordersContainer');
@@ -176,6 +222,7 @@
       const deliveredCountEl = document.getElementById('deliveredCount');
       const totalBudgetUSDEl = document.getElementById('totalBudgetUSD');
       const totalBudgetEUREl = document.getElementById('totalBudgetEUR');
+      const totalBudgetTNDEl = document.getElementById('totalBudgetTND');
       const searchInput = document.getElementById('searchInput');
       const orderModal = document.getElementById('orderModal');
       const orderForm = document.getElementById('orderForm');
@@ -190,8 +237,6 @@
       const statusSelect = document.getElementById('statusSelect');
       const trackingNumberInput = document.getElementById('trackingNumber');
       const notesInput = document.getElementById('notes');
-      const darkModeToggle = document.getElementById('darkModeToggle');
-      const darkIcon = document.getElementById('darkIcon');
       const toast = document.getElementById('toast');
       const toastMessage = document.getElementById('toastMessage');
       const importFileInput = document.getElementById('importFileInput');
@@ -204,6 +249,9 @@
       const activeCardFilter = document.getElementById('activeCardFilter');
       const activeCardFilterText = document.getElementById('activeCardFilterText');
       const clearCardFilterBtn = document.getElementById('clearCardFilterBtn');
+
+      // Charts
+      let statusChart, currencyChart;
 
       function showToast(msg, dur=2500) {
         toastMessage.textContent = msg;
@@ -255,6 +303,78 @@
         }
       }
 
+      function updateCharts() {
+        const ctx1 = document.getElementById('statusChart')?.getContext('2d');
+        const ctx2 = document.getElementById('currencyChart')?.getContext('2d');
+        if (!ctx1 || !ctx2) return;
+
+        const inTransit = orders.filter(o => o.status === 'In Transit').length;
+        const delivered = orders.filter(o => o.status === 'Delivered').length;
+
+        if (statusChart) statusChart.destroy();
+        statusChart = new Chart(ctx1, {
+          type: 'pie',
+          data: {
+            labels: ['En transit', 'Livré'],
+            datasets: [{
+              data: [inTransit, delivered],
+              backgroundColor: ['#38bdf8', '#4ade80'],
+              borderColor: '#1e293b',
+              borderWidth: 2,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: {
+                labels: { color: '#cbd5e1' }
+              }
+            }
+          }
+        });
+
+        let usd = 0, eur = 0, tnd = 0;
+        orders.forEach(o => {
+          const amt = parseFloat(o.price)||0;
+          if (o.currency === 'USD') usd += amt;
+          else if (o.currency === 'EUR') eur += amt;
+          else if (o.currency === 'TND') tnd += amt;
+        });
+
+        if (currencyChart) currencyChart.destroy();
+        currencyChart = new Chart(ctx2, {
+          type: 'bar',
+          data: {
+            labels: ['USD', 'EUR', 'TND'],
+            datasets: [{
+              label: 'Total dépensé',
+              data: [usd, eur, tnd],
+              backgroundColor: ['#818cf8', '#c084fc', '#fbbf24'],
+              borderColor: '#1e293b',
+              borderWidth: 1,
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { color: '#94a3b8' },
+                grid: { color: '#334155' }
+              },
+              x: {
+                ticks: { color: '#94a3b8' }
+              }
+            },
+            plugins: {
+              legend: { display: false }
+            }
+          }
+        });
+      }
+
       function updateCardFilterUI() {
         if (currentCardFilter) {
           const card = cards.find(c => c.id === currentCardFilter);
@@ -292,18 +412,17 @@
           cards.forEach(card => {
             const balance = getCardBalance(card.id);
             const cardEl = document.createElement('div');
-            cardEl.className = 'warm-card bg-[#fefcf8] dark:bg-slate-800 rounded-xl shadow-sm border p-4 flex flex-col gap-2 transition-smooth cursor-pointer';
+            cardEl.className = 'warm-card bg-slate-800 rounded-xl shadow-sm border p-4 flex flex-col gap-2 transition-smooth cursor-pointer';
             cardEl.innerHTML = `
               <div class="flex justify-between items-start">
-                <span class="font-bold text-stone-700 dark:text-slate-200">👤 ${escapeHTML(card.personName)}</span>
+                <span class="font-bold text-slate-200">👤 ${escapeHTML(card.personName)}</span>
                 <button class="delete-card-btn text-red-400 hover:text-red-600 text-sm z-10" data-card-id="${card.id}">🗑️</button>
               </div>
-              <div class="text-sm text-stone-500 dark:text-slate-400">
-                <p>💰 Montant : <span class="font-semibold text-stone-700 dark:text-slate-300">€${card.amount.toFixed(2)}</span></p>
-                <p>💸 Reste : <span class="font-bold ${balance > 0 ? 'text-emerald-600' : 'text-red-500'}">€${balance.toFixed(2)}</span></p>
+              <div class="text-sm text-slate-400">
+                <p>💰 Montant : <span class="font-semibold text-slate-300">€${card.amount.toFixed(2)}</span></p>
+                <p>💸 Reste : <span class="font-bold ${balance > 0 ? 'text-emerald-400' : 'text-red-500'}">€${balance.toFixed(2)}</span></p>
               </div>
             `;
-            // النقر على البطاقة (باستثناء زر الحذف) يقوم بتفعيل الفلتر
             cardEl.addEventListener('click', (e) => {
               if (!e.target.closest('.delete-card-btn')) {
                 applyCardFilter(card.id);
@@ -311,12 +430,15 @@
             });
             cardEl.querySelector('.delete-card-btn').addEventListener('click', (e) => {
               e.stopPropagation();
-              if (confirm('Supprimer cette carte ?')) {
-                cards = cards.filter(c => c.id !== card.id);
-                saveCards(); 
-                if (currentCardFilter === card.id) clearCardFilter();
-                renderCards(); updateStats(); showToast('🗑️ Carte supprimée');
-              }
+              customConfirm('Supprimer cette carte ?', (ok) => {
+                if (ok) {
+                  cards = cards.filter(c => c.id !== card.id);
+                  saveCards(); 
+                  if (currentCardFilter === card.id) clearCardFilter();
+                  renderCards(); updateStats(); updateCharts();
+                  showToast('🗑️ Carte supprimée');
+                }
+              });
             });
             cardsContainer.appendChild(cardEl);
           });
@@ -327,23 +449,25 @@
       function updateStats() {
         const inTransit = orders.filter(o => o.status === 'In Transit').length;
         const delivered = orders.filter(o => o.status === 'Delivered').length;
-        let totalUSD = 0, totalEUR = 0;
+        let totalUSD = 0, totalEUR = 0, totalTND = 0;
         orders.forEach(o => {
           const amt = parseFloat(o.price)||0;
-          if (o.currency === 'EUR') totalEUR += amt;
-          else totalUSD += amt;
+          if (o.currency === 'USD') totalUSD += amt;
+          else if (o.currency === 'EUR') totalEUR += amt;
+          else if (o.currency === 'TND') totalTND += amt;
         });
         inTransitCountEl.textContent = inTransit;
         deliveredCountEl.textContent = delivered;
         totalBudgetUSDEl.textContent = `$${totalUSD.toFixed(2)}`;
         totalBudgetEUREl.textContent = `€${totalEUR.toFixed(2)}`;
+        totalBudgetTNDEl.textContent = `${totalTND.toFixed(2)} DT`;
       }
 
       function formatDate(dateString) { return dateString ? new Date(dateString).toLocaleDateString('fr-FR',{year:'numeric',month:'short',day:'numeric'}) : '—'; }
-      function getStatusBadge(s) { return s==='In Transit'?'<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300">✈️ En transit</span>':'<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300">✅ Livré</span>'; }
+      function getStatusBadge(s) { return s==='In Transit'?'<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-900/50 text-blue-300">✈️ En transit</span>':'<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-900/50 text-green-300">✅ Livré</span>'; }
       function escapeHTML(str) { return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
       function generateId() { return Date.now().toString(36)+Math.random().toString(36).substring(2,7); }
-      function formatPrice(price, currency) { if(price===undefined||price===null||price==='') return ''; const n=parseFloat(price).toFixed(2); return currency==='EUR'?`€${n}`:`$${n}`; }
+      function formatPrice(price, currency) { if(price===undefined||price===null||price==='') return ''; const n=parseFloat(price).toFixed(2); if(currency==='EUR') return `€${n}`; if(currency==='TND') return `${n} DT`; return `$${n}`; }
 
       function attachOrderEvents(el, id) {
         el.querySelector('.toggle-status-btn')?.addEventListener('click', e=>{e.stopPropagation(); toggleOrderStatus(id);});
@@ -353,11 +477,9 @@
 
       function renderOrders(filter='') {
         let filtered = orders;
-        // تطبيق فلتر البطاقة أولاً
         if (currentCardFilter) {
           filtered = filtered.filter(o => o.cardId === currentCardFilter);
         }
-        // ثم فلتر البحث النصي
         const f = filter.trim().toLowerCase();
         if (f !== '') {
           filtered = filtered.filter(o => o.productName.toLowerCase().includes(f) || o.trackingNumber.toLowerCase().includes(f));
@@ -376,23 +498,32 @@
           el.className = 'order-row grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 md:px-6 py-4 items-center';
           const priceDisp = order.price ? formatPrice(order.price, order.currency) : '';
           el.innerHTML = `
-            <div class="flex flex-col"><span class="text-sm text-stone-400 md:hidden">Produit</span><span class="font-semibold text-stone-800 dark:text-slate-100 truncate">${escapeHTML(order.productName)}</span>${priceDisp?`<span class="text-xs text-stone-500">${priceDisp}</span>`:''}</div>
-            <div class="flex flex-col"><span class="text-sm text-stone-400 md:hidden">N° suivi</span><span class="text-sm font-mono bg-stone-100 dark:bg-slate-700 px-2 py-1 rounded">${escapeHTML(order.trackingNumber)}</span></div>
-            <div class="flex flex-col"><span class="text-sm text-stone-400 md:hidden">Statut</span>${getStatusBadge(order.status)}</div>
-            <div class="flex flex-col"><span class="text-sm text-stone-400 md:hidden">Date</span><span class="text-sm text-stone-600 dark:text-slate-400">${formatDate(order.date)}</span></div>
+            <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Produit</span><span class="font-semibold text-slate-100 truncate">${escapeHTML(order.productName)}</span>${priceDisp?`<span class="text-xs text-slate-400">${priceDisp}</span>`:''}</div>
+            <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">N° suivi</span><span class="text-sm font-mono bg-slate-700 px-2 py-1 rounded text-slate-300">${escapeHTML(order.trackingNumber)}</span></div>
+            <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Statut</span>${getStatusBadge(order.status)}</div>
+            <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Date</span><span class="text-sm text-slate-400">${formatDate(order.date)}</span></div>
             <div class="flex gap-2 md:justify-end mt-2 md:mt-0">
-              <button class="toggle-status-btn text-xs px-3 py-1.5 rounded-lg bg-stone-100 dark:bg-slate-700 hover:bg-stone-200">🔄</button>
-              <button class="edit-order-btn text-xs px-3 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 text-blue-600">✏️</button>
-              <button class="delete-order-btn text-xs px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-900/30 hover:bg-red-100 text-red-600">🗑️</button>
+              <button class="toggle-status-btn text-xs px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300">🔄</button>
+              <button class="edit-order-btn text-xs px-3 py-1.5 rounded-lg bg-blue-900/30 hover:bg-blue-800/50 text-blue-400">✏️</button>
+              <button class="delete-order-btn text-xs px-3 py-1.5 rounded-lg bg-red-900/30 hover:bg-red-800/50 text-red-400">🗑️</button>
             </div>`;
           attachOrderEvents(el, order.id);
           ordersContainer.appendChild(el);
         });
         updateStats();
+        updateCharts();
       }
 
       function deleteOrder(id) {
-        if(confirm('Supprimer cette commande ?')) { orders = orders.filter(o=>o.id!==id); saveOrders(); renderOrders(searchInput.value); renderCards(); showToast('🗑️ Commande supprimée'); }
+        customConfirm('Supprimer cette commande ?', (ok) => {
+          if (ok) {
+            orders = orders.filter(o=>o.id!==id);
+            saveOrders();
+            renderOrders(searchInput.value);
+            renderCards();
+            showToast('🗑️ Commande supprimée');
+          }
+        });
       }
 
       function openEditModal(id) {
@@ -429,12 +560,12 @@
         const price = parseFloat(priceInput.value)||0;
         const currency = currencySelect.value;
         let cardId = null;
-        if(currency === 'EUR') {
-          if(cards.length === 0) { showToast('⚠️ Veuillez dʼabord ajouter une carte'); return; }
+        if (currency === 'EUR') {
+          if (cards.length === 0) { showToast('⚠️ Veuillez dʼabord ajouter une carte'); return; }
           cardId = cardSelect.value;
-          if(!cardId) { showToast('⚠️ Sélectionnez une carte'); return; }
+          if (!cardId) { showToast('⚠️ Sélectionnez une carte'); return; }
           const bal = getCardBalance(cardId);
-          if(price > bal) { showToast('⚠️ Solde insuffisant'); return; }
+          if (price > bal) { showToast('⚠️ Solde insuffisant'); return; }
         }
         const status = statusSelect.value, notes = notesInput.value.trim();
         if(currentEditId) {
@@ -457,17 +588,6 @@
         if(!person || isNaN(amount) || amount <= 0) { showToast('⚠️ Données invalides'); return; }
         cards.push({ id: generateId(), personName: person, amount });
         saveCards(); renderCards(); closeCardModal(); showToast('💳 Carte ajoutée');
-      }
-
-      function applyDarkMode(isDark) {
-        document.documentElement.classList.toggle('dark', isDark);
-        darkIcon.textContent = isDark?'☀️':'🌙';
-        localStorage.setItem('darkMode', isDark);
-      }
-      function toggleDarkMode() { applyDarkMode(!document.documentElement.classList.contains('dark')); }
-      function initDarkMode() {
-        const saved = localStorage.getItem('darkMode');
-        applyDarkMode(saved===null ? window.matchMedia('(prefers-color-scheme: dark)').matches : saved==='true');
       }
 
       function exportToJSON() {
@@ -511,7 +631,6 @@
         orderModal.addEventListener('click', e => { if(e.target===orderModal) closeOrderModal(); });
         orderForm.addEventListener('submit', saveOrder);
         searchInput.addEventListener('input', e => renderOrders(e.target.value));
-        darkModeToggle.addEventListener('click', toggleDarkMode);
         document.getElementById('exportBtn').addEventListener('click', exportToJSON);
         document.getElementById('exportBtnMobile').addEventListener('click', exportToJSON);
         document.getElementById('importBtn').addEventListener('click', triggerImport);
@@ -531,7 +650,7 @@
       }
 
       window.addEventListener('DOMContentLoaded', () => {
-        initDarkMode(); loadData(); bindEvents();
+        loadData(); bindEvents();
         renderCards(); renderOrders();
         updateCardFilterUI();
       });
