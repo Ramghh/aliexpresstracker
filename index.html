@@ -107,15 +107,29 @@
       </div>
     </div>
 
-    <!-- Tableau des commandes -->
-    <div class="warm-card bg-slate-800 rounded-xl shadow-md border overflow-hidden transition-smooth">
-      <div class="hidden md:grid grid-cols-5 gap-4 px-6 py-4 bg-slate-700/50 text-sm font-semibold text-slate-300 border-b border-slate-600">
-        <div>Produit</div><div>N° de suivi</div><div>Statut</div><div>Date</div><div>Actions</div>
+    <!-- Commandes actives (En transit) -->
+    <div class="warm-card bg-slate-800 rounded-xl shadow-md border overflow-hidden transition-smooth mb-6">
+      <div class="flex justify-between items-center px-6 py-3 bg-slate-700/50 border-b border-slate-600">
+        <h2 class="text-md font-semibold text-slate-200">📦 Commandes actives</h2>
+        <span id="activeCountBadge" class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full">0</span>
       </div>
-      <div id="ordersContainer" class="divide-y divide-slate-700"></div>
-      <div id="emptyState" class="px-6 py-16 text-center text-slate-500 flex flex-col items-center gap-3">
-        <span class="text-5xl">📭</span><p class="text-lg font-medium">Aucune commande</p><p class="text-sm">Cliquez sur "Ajouter" pour suivre vos achats</p>
+      <div id="activeOrdersContainer" class="divide-y divide-slate-700"></div>
+      <div id="activeEmptyState" class="px-6 py-12 text-center text-slate-500 flex flex-col items-center gap-2">
+        <span class="text-4xl">✨</span><p class="text-sm">Aucune commande en transit</p>
       </div>
+    </div>
+
+    <!-- Archives (Livré) -->
+    <div id="archiveSection" class="warm-card bg-slate-800 rounded-xl shadow-md border overflow-hidden transition-smooth hidden">
+      <div class="flex justify-between items-center px-6 py-3 bg-slate-700/50 border-b border-slate-600 cursor-pointer" id="toggleArchiveBtn">
+        <h2 class="text-md font-semibold text-slate-200 flex items-center gap-2">📦 Colis reçus (Archivés)</h2>
+        <div class="flex items-center gap-2">
+          <span id="archivedCountBadge" class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">0</span>
+          <span id="archiveToggleIcon" class="text-slate-400">▼</span>
+        </div>
+      </div>
+      <div id="archivedOrdersContainer" class="divide-y divide-slate-700 hidden"></div>
+      <div id="archivedEmptyState" class="px-6 py-8 text-center text-slate-500 hidden">Aucun colis archivé</div>
     </div>
   </main>
 
@@ -215,8 +229,15 @@
       });
 
       // DOM
-      const ordersContainer = document.getElementById('ordersContainer');
-      const emptyState = document.getElementById('emptyState');
+      const activeOrdersContainer = document.getElementById('activeOrdersContainer');
+      const activeEmptyState = document.getElementById('activeEmptyState');
+      const archivedOrdersContainer = document.getElementById('archivedOrdersContainer');
+      const archivedEmptyState = document.getElementById('archivedEmptyState');
+      const archiveSection = document.getElementById('archiveSection');
+      const toggleArchiveBtn = document.getElementById('toggleArchiveBtn');
+      const archiveToggleIcon = document.getElementById('archiveToggleIcon');
+      const activeCountBadge = document.getElementById('activeCountBadge');
+      const archivedCountBadge = document.getElementById('archivedCountBadge');
       const inTransitCountEl = document.getElementById('inTransitCount');
       const deliveredCountEl = document.getElementById('deliveredCount');
       const totalBudgetUSDEl = document.getElementById('totalBudgetUSD');
@@ -249,8 +270,8 @@
       const activeCardFilterText = document.getElementById('activeCardFilterText');
       const clearCardFilterBtn = document.getElementById('clearCardFilterBtn');
 
-      // Charts
       let statusChart, currencyChart;
+      let archiveVisible = false;
 
       function showToast(msg, dur=2500) {
         toastMessage.textContent = msg;
@@ -325,9 +346,7 @@
           options: {
             responsive: true,
             maintainAspectRatio: true,
-            plugins: {
-              legend: { labels: { color: '#cbd5e1' } }
-            }
+            plugins: { legend: { labels: { color: '#cbd5e1' } } }
           }
         });
 
@@ -425,7 +444,7 @@
               customConfirm('Supprimer cette carte ?', (ok) => {
                 if (ok) {
                   cards = cards.filter(c => c.id !== card.id);
-                  saveCards(); 
+                  saveCards();
                   if (currentCardFilter === card.id) clearCardFilter();
                   renderCards(); updateStats(); updateCharts();
                   showToast('🗑️ Carte supprimée');
@@ -453,6 +472,14 @@
         totalBudgetUSDEl.textContent = `$${totalUSD.toFixed(2)}`;
         totalBudgetEUREl.textContent = `€${totalEUR.toFixed(2)}`;
         totalBudgetTNDEl.textContent = `${totalTND.toFixed(2)} DT`;
+        activeCountBadge.textContent = inTransit;
+        archivedCountBadge.textContent = delivered;
+
+        if (delivered > 0) {
+          archiveSection.classList.remove('hidden');
+        } else {
+          archiveSection.classList.add('hidden');
+        }
       }
 
       function formatDate(dateString) { return dateString ? new Date(dateString).toLocaleDateString('fr-FR',{year:'numeric',month:'short',day:'numeric'}) : '—'; }
@@ -467,17 +494,14 @@
         el.querySelector('.delete-order-btn')?.addEventListener('click', e=>{ e.stopPropagation(); deleteOrder(id); });
       }
 
-      // Gestion des clics sur les boutons de tracking et copie
-      ordersContainer.addEventListener('click', (e) => {
+      activeOrdersContainer.addEventListener('click', (e) => {
         const copyBtn = e.target.closest('.copy-tracking-btn');
         const trackBtn = e.target.closest('.track-btn');
         if (copyBtn) {
           e.stopPropagation();
           const trackingEl = copyBtn.parentElement.querySelector('span.font-mono');
           const trackingNumber = trackingEl ? trackingEl.textContent.trim() : '';
-          if (trackingNumber) {
-            navigator.clipboard.writeText(trackingNumber).then(() => showToast('📋 Numéro copié'));
-          }
+          if (trackingNumber) navigator.clipboard.writeText(trackingNumber).then(() => showToast('📋 Numéro copié'));
           return;
         }
         if (trackBtn) {
@@ -494,49 +518,99 @@
         }
       });
 
+      archivedOrdersContainer.addEventListener('click', (e) => {
+        const copyBtn = e.target.closest('.copy-tracking-btn');
+        const trackBtn = e.target.closest('.track-btn');
+        if (copyBtn) {
+          e.stopPropagation();
+          const trackingEl = copyBtn.parentElement.querySelector('span.font-mono');
+          const trackingNumber = trackingEl ? trackingEl.textContent.trim() : '';
+          if (trackingNumber) navigator.clipboard.writeText(trackingNumber).then(() => showToast('📋 Numéro copié'));
+          return;
+        }
+        if (trackBtn) {
+          e.stopPropagation();
+          const trackingEl = trackBtn.parentElement.querySelector('span.font-mono');
+          const trackingNumber = trackingEl ? trackingEl.textContent.trim() : '';
+          if (trackingNumber) {
+            navigator.clipboard.writeText(trackingNumber).then(() => {
+              window.open('http://www.e-suivi.poste.tn/fr/suivi.html', '_blank');
+              showToast('🔍 Numéro copié, collez-le sur le site poste.tn');
+            });
+          }
+          return;
+        }
+      });
+
+      function createOrderElement(order) {
+        const el = document.createElement('div');
+        el.className = 'order-row grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 md:px-6 py-4 items-center';
+        const priceDisp = order.price ? formatPrice(order.price, order.currency) : '';
+        const showTrackBtn = isTunisianTracking(order.trackingNumber);
+        el.innerHTML = `
+          <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Produit</span><span class="font-semibold text-slate-100 truncate">${escapeHTML(order.productName)}</span>${priceDisp?`<span class="text-xs text-slate-400">${priceDisp}</span>`:''}</div>
+          <div class="flex flex-col">
+            <span class="text-sm text-slate-400 md:hidden">N° suivi</span>
+            <div class="flex items-center gap-1">
+              <span class="text-sm font-mono bg-slate-700 px-2 py-1 rounded text-slate-300">${escapeHTML(order.trackingNumber)}</span>
+              <button class="copy-tracking-btn text-slate-400 hover:text-slate-200 text-xs" title="Copier">📋</button>
+              ${showTrackBtn ? '<button class="track-btn text-blue-400 hover:text-blue-300 text-xs" title="Suivre sur poste.tn">🔍</button>' : ''}
+            </div>
+          </div>
+          <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Statut</span>${getStatusBadge(order.status)}</div>
+          <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Date</span><span class="text-sm text-slate-400">${formatDate(order.date)}</span></div>
+          <div class="flex gap-2 md:justify-end mt-2 md:mt-0">
+            <button class="toggle-status-btn text-xs px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300">🔄</button>
+            <button class="edit-order-btn text-xs px-3 py-1.5 rounded-lg bg-blue-900/30 hover:bg-blue-800/50 text-blue-400">✏️</button>
+            <button class="delete-order-btn text-xs px-3 py-1.5 rounded-lg bg-red-900/30 hover:bg-red-800/50 text-red-400">🗑️</button>
+          </div>`;
+        attachOrderEvents(el, order.id);
+        return el;
+      }
+
       function renderOrders(filter='') {
-        let filtered = orders;
+        let allOrders = orders;
         if (currentCardFilter) {
-          filtered = filtered.filter(o => o.cardId === currentCardFilter);
+          allOrders = allOrders.filter(o => o.cardId === currentCardFilter);
         }
         const f = filter.trim().toLowerCase();
         if (f !== '') {
-          filtered = filtered.filter(o => o.productName.toLowerCase().includes(f) || o.trackingNumber.toLowerCase().includes(f));
+          allOrders = allOrders.filter(o => o.productName.toLowerCase().includes(f) || o.trackingNumber.toLowerCase().includes(f));
         }
 
-        ordersContainer.innerHTML = '';
-        if (filtered.length === 0) {
-          emptyState.classList.remove('hidden');
-          emptyState.innerHTML = (f!=='' || currentCardFilter) ? '<span class="text-5xl">🔍</span><p class="text-lg font-medium">Aucun résultat</p>' : '<span class="text-5xl">📭</span><p class="text-lg font-medium">Aucune commande</p>';
+        const activeOrders = allOrders.filter(o => o.status === 'In Transit');
+        const archivedOrders = allOrders.filter(o => o.status === 'Delivered');
+
+        // Render active orders
+        activeOrdersContainer.innerHTML = '';
+        if (activeOrders.length === 0) {
+          activeEmptyState.classList.remove('hidden');
         } else {
-          emptyState.classList.add('hidden');
+          activeEmptyState.classList.add('hidden');
+          activeOrders.forEach(order => {
+            activeOrdersContainer.appendChild(createOrderElement(order));
+          });
         }
 
-        filtered.forEach(order => {
-          const el = document.createElement('div');
-          el.className = 'order-row grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 md:px-6 py-4 items-center';
-          const priceDisp = order.price ? formatPrice(order.price, order.currency) : '';
-          const showTrackBtn = isTunisianTracking(order.trackingNumber);
-          el.innerHTML = `
-            <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Produit</span><span class="font-semibold text-slate-100 truncate">${escapeHTML(order.productName)}</span>${priceDisp?`<span class="text-xs text-slate-400">${priceDisp}</span>`:''}</div>
-            <div class="flex flex-col">
-              <span class="text-sm text-slate-400 md:hidden">N° suivi</span>
-              <div class="flex items-center gap-1">
-                <span class="text-sm font-mono bg-slate-700 px-2 py-1 rounded text-slate-300">${escapeHTML(order.trackingNumber)}</span>
-                <button class="copy-tracking-btn text-slate-400 hover:text-slate-200 text-xs" title="Copier">📋</button>
-                ${showTrackBtn ? '<button class="track-btn text-blue-400 hover:text-blue-300 text-xs" title="Suivre sur poste.tn">🔍</button>' : ''}
-              </div>
-            </div>
-            <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Statut</span>${getStatusBadge(order.status)}</div>
-            <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Date</span><span class="text-sm text-slate-400">${formatDate(order.date)}</span></div>
-            <div class="flex gap-2 md:justify-end mt-2 md:mt-0">
-              <button class="toggle-status-btn text-xs px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300">🔄</button>
-              <button class="edit-order-btn text-xs px-3 py-1.5 rounded-lg bg-blue-900/30 hover:bg-blue-800/50 text-blue-400">✏️</button>
-              <button class="delete-order-btn text-xs px-3 py-1.5 rounded-lg bg-red-900/30 hover:bg-red-800/50 text-red-400">🗑️</button>
-            </div>`;
-          attachOrderEvents(el, order.id);
-          ordersContainer.appendChild(el);
-        });
+        // Render archived orders
+        archivedOrdersContainer.innerHTML = '';
+        if (archivedOrders.length === 0) {
+          archivedEmptyState.classList.remove('hidden');
+        } else {
+          archivedEmptyState.classList.add('hidden');
+          archivedOrders.forEach(order => {
+            archivedOrdersContainer.appendChild(createOrderElement(order));
+          });
+        }
+
+        if (archiveVisible) {
+          archivedOrdersContainer.classList.remove('hidden');
+          archiveToggleIcon.textContent = '▲';
+        } else {
+          archivedOrdersContainer.classList.add('hidden');
+          archiveToggleIcon.textContent = '▼';
+        }
+
         updateStats();
         updateCharts();
       }
@@ -674,6 +748,11 @@
 
         currencySelect.addEventListener('change', toggleCardField);
         clearCardFilterBtn.addEventListener('click', clearCardFilter);
+
+        toggleArchiveBtn.addEventListener('click', () => {
+          archiveVisible = !archiveVisible;
+          renderOrders(searchInput.value);
+        });
       }
 
       window.addEventListener('DOMContentLoaded', () => {
