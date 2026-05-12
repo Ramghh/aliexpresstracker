@@ -21,13 +21,107 @@
     button:disabled { opacity: 0.5; cursor: not-allowed; }
     .order-row { background-color: transparent; }
     .order-row:hover, .order-row:active { background-color: transparent !important; }
-    body { background-color: #0f172a; color: #e2e8f0; }
+    body { background-color: #0f172a; color: #e2e8f0; padding-bottom: 80px; }
+    
+    /* Bottom Navigation Bar */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 72px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(148, 163, 184, 0.15);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 40;
+      padding-bottom: env(safe-area-inset-bottom, 8px);
+    }
+    .bottom-nav button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      color: #94a3b8;
+      transition: all 0.2s ease;
+      min-width: 60px;
+    }
+    .bottom-nav button .nav-icon {
+      font-size: 22px;
+      line-height: 1;
+    }
+    .bottom-nav button .nav-label {
+      font-size: 10px;
+      font-weight: 500;
+    }
+    .bottom-nav button.active {
+      color: #f97316;
+      background: rgba(249, 115, 22, 0.1);
+    }
+    .bottom-nav button.add-btn {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      color: white;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+      margin-top: -20px;
+    }
+    .bottom-nav button.add-btn .nav-icon {
+      font-size: 26px;
+    }
+    
+    /* إخفاء النافبار العلوي على الشاشات الصغيرة */
+    @media (max-width: 640px) {
+      .desktop-nav {
+        display: none !important;
+      }
+    }
+    @media (min-width: 641px) {
+      .bottom-nav {
+        display: none !important;
+      }
+      body {
+        padding-bottom: 0 !important;
+      }
+      .desktop-nav {
+        display: block !important;
+      }
+    }
+
+    /* القائمة المنبثقة للموبايل */
+    .mobile-menu-panel {
+      position: fixed;
+      bottom: 80px;
+      left: 16px;
+      right: 16px;
+      background: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 20px;
+      padding: 16px;
+      z-index: 50;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mobile-menu-panel.show {
+      display: flex;
+    }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-200 min-h-screen transition-smooth">
 
-  <!-- NAVBAR -->
-  <nav class="warm-card bg-slate-800 shadow-md sticky top-0 z-30 border-b border-slate-700 transition-smooth">
+  <!-- DESKTOP NAVBAR -->
+  <nav class="desktop-nav warm-card bg-slate-800 shadow-md sticky top-0 z-30 border-b border-slate-700 transition-smooth hidden sm:block">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex items-center gap-3">
@@ -35,134 +129,93 @@
           <h1 class="text-xl sm:text-2xl font-bold text-orange-400 tracking-tight">AliExpress Tracker</h1>
         </div>
         <div class="flex items-center gap-2 sm:gap-3">
-          <div class="hidden sm:flex items-center gap-1">
-            <button id="exportBtn" title="Exporter les données (JSON)" class="p-2 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-slate-700 transition-smooth">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" /></svg>
-            </button>
-            <button id="importBtn" title="Importer des données (JSON)" class="p-2 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-slate-700 transition-smooth">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" /></svg>
-            </button>
-          </div>
+          <button id="exportBtn" title="Exporter les données (JSON)" class="p-2 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-slate-700 transition-smooth">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" /></svg>
+          </button>
+          <button id="importBtn" title="Importer des données (JSON)" class="p-2 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-slate-700 transition-smooth">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" /></svg>
+          </button>
           <button id="openAddModalBtn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium shadow-md hover:shadow-lg transition-smooth flex items-center gap-2 text-sm sm:text-base">
-            <span class="text-lg leading-none">➕</span> <span class="hidden sm:inline">Ajouter</span>
+            <span class="text-lg leading-none">➕</span> <span>Ajouter</span>
           </button>
         </div>
       </div>
     </div>
-    <div class="flex sm:hidden justify-center gap-4 pb-2 bg-slate-800 border-t border-slate-700 pt-2">
-      <button id="exportBtnMobile" class="text-xs flex items-center gap-1 text-emerald-400 font-medium px-3 py-1 rounded-full bg-emerald-900/30"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" /></svg> Export</button>
-      <button id="importBtnMobile" class="text-xs flex items-center gap-1 text-blue-400 font-medium px-3 py-1 rounded-full bg-blue-900/30"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" /></svg> Import</button>
-    </div>
   </nav>
 
+  <!-- المحتوى الرئيسي -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <!-- Dashboard -->
-    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4">
-        <div class="bg-blue-900/50 p-3 rounded-full text-2xl">✈️</div>
-        <div><p class="text-sm text-slate-400">En transit</p><p id="inTransitCount" class="text-3xl font-bold text-blue-400">0</p></div>
-      </div>
-      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4">
-        <div class="bg-green-900/50 p-3 rounded-full text-2xl">✅</div>
-        <div><p class="text-sm text-slate-400">Livré</p><p id="deliveredCount" class="text-3xl font-bold text-green-400">0</p></div>
-      </div>
-      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5">
-        <div class="flex items-center gap-3 mb-2"><div class="bg-purple-900/50 p-2 rounded-full text-xl">💰</div><p class="text-sm text-slate-400 font-medium">Budget total</p></div>
-        <div class="space-y-1 text-sm">
-          <div class="flex justify-between"><span class="text-xs text-slate-400">🇺🇸 Dollar</span><span id="totalBudgetUSD" class="font-bold text-purple-400">$0.00</span></div>
-          <div class="flex justify-between"><span class="text-xs text-slate-400">🇪🇺 Euro</span><span id="totalBudgetEUR" class="font-bold text-purple-400">€0.00</span></div>
-          <div class="flex justify-between"><span class="text-xs text-slate-400">🇹🇳 TND</span><span id="totalBudgetTND" class="font-bold text-purple-400">0.00 DT</span></div>
-        </div>
-      </div>
+    <!-- نفس الأقسام السابقة (Dashboard, Charts, Cartes, Search, Orders, Archive) بدون تغيير -->
+    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8" id="dashboardSection">
+      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4"><div class="bg-blue-900/50 p-3 rounded-full text-2xl">✈️</div><div><p class="text-sm text-slate-400">En transit</p><p id="inTransitCount" class="text-3xl font-bold text-blue-400">0</p></div></div>
+      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4"><div class="bg-green-900/50 p-3 rounded-full text-2xl">✅</div><div><p class="text-sm text-slate-400">Livré</p><p id="deliveredCount" class="text-3xl font-bold text-green-400">0</p></div></div>
+      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5"><div class="flex items-center gap-3 mb-2"><div class="bg-purple-900/50 p-2 rounded-full text-xl">💰</div><p class="text-sm text-slate-400 font-medium">Budget total</p></div><div class="space-y-1 text-sm"><div class="flex justify-between"><span class="text-xs text-slate-400">🇺🇸 Dollar</span><span id="totalBudgetUSD" class="font-bold text-purple-400">$0.00</span></div><div class="flex justify-between"><span class="text-xs text-slate-400">🇪🇺 Euro</span><span id="totalBudgetEUR" class="font-bold text-purple-400">€0.00</span></div><div class="flex justify-between"><span class="text-xs text-slate-400">🇹🇳 TND</span><span id="totalBudgetTND" class="font-bold text-purple-400">0.00 DT</span></div></div></div>
     </section>
 
-    <!-- Charts -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-4">
-        <h3 class="text-md font-semibold text-slate-200 mb-3">Statut des commandes</h3>
-        <canvas id="statusChart" height="200"></canvas>
-      </div>
-      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-4">
-        <h3 class="text-md font-semibold text-slate-200 mb-3">Dépenses par devise</h3>
-        <canvas id="currencyChart" height="200"></canvas>
-      </div>
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8" id="statsSection">
+      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-4"><h3 class="text-md font-semibold text-slate-200 mb-3">Statut des commandes</h3><canvas id="statusChart" height="200"></canvas></div>
+      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-4"><h3 class="text-md font-semibold text-slate-200 mb-3">Dépenses par devise</h3><canvas id="currencyChart" height="200"></canvas></div>
     </section>
 
-    <!-- Cartes virtuelles -->
-    <section class="mb-8">
-      <div class="flex justify-between items-center mb-3">
-        <h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">💳 Cartes virtuelles</h2>
-        <button id="openCardModalBtn" class="text-sm bg-slate-700 text-slate-300 px-3 py-2 rounded-lg hover:bg-slate-600 transition-smooth flex items-center gap-1">➕ Ajouter</button>
-      </div>
+    <section class="mb-8" id="cardsSection">
+      <div class="flex justify-between items-center mb-3"><h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">💳 Cartes virtuelles</h2><button id="openCardModalBtn" class="text-sm bg-slate-700 text-slate-300 px-3 py-2 rounded-lg hover:bg-slate-600 transition-smooth flex items-center gap-1">➕ Ajouter</button></div>
       <div id="cardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
       <div id="noCardsMessage" class="text-center text-slate-500 py-4 text-sm hidden">Aucune carte ajoutée</div>
     </section>
 
-    <!-- Barre de recherche + filtre carte -->
     <div class="relative mb-6 flex flex-col sm:flex-row gap-3">
       <input type="text" id="searchInput" placeholder="🔍  Rechercher par produit ou N° de suivi..." class="flex-1 px-5 py-3 rounded-xl border border-slate-600 bg-slate-800 text-slate-200 shadow-sm focus:ring-2 focus:ring-orange-400 outline-none transition-smooth text-sm sm:text-base" autocomplete="off">
-      <div id="activeCardFilter" class="hidden items-center gap-2 text-sm bg-amber-900/40 text-amber-200 px-4 py-2 rounded-lg border border-amber-700 whitespace-nowrap">
-        <span id="activeCardFilterText"></span>
-        <button id="clearCardFilterBtn" class="font-bold text-amber-400 hover:text-red-400 ml-2">✕</button>
-      </div>
+      <div id="activeCardFilter" class="hidden items-center gap-2 text-sm bg-amber-900/40 text-amber-200 px-4 py-2 rounded-lg border border-amber-700 whitespace-nowrap"><span id="activeCardFilterText"></span><button id="clearCardFilterBtn" class="font-bold text-amber-400 hover:text-red-400 ml-2">✕</button></div>
     </div>
 
-    <!-- Commandes actives (En transit) -->
-    <div class="warm-card bg-slate-800 rounded-xl shadow-md border overflow-hidden transition-smooth mb-6">
-      <div class="flex justify-between items-center px-6 py-3 bg-slate-700/50 border-b border-slate-600">
-        <h2 class="text-md font-semibold text-slate-200">📦 Commandes actives</h2>
-        <span id="activeCountBadge" class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full">0</span>
-      </div>
+    <div class="warm-card bg-slate-800 rounded-xl shadow-md border overflow-hidden transition-smooth mb-6" id="ordersSection">
+      <div class="flex justify-between items-center px-6 py-3 bg-slate-700/50 border-b border-slate-600"><h2 class="text-md font-semibold text-slate-200">📦 Commandes actives</h2><span id="activeCountBadge" class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full">0</span></div>
       <div id="activeOrdersContainer" class="divide-y divide-slate-700"></div>
-      <div id="activeEmptyState" class="px-6 py-12 text-center text-slate-500 flex flex-col items-center gap-2">
-        <span class="text-4xl">✨</span><p class="text-sm">Aucune commande en transit</p>
-      </div>
+      <div id="activeEmptyState" class="px-6 py-12 text-center text-slate-500 flex flex-col items-center gap-2"><span class="text-4xl">✨</span><p class="text-sm">Aucune commande en transit</p></div>
     </div>
 
-    <!-- Archives (Livré) -->
     <div id="archiveSection" class="warm-card bg-slate-800 rounded-xl shadow-md border overflow-hidden transition-smooth hidden">
-      <div class="flex justify-between items-center px-6 py-3 bg-slate-700/50 border-b border-slate-600 cursor-pointer" id="toggleArchiveBtn">
-        <h2 class="text-md font-semibold text-slate-200 flex items-center gap-2">📦 Colis reçus (Archivés)</h2>
-        <div class="flex items-center gap-2">
-          <span id="archivedCountBadge" class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">0</span>
-          <span id="archiveToggleIcon" class="text-slate-400">▼</span>
-        </div>
-      </div>
+      <div class="flex justify-between items-center px-6 py-3 bg-slate-700/50 border-b border-slate-600 cursor-pointer" id="toggleArchiveBtn"><h2 class="text-md font-semibold text-slate-200 flex items-center gap-2">📦 Colis reçus (Archivés)</h2><div class="flex items-center gap-2"><span id="archivedCountBadge" class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">0</span><span id="archiveToggleIcon" class="text-slate-400">▼</span></div></div>
       <div id="archivedOrdersContainer" class="divide-y divide-slate-700 hidden"></div>
       <div id="archivedEmptyState" class="px-6 py-8 text-center text-slate-500 hidden">Aucun colis archivé</div>
     </div>
   </main>
 
-  <!-- MODAL CONFIRMATION -->
+  <!-- BOTTOM NAVIGATION BAR -->
+  <div class="bottom-nav">
+    <button id="navOrders" class="active" onclick="scrollToSection('ordersSection')"><span class="nav-icon">📋</span><span class="nav-label">Suivi</span></button>
+    <button id="navStats" onclick="scrollToSection('statsSection')"><span class="nav-icon">📊</span><span class="nav-label">Stats</span></button>
+    <button id="navAdd" class="add-btn" onclick="document.getElementById('openAddModalBtn').click()"><span class="nav-icon">+</span></button>
+    <button id="navCards" onclick="scrollToSection('cardsSection')"><span class="nav-icon">💳</span><span class="nav-label">Cartes</span></button>
+    <button id="navMenu" onclick="toggleMobileMenu()"><span class="nav-icon">☰</span><span class="nav-label">Menu</span></button>
+  </div>
+
+  <!-- القائمة المنبثقة للموبايل -->
+  <div id="mobileMenuPanel" class="mobile-menu-panel">
+    <button onclick="document.getElementById('exportBtn').click()" class="flex items-center gap-3 p-3 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 w-full text-left">
+      <span class="text-lg">📥</span> Exporter les données
+    </button>
+    <button onclick="document.getElementById('importBtn').click()" class="flex items-center gap-3 p-3 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 w-full text-left">
+      <span class="text-lg">📤</span> Importer des données
+    </button>
+  </div>
+
+  <!-- باقي المودالات (confirm, order, card, toast, input file) دون تغيير -->
   <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
     <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 border border-slate-700">
       <p id="confirmMessage" class="text-slate-200 text-center mb-4">Êtes-vous sûr de vouloir supprimer ?</p>
-      <div class="flex gap-3 justify-center">
-        <button id="confirmCancelBtn" class="px-5 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-700">Annuler</button>
-        <button id="confirmOkBtn" class="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-bold">Supprimer</button>
-      </div>
+      <div class="flex gap-3 justify-center"><button id="confirmCancelBtn" class="px-5 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-700">Annuler</button><button id="confirmOkBtn" class="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-bold">Supprimer</button></div>
     </div>
   </div>
 
-  <!-- MODAL COMMANDE -->
   <div id="orderModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden transition-smooth">
     <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 border border-slate-700 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center mb-5">
-        <h2 id="modalTitle" class="text-xl font-bold text-slate-100">Ajouter une commande</h2>
-        <button id="closeModalBtn" class="text-slate-400 hover:text-red-400 text-2xl leading-none p-1">&times;</button>
-      </div>
+      <div class="flex justify-between items-center mb-5"><h2 id="modalTitle" class="text-xl font-bold text-slate-100">Ajouter une commande</h2><button id="closeModalBtn" class="text-slate-400 hover:text-red-400 text-2xl leading-none p-1">&times;</button></div>
       <form id="orderForm" class="space-y-4">
         <input type="hidden" id="orderId" value="">
         <div><label class="block text-sm font-medium text-slate-300 mb-1">Produit *</label><input type="text" id="productName" required placeholder="Ex: Montre connectée" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none"></div>
-        <div class="grid grid-cols-5 gap-2">
-          <div class="col-span-3"><label class="block text-sm font-medium text-slate-300 mb-1">Prix</label><input type="number" id="price" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div>
-          <div class="col-span-2"><label class="block text-sm font-medium text-slate-300 mb-1">Devise</label><select id="currencySelect" class="w-full px-3 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"><option value="USD">$ Dollar</option><option value="EUR">€ Euro</option><option value="TND">DT TND</option></select></div>
-        </div>
-        <div id="cardSelectionRow" class="hidden">
-          <label class="block text-sm font-medium text-slate-300 mb-1">Carte utilisée (EUR uniquement)</label>
-          <select id="cardSelect" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></select>
-          <p id="noCardWarning" class="text-xs text-red-400 mt-1 hidden">Veuillez d'abord ajouter une carte dans "Cartes virtuelles"</p>
-        </div>
+        <div class="grid grid-cols-5 gap-2"><div class="col-span-3"><label class="block text-sm font-medium text-slate-300 mb-1">Prix</label><input type="number" id="price" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div><div class="col-span-2"><label class="block text-sm font-medium text-slate-300 mb-1">Devise</label><select id="currencySelect" class="w-full px-3 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"><option value="USD">$ Dollar</option><option value="EUR">€ Euro</option><option value="TND">DT TND</option></select></div></div>
+        <div id="cardSelectionRow" class="hidden"><label class="block text-sm font-medium text-slate-300 mb-1">Carte utilisée (EUR uniquement)</label><select id="cardSelect" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></select><p id="noCardWarning" class="text-xs text-red-400 mt-1 hidden">Veuillez d'abord ajouter une carte dans "Cartes virtuelles"</p></div>
         <div><label class="block text-sm font-medium text-slate-300 mb-1">Statut</label><select id="statusSelect" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"><option value="In Transit">🚚 En transit</option><option value="Delivered">✅ Livré</option></select></div>
         <div><label class="block text-sm font-medium text-slate-300 mb-1">N° de suivi *</label><input type="text" id="trackingNumber" required placeholder="Ex: LP000123456789" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div>
         <div><label class="block text-sm font-medium text-slate-300 mb-1">Notes</label><textarea id="notes" rows="2" placeholder="Notes supplémentaires..." class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 resize-none"></textarea></div>
@@ -171,25 +224,47 @@
     </div>
   </div>
 
-  <!-- MODAL CARTE -->
   <div id="cardModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden transition-smooth">
     <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 border border-slate-700">
       <div class="flex justify-between items-center mb-4"><h2 class="text-lg font-bold text-slate-100">Ajouter une carte</h2><button id="closeCardModalBtn" class="text-slate-400 hover:text-red-400 text-2xl p-1">&times;</button></div>
-      <form id="cardForm" class="space-y-4">
-        <div><label class="block text-sm font-medium text-slate-300 mb-1">Personne *</label><input type="text" id="cardPersonName" required placeholder="Ex: Ahmed" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div>
-        <div><label class="block text-sm font-medium text-slate-300 mb-1">Montant (€) *</label><input type="number" id="cardAmount" step="0.01" min="0.01" required placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div>
-        <div class="flex gap-2"><button type="button" id="cancelCardBtn" class="flex-1 py-2.5 rounded-lg border border-slate-600 text-slate-300">Annuler</button><button type="submit" class="flex-1 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold">Enregistrer</button></div>
-      </form>
+      <form id="cardForm" class="space-y-4"><div><label class="block text-sm font-medium text-slate-300 mb-1">Personne *</label><input type="text" id="cardPersonName" required placeholder="Ex: Ahmed" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div><div><label class="block text-sm font-medium text-slate-300 mb-1">Montant (€) *</label><input type="number" id="cardAmount" step="0.01" min="0.01" required placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div><div class="flex gap-2"><button type="button" id="cancelCardBtn" class="flex-1 py-2.5 rounded-lg border border-slate-600 text-slate-300">Annuler</button><button type="submit" class="flex-1 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold">Enregistrer</button></div></form>
     </div>
   </div>
 
-  <div id="toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-slate-700 text-white px-5 py-3 rounded-full shadow-lg text-sm font-medium z-50 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2">
-    <span id="toastMessage"></span>
-  </div>
-
+  <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-slate-700 text-white px-5 py-3 rounded-full shadow-lg text-sm font-medium z-50 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2"><span id="toastMessage"></span></div>
   <input type="file" id="importFileInput" accept=".json" class="hidden">
 
   <script>
+    // جعل القائمة تظهر/تختفي
+    function toggleMobileMenu() {
+      const panel = document.getElementById('mobileMenuPanel');
+      panel.classList.toggle('show');
+    }
+    // إغلاق القائمة عند النقر خارجها
+    document.addEventListener('click', function(e) {
+      const panel = document.getElementById('mobileMenuPanel');
+      const menuBtn = document.getElementById('navMenu');
+      if (!panel.contains(e.target) && e.target !== menuBtn && !menuBtn.contains(e.target)) {
+        panel.classList.remove('show');
+      }
+    });
+
+    function scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.querySelectorAll('.bottom-nav button:not(.add-btn)').forEach(b => b.classList.remove('active'));
+        const btnMap = {
+          ordersSection: 'navOrders',
+          statsSection: 'navStats',
+          cardsSection: 'navCards'
+        };
+        const activeBtn = document.getElementById(btnMap[sectionId]);
+        if (activeBtn) activeBtn.classList.add('active');
+      }
+    }
+
+    // (الكود البرمجي السابق كما هو، بدون أي تغيير)
     (function() {
       const STORAGE_KEY = 'aliexpress_orders';
       const CARDS_KEY = 'virtual_cards';
@@ -198,7 +273,6 @@
       let currentEditId = null;
       let currentCardFilter = null;
 
-      // Confirmation modal
       let confirmCallback = null;
       const confirmModal = document.getElementById('confirmModal');
       const confirmMessage = document.getElementById('confirmMessage');
@@ -228,7 +302,6 @@
         if (e.target === confirmModal) closeConfirmModal();
       });
 
-      // DOM
       const activeOrdersContainer = document.getElementById('activeOrdersContainer');
       const activeEmptyState = document.getElementById('activeEmptyState');
       const archivedOrdersContainer = document.getElementById('archivedOrdersContainer');
@@ -581,7 +654,6 @@
         const activeOrders = allOrders.filter(o => o.status === 'In Transit');
         const archivedOrders = allOrders.filter(o => o.status === 'Delivered');
 
-        // Render active orders
         activeOrdersContainer.innerHTML = '';
         if (activeOrders.length === 0) {
           activeEmptyState.classList.remove('hidden');
@@ -592,7 +664,6 @@
           });
         }
 
-        // Render archived orders
         archivedOrdersContainer.innerHTML = '';
         if (archivedOrders.length === 0) {
           archivedEmptyState.classList.remove('hidden');
@@ -733,9 +804,7 @@
         orderForm.addEventListener('submit', saveOrder);
         searchInput.addEventListener('input', e => renderOrders(e.target.value));
         document.getElementById('exportBtn').addEventListener('click', exportToJSON);
-        document.getElementById('exportBtnMobile').addEventListener('click', exportToJSON);
         document.getElementById('importBtn').addEventListener('click', triggerImport);
-        document.getElementById('importBtnMobile').addEventListener('click', triggerImport);
         importFileInput.addEventListener('change', e => { if(e.target.files[0]) { importFromJSON(e.target.files[0]); importFileInput.value=''; } });
         document.addEventListener('keydown', e => { if(e.key==='Escape' && !orderModal.classList.contains('hidden')) closeOrderModal(); });
 
