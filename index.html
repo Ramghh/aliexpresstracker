@@ -2,834 +2,276 @@
 <html lang="fr" dir="ltr" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>AliExpress Tracker | Suivi de commandes</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-    }
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script> tailwind.config = { darkMode: 'class' } </script>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <style>
     * { font-family: 'Tajawal', sans-serif; }
     .transition-smooth { transition: all 0.25s ease; }
     .warm-card { background-color: #1e293b; border-color: #334155; }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
-    .order-row { background-color: transparent; }
-    .order-row:hover, .order-row:active { background-color: transparent !important; }
     body { background-color: #0f172a; color: #e2e8f0; padding-bottom: 80px; }
-    
-    /* Bottom Navigation Bar */
     .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 72px;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      position: fixed; bottom: 0; left: 0; right: 0; height: 72px;
+      background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px);
       border-top: 1px solid rgba(148, 163, 184, 0.15);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 40;
+      display: flex; justify-content: space-around; align-items: center; z-index: 40;
       padding-bottom: env(safe-area-inset-bottom, 8px);
     }
     .bottom-nav button {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      padding: 8px 12px;
-      border-radius: 12px;
-      color: #94a3b8;
-      transition: all 0.2s ease;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 8px 12px; border-radius: 12px; color: #94a3b8;
       min-width: 60px;
     }
-    .bottom-nav button .nav-icon {
-      font-size: 22px;
-      line-height: 1;
-    }
-    .bottom-nav button .nav-label {
-      font-size: 10px;
-      font-weight: 500;
-    }
-    .bottom-nav button.active {
-      color: #f97316;
-      background: rgba(249, 115, 22, 0.1);
-    }
+    .bottom-nav button .nav-icon { font-size: 22px; }
+    .bottom-nav button .nav-label { font-size: 10px; font-weight: 500; }
+    .bottom-nav button.active { color: #f97316; background: rgba(249, 115, 22, 0.1); }
     .bottom-nav button.add-btn {
-      background: linear-gradient(135deg, #f97316, #ea580c);
-      color: white;
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      padding: 0;
-      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
-      margin-top: -20px;
+      background: linear-gradient(135deg, #f97316, #ea580c); color: white;
+      border-radius: 50%; width: 48px; height: 48px; padding: 0;
+      margin-top: -20px; box-shadow: 0 4px 12px rgba(249,115,22,0.4);
     }
-    .bottom-nav button.add-btn .nav-icon {
-      font-size: 26px;
-    }
-    
-    /* إخفاء النافبار العلوي على الشاشات الصغيرة */
-    @media (max-width: 640px) {
-      .desktop-nav {
-        display: none !important;
-      }
-    }
-    @media (min-width: 641px) {
-      .bottom-nav {
-        display: none !important;
-      }
-      body {
-        padding-bottom: 0 !important;
-      }
-      .desktop-nav {
-        display: block !important;
-      }
-    }
-
-    /* القائمة المنبثقة للموبايل */
+    @media (max-width: 640px) { .desktop-nav { display: none !important; } }
+    @media (min-width: 641px) { .bottom-nav { display: none !important; } body { padding-bottom: 0; } .desktop-nav { display: block !important; } }
     .mobile-menu-panel {
-      position: fixed;
-      bottom: 80px;
-      left: 16px;
-      right: 16px;
-      background: rgba(30, 41, 59, 0.95);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(148, 163, 184, 0.2);
-      border-radius: 20px;
-      padding: 16px;
-      z-index: 50;
-      display: none;
-      flex-direction: column;
-      gap: 8px;
+      position: fixed; bottom: 80px; left: 16px; right: 16px;
+      background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(16px);
+      border: 1px solid rgba(148,163,184,0.2); border-radius: 20px;
+      padding: 16px; z-index: 50; display: none; flex-direction: column; gap: 8px;
     }
-    .mobile-menu-panel.show {
-      display: flex;
-    }
+    .mobile-menu-panel.show { display: flex; }
+    .order-row { background: transparent; }
+    button, .copy-tracking-btn, .track-btn { cursor: pointer; }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-200 min-h-screen transition-smooth">
+<body class="bg-slate-900 text-slate-200">
 
-  <!-- DESKTOP NAVBAR -->
-  <nav class="desktop-nav warm-card bg-slate-800 shadow-md sticky top-0 z-30 border-b border-slate-700 transition-smooth hidden sm:block">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <div class="flex items-center gap-3">
-          <span class="text-3xl">📦</span>
-          <h1 class="text-xl sm:text-2xl font-bold text-orange-400 tracking-tight">AliExpress Tracker</h1>
-        </div>
-        <div class="flex items-center gap-2 sm:gap-3">
-          <button id="exportBtn" title="Exporter les données (JSON)" class="p-2 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-slate-700 transition-smooth">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5-5m0 0l5 5m-5-5v12" /></svg>
-          </button>
-          <button id="importBtn" title="Importer des données (JSON)" class="p-2 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-slate-700 transition-smooth">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M17 10l-5 5m0 0l-5-5m5 5V3" /></svg>
-          </button>
-          <button id="openAddModalBtn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium shadow-md hover:shadow-lg transition-smooth flex items-center gap-2 text-sm sm:text-base">
-            <span class="text-lg leading-none">➕</span> <span>Ajouter</span>
-          </button>
-        </div>
+<!-- DESKTOP NAVBAR -->
+<nav class="desktop-nav warm-card bg-slate-800 shadow-md sticky top-0 z-30 border-b border-slate-700 hidden sm:block">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <div class="flex items-center gap-3"><span class="text-3xl">📦</span><h1 class="text-xl sm:text-2xl font-bold text-orange-400">AliExpress Tracker</h1></div>
+      <div class="flex gap-2">
+        <button id="exportBtn" title="Exporter JSON" class="p-2 rounded-lg text-slate-400 hover:text-emerald-400">📤</button>
+        <button id="importBtn" title="Importer JSON" class="p-2 rounded-lg text-slate-400 hover:text-blue-400">📥</button>
+        <button id="openAddModalBtn" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg flex items-center gap-2">➕ Ajouter</button>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <!-- المحتوى الرئيسي -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <!-- نفس الأقسام السابقة (Dashboard, Charts, Cartes, Search, Orders, Archive) بدون تغيير -->
-    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8" id="dashboardSection">
-      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4"><div class="bg-blue-900/50 p-3 rounded-full text-2xl">✈️</div><div><p class="text-sm text-slate-400">En transit</p><p id="inTransitCount" class="text-3xl font-bold text-blue-400">0</p></div></div>
-      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5 flex items-center gap-4"><div class="bg-green-900/50 p-3 rounded-full text-2xl">✅</div><div><p class="text-sm text-slate-400">Livré</p><p id="deliveredCount" class="text-3xl font-bold text-green-400">0</p></div></div>
-      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-5"><div class="flex items-center gap-3 mb-2"><div class="bg-purple-900/50 p-2 rounded-full text-xl">💰</div><p class="text-sm text-slate-400 font-medium">Budget total</p></div><div class="space-y-1 text-sm"><div class="flex justify-between"><span class="text-xs text-slate-400">🇺🇸 Dollar</span><span id="totalBudgetUSD" class="font-bold text-purple-400">$0.00</span></div><div class="flex justify-between"><span class="text-xs text-slate-400">🇪🇺 Euro</span><span id="totalBudgetEUR" class="font-bold text-purple-400">€0.00</span></div><div class="flex justify-between"><span class="text-xs text-slate-400">🇹🇳 TND</span><span id="totalBudgetTND" class="font-bold text-purple-400">0.00 DT</span></div></div></div>
-    </section>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <!-- Dashboard -->
+  <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <div class="warm-card bg-slate-800 rounded-xl p-5 flex items-center gap-4"><div class="bg-blue-900/50 p-3 rounded-full text-2xl">✈️</div><div><p class="text-sm text-slate-400">En transit</p><p id="inTransitCount" class="text-3xl font-bold text-blue-400">0</p></div></div>
+    <div class="warm-card bg-slate-800 rounded-xl p-5 flex items-center gap-4"><div class="bg-green-900/50 p-3 rounded-full text-2xl">✅</div><div><p class="text-sm text-slate-400">Livré</p><p id="deliveredCount" class="text-3xl font-bold text-green-400">0</p></div></div>
+    <div class="warm-card bg-slate-800 rounded-xl p-5"><div class="flex items-center gap-3 mb-2"><div class="bg-purple-900/50 p-2 rounded-full text-xl">💰</div><p class="text-sm text-slate-400">Budget total</p></div><div class="space-y-1 text-sm"><div class="flex justify-between"><span>🇺🇸 Dollar</span><span id="totalBudgetUSD" class="font-bold text-purple-400">$0.00</span></div><div class="flex justify-between"><span>🇪🇺 Euro</span><span id="totalBudgetEUR" class="font-bold text-purple-400">€0.00</span></div><div class="flex justify-between"><span>🇹🇳 TND</span><span id="totalBudgetTND" class="font-bold text-purple-400">0.00 DT</span></div></div></div>
+  </section>
 
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8" id="statsSection">
-      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-4"><h3 class="text-md font-semibold text-slate-200 mb-3">Statut des commandes</h3><canvas id="statusChart" height="200"></canvas></div>
-      <div class="warm-card bg-slate-800 rounded-xl shadow-md border p-4"><h3 class="text-md font-semibold text-slate-200 mb-3">Dépenses par devise</h3><canvas id="currencyChart" height="200"></canvas></div>
-    </section>
+  <!-- Charts -->
+  <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="warm-card bg-slate-800 rounded-xl p-4"><h3 class="font-semibold mb-3">Statut des commandes</h3><canvas id="statusChart" height="200"></canvas></div>
+    <div class="warm-card bg-slate-800 rounded-xl p-4"><h3 class="font-semibold mb-3">Dépenses par devise</h3><canvas id="currencyChart" height="200"></canvas></div>
+  </section>
 
-    <section class="mb-8" id="cardsSection">
-      <div class="flex justify-between items-center mb-3"><h2 class="text-lg font-bold text-slate-200 flex items-center gap-2">💳 Cartes virtuelles</h2><button id="openCardModalBtn" class="text-sm bg-slate-700 text-slate-300 px-3 py-2 rounded-lg hover:bg-slate-600 transition-smooth flex items-center gap-1">➕ Ajouter</button></div>
-      <div id="cardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
-      <div id="noCardsMessage" class="text-center text-slate-500 py-4 text-sm hidden">Aucune carte ajoutée</div>
-    </section>
+  <!-- Cartes virtuelles -->
+  <section class="mb-8">
+    <div class="flex justify-between items-center mb-3"><h2 class="text-lg font-bold">💳 Cartes virtuelles</h2><button id="openCardModalBtn" class="bg-slate-700 px-3 py-2 rounded-lg">➕ Ajouter</button></div>
+    <div id="cardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+    <div id="noCardsMessage" class="text-center text-slate-500 py-4 hidden">Aucune carte</div>
+  </section>
 
-    <div class="relative mb-6 flex flex-col sm:flex-row gap-3">
-      <input type="text" id="searchInput" placeholder="🔍  Rechercher par produit ou N° de suivi..." class="flex-1 px-5 py-3 rounded-xl border border-slate-600 bg-slate-800 text-slate-200 shadow-sm focus:ring-2 focus:ring-orange-400 outline-none transition-smooth text-sm sm:text-base" autocomplete="off">
-      <div id="activeCardFilter" class="hidden items-center gap-2 text-sm bg-amber-900/40 text-amber-200 px-4 py-2 rounded-lg border border-amber-700 whitespace-nowrap"><span id="activeCardFilterText"></span><button id="clearCardFilterBtn" class="font-bold text-amber-400 hover:text-red-400 ml-2">✕</button></div>
-    </div>
-
-    <div class="warm-card bg-slate-800 rounded-xl shadow-md border overflow-hidden transition-smooth mb-6" id="ordersSection">
-      <div class="flex justify-between items-center px-6 py-3 bg-slate-700/50 border-b border-slate-600"><h2 class="text-md font-semibold text-slate-200">📦 Commandes actives</h2><span id="activeCountBadge" class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full">0</span></div>
-      <div id="activeOrdersContainer" class="divide-y divide-slate-700"></div>
-      <div id="activeEmptyState" class="px-6 py-12 text-center text-slate-500 flex flex-col items-center gap-2"><span class="text-4xl">✨</span><p class="text-sm">Aucune commande en transit</p></div>
-    </div>
-
-    <div id="archiveSection" class="warm-card bg-slate-800 rounded-xl shadow-md border overflow-hidden transition-smooth hidden">
-      <div class="flex justify-between items-center px-6 py-3 bg-slate-700/50 border-b border-slate-600 cursor-pointer" id="toggleArchiveBtn"><h2 class="text-md font-semibold text-slate-200 flex items-center gap-2">📦 Colis reçus (Archivés)</h2><div class="flex items-center gap-2"><span id="archivedCountBadge" class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">0</span><span id="archiveToggleIcon" class="text-slate-400">▼</span></div></div>
-      <div id="archivedOrdersContainer" class="divide-y divide-slate-700 hidden"></div>
-      <div id="archivedEmptyState" class="px-6 py-8 text-center text-slate-500 hidden">Aucun colis archivé</div>
-    </div>
-  </main>
-
-  <!-- BOTTOM NAVIGATION BAR -->
-  <div class="bottom-nav">
-    <button id="navOrders" class="active" onclick="scrollToSection('ordersSection')"><span class="nav-icon">📋</span><span class="nav-label">Suivi</span></button>
-    <button id="navStats" onclick="scrollToSection('statsSection')"><span class="nav-icon">📊</span><span class="nav-label">Stats</span></button>
-    <button id="navAdd" class="add-btn" onclick="document.getElementById('openAddModalBtn').click()"><span class="nav-icon">+</span></button>
-    <button id="navCards" onclick="scrollToSection('cardsSection')"><span class="nav-icon">💳</span><span class="nav-label">Cartes</span></button>
-    <button id="navMenu" onclick="toggleMobileMenu()"><span class="nav-icon">☰</span><span class="nav-label">Menu</span></button>
+  <!-- Search & filter -->
+  <div class="relative mb-6 flex flex-col sm:flex-row gap-3">
+    <input type="text" id="searchInput" placeholder="🔍 Rechercher par produit ou N° de suivi..." class="flex-1 px-5 py-3 rounded-xl border border-slate-600 bg-slate-800">
+    <div id="activeCardFilter" class="hidden items-center gap-2 text-sm bg-amber-900/40 text-amber-200 px-4 py-2 rounded-lg"><span id="activeCardFilterText"></span><button id="clearCardFilterBtn" class="font-bold text-red-400 ml-2">✕</button></div>
   </div>
 
-  <!-- القائمة المنبثقة للموبايل -->
-  <div id="mobileMenuPanel" class="mobile-menu-panel">
-    <button onclick="document.getElementById('exportBtn').click()" class="flex items-center gap-3 p-3 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 w-full text-left">
-      <span class="text-lg">📥</span> Exporter les données
-    </button>
-    <button onclick="document.getElementById('importBtn').click()" class="flex items-center gap-3 p-3 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-200 w-full text-left">
-      <span class="text-lg">📤</span> Importer des données
-    </button>
+  <!-- Active orders -->
+  <div class="warm-card bg-slate-800 rounded-xl overflow-hidden mb-6">
+    <div class="flex justify-between items-center px-6 py-3 bg-slate-700/50 border-b"><h2>📦 Commandes actives</h2><span id="activeCountBadge" class="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded-full">0</span></div>
+    <div id="activeOrdersContainer" class="divide-y divide-slate-700"></div>
+    <div id="activeEmptyState" class="px-6 py-12 text-center text-slate-500">✨ Aucune commande en transit</div>
   </div>
 
-  <!-- باقي المودالات (confirm, order, card, toast, input file) دون تغيير -->
-  <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
-    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 border border-slate-700">
-      <p id="confirmMessage" class="text-slate-200 text-center mb-4">Êtes-vous sûr de vouloir supprimer ?</p>
-      <div class="flex gap-3 justify-center"><button id="confirmCancelBtn" class="px-5 py-2 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-700">Annuler</button><button id="confirmOkBtn" class="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-bold">Supprimer</button></div>
-    </div>
+  <!-- Archive section -->
+  <div id="archiveSection" class="warm-card bg-slate-800 rounded-xl overflow-hidden hidden">
+    <div class="flex justify-between items-center px-6 py-3 bg-slate-700/50 border-b cursor-pointer" id="toggleArchiveBtn"><h2>📦 Colis reçus (Archivés)</h2><div><span id="archivedCountBadge" class="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded-full">0</span><span id="archiveToggleIcon" class="ml-2">▼</span></div></div>
+    <div id="archivedOrdersContainer" class="divide-y divide-slate-700 hidden"></div>
+    <div id="archivedEmptyState" class="px-6 py-8 text-center text-slate-500 hidden">Aucun colis archivé</div>
   </div>
+</main>
 
-  <div id="orderModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden transition-smooth">
-    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-lg mx-4 p-6 border border-slate-700 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center mb-5"><h2 id="modalTitle" class="text-xl font-bold text-slate-100">Ajouter une commande</h2><button id="closeModalBtn" class="text-slate-400 hover:text-red-400 text-2xl leading-none p-1">&times;</button></div>
-      <form id="orderForm" class="space-y-4">
-        <input type="hidden" id="orderId" value="">
-        <div><label class="block text-sm font-medium text-slate-300 mb-1">Produit *</label><input type="text" id="productName" required placeholder="Ex: Montre connectée" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 focus:ring-2 focus:ring-orange-400 outline-none"></div>
-        <div class="grid grid-cols-5 gap-2"><div class="col-span-3"><label class="block text-sm font-medium text-slate-300 mb-1">Prix</label><input type="number" id="price" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div><div class="col-span-2"><label class="block text-sm font-medium text-slate-300 mb-1">Devise</label><select id="currencySelect" class="w-full px-3 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"><option value="USD">$ Dollar</option><option value="EUR">€ Euro</option><option value="TND">DT TND</option></select></div></div>
-        <div id="cardSelectionRow" class="hidden"><label class="block text-sm font-medium text-slate-300 mb-1">Carte utilisée (EUR uniquement)</label><select id="cardSelect" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></select><p id="noCardWarning" class="text-xs text-red-400 mt-1 hidden">Veuillez d'abord ajouter une carte dans "Cartes virtuelles"</p></div>
-        <div><label class="block text-sm font-medium text-slate-300 mb-1">Statut</label><select id="statusSelect" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"><option value="In Transit">🚚 En transit</option><option value="Delivered">✅ Livré</option></select></div>
-        <div><label class="block text-sm font-medium text-slate-300 mb-1">N° de suivi *</label><input type="text" id="trackingNumber" required placeholder="Ex: LP000123456789" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div>
-        <div><label class="block text-sm font-medium text-slate-300 mb-1">Notes</label><textarea id="notes" rows="2" placeholder="Notes supplémentaires..." class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200 resize-none"></textarea></div>
-        <div class="flex gap-3 pt-2"><button type="button" id="cancelModalBtn" class="flex-1 py-3 rounded-lg border border-slate-600 text-slate-300 hover:bg-slate-700">Annuler</button><button type="submit" class="flex-1 py-3 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-md">💾 Enregistrer</button></div>
-      </form>
-    </div>
-  </div>
+<!-- Bottom Navigation -->
+<div class="bottom-nav">
+  <button id="navOrders" class="active" onclick="scrollToSection('ordersSection')"><span class="nav-icon">📋</span><span class="nav-label">Suivi</span></button>
+  <button id="navStats" onclick="scrollToSection('statsSection')"><span class="nav-icon">📊</span><span class="nav-label">Stats</span></button>
+  <button id="navAdd" class="add-btn" onclick="document.getElementById('openAddModalBtn').click()"><span class="nav-icon">+</span></button>
+  <button id="navCards" onclick="scrollToSection('cardsSection')"><span class="nav-icon">💳</span><span class="nav-label">Cartes</span></button>
+  <button id="navMenu" onclick="toggleMobileMenu()"><span class="nav-icon">☰</span><span class="nav-label">Menu</span></button>
+</div>
+<div id="mobileMenuPanel" class="mobile-menu-panel">
+  <button onclick="document.getElementById('exportBtn').click()">📥 Exporter</button>
+  <button onclick="document.getElementById('importBtn').click()">📤 Importer</button>
+  <button onclick="clearAllData()" class="text-red-400">🗑️ Supprimer toutes les données</button>
+</div>
 
-  <div id="cardModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm hidden transition-smooth">
-    <div class="bg-slate-800 rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-6 border border-slate-700">
-      <div class="flex justify-between items-center mb-4"><h2 class="text-lg font-bold text-slate-100">Ajouter une carte</h2><button id="closeCardModalBtn" class="text-slate-400 hover:text-red-400 text-2xl p-1">&times;</button></div>
-      <form id="cardForm" class="space-y-4"><div><label class="block text-sm font-medium text-slate-300 mb-1">Personne *</label><input type="text" id="cardPersonName" required placeholder="Ex: Ahmed" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div><div><label class="block text-sm font-medium text-slate-300 mb-1">Montant (€) *</label><input type="number" id="cardAmount" step="0.01" min="0.01" required placeholder="0.00" class="w-full px-4 py-3 rounded-lg border border-slate-600 bg-slate-700 text-slate-200"></div><div class="flex gap-2"><button type="button" id="cancelCardBtn" class="flex-1 py-2.5 rounded-lg border border-slate-600 text-slate-300">Annuler</button><button type="submit" class="flex-1 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold">Enregistrer</button></div></form>
-    </div>
-  </div>
+<!-- Modals -->
+<div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 hidden"><div class="bg-slate-800 rounded-2xl p-6 max-w-sm"><p id="confirmMessage" class="text-center mb-4"></p><div class="flex gap-3 justify-center"><button id="confirmCancelBtn" class="px-5 py-2 rounded-lg border">Annuler</button><button id="confirmOkBtn" class="px-5 py-2 rounded-lg bg-red-500">Supprimer</button></div></div></div>
+<div id="orderModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden"><div class="bg-slate-800 rounded-2xl w-full max-w-lg mx-4 p-6 max-h-[90vh] overflow-auto"><div class="flex justify-between mb-4"><h2 id="modalTitle" class="text-xl font-bold">Ajouter une commande</h2><button id="closeModalBtn" class="text-2xl">&times;</button></div><form id="orderForm"><input type="hidden" id="orderId"><div><label>Produit *</label><input type="text" id="productName" required class="w-full p-3 rounded-lg bg-slate-700 border"></div><div class="grid grid-cols-5 gap-2"><div class="col-span-3"><label>Prix</label><input type="number" id="price" step="0.01" class="w-full p-3 rounded-lg bg-slate-700"></div><div class="col-span-2"><label>Devise</label><select id="currencySelect" class="w-full p-3 rounded-lg bg-slate-700"><option value="USD">USD</option><option value="EUR">EUR</option><option value="TND">TND</option></select></div></div><div id="cardSelectionRow" class="hidden"><label>Carte (EUR)</label><select id="cardSelect" class="w-full p-3 rounded-lg bg-slate-700"></select><p id="noCardWarning" class="text-red-400 text-xs hidden">Ajoutez d'abord une carte</p></div><div><label>Statut</label><select id="statusSelect" class="w-full p-3 rounded-lg bg-slate-700"><option value="In Transit">En transit</option><option value="Delivered">Livré</option></select></div><div><label>N° de suivi *</label><input type="text" id="trackingNumber" required class="w-full p-3 rounded-lg bg-slate-700"></div><div><label>Notes</label><textarea id="notes" rows="2" class="w-full p-3 rounded-lg bg-slate-700"></textarea></div><div class="flex gap-3 pt-2"><button type="button" id="cancelModalBtn" class="flex-1 py-3 rounded-lg border">Annuler</button><button type="submit" class="flex-1 py-3 rounded-lg bg-orange-500 font-bold">Enregistrer</button></div></form></div></div>
+<div id="cardModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 hidden"><div class="bg-slate-800 rounded-2xl max-w-sm w-full p-6"><div class="flex justify-between mb-4"><h2>Ajouter une carte</h2><button id="closeCardModalBtn">&times;</button></div><form id="cardForm"><div><label>Personne *</label><input type="text" id="cardPersonName" required class="w-full p-3 rounded-lg bg-slate-700"></div><div><label>Montant (€) *</label><input type="number" id="cardAmount" step="0.01" required class="w-full p-3 rounded-lg bg-slate-700"></div><div class="flex gap-2 mt-4"><button type="button" id="cancelCardBtn" class="flex-1 py-2 rounded-lg border">Annuler</button><button type="submit" class="flex-1 py-2 rounded-lg bg-emerald-500">Enregistrer</button></div></form></div></div>
+<div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-slate-700 text-white px-5 py-3 rounded-full text-sm opacity-0 transition-all pointer-events-none z-50"></div>
+<input type="file" id="importFileInput" accept=".json" class="hidden">
 
-  <div id="toast" class="fixed bottom-24 left-1/2 transform -translate-x-1/2 bg-slate-700 text-white px-5 py-3 rounded-full shadow-lg text-sm font-medium z-50 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-2"><span id="toastMessage"></span></div>
-  <input type="file" id="importFileInput" accept=".json" class="hidden">
+<script>
+  function toggleMobileMenu() { document.getElementById('mobileMenuPanel').classList.toggle('show'); }
+  document.addEventListener('click', function(e) { let panel=document.getElementById('mobileMenuPanel'), btn=document.getElementById('navMenu'); if(!panel.contains(e.target) && e.target!==btn && !btn.contains(e.target)) panel.classList.remove('show'); });
+  function scrollToSection(sectionId) { let s=document.getElementById(sectionId); if(s) { s.scrollIntoView({behavior:'smooth'}); document.querySelectorAll('.bottom-nav button:not(.add-btn)').forEach(b=>b.classList.remove('active')); let map={ordersSection:'navOrders',statsSection:'navStats',cardsSection:'navCards'}; let act=document.getElementById(map[sectionId]); if(act) act.classList.add('active'); } }
+  function clearAllData() { if(confirm('⚠️ Supprimer TOUTES les commandes et cartes ?')) { localStorage.removeItem('aliexpress_orders'); localStorage.removeItem('virtual_cards'); location.reload(); } }
 
-  <script>
-    // جعل القائمة تظهر/تختفي
-    function toggleMobileMenu() {
-      const panel = document.getElementById('mobileMenuPanel');
-      panel.classList.toggle('show');
-    }
-    // إغلاق القائمة عند النقر خارجها
-    document.addEventListener('click', function(e) {
-      const panel = document.getElementById('mobileMenuPanel');
-      const menuBtn = document.getElementById('navMenu');
-      if (!panel.contains(e.target) && e.target !== menuBtn && !menuBtn.contains(e.target)) {
-        panel.classList.remove('show');
-      }
-    });
+  (function(){
+    const STORAGE_KEY='aliexpress_orders', CARDS_KEY='virtual_cards';
+    let orders=[], cards=[], currentEditId=null, currentCardFilter=null, archiveVisible=false;
+    let statusChart, currencyChart, confirmCallback=null;
 
-    function scrollToSection(sectionId) {
-      const section = document.getElementById(sectionId);
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        document.querySelectorAll('.bottom-nav button:not(.add-btn)').forEach(b => b.classList.remove('active'));
-        const btnMap = {
-          ordersSection: 'navOrders',
-          statsSection: 'navStats',
-          cardsSection: 'navCards'
-        };
-        const activeBtn = document.getElementById(btnMap[sectionId]);
-        if (activeBtn) activeBtn.classList.add('active');
-      }
+    const confirmModal=document.getElementById('confirmModal'), confirmMsg=document.getElementById('confirmMessage'), confirmOk=document.getElementById('confirmOkBtn'), confirmCancel=document.getElementById('confirmCancelBtn');
+    function customConfirm(msg,cb){ confirmMsg.textContent=msg; confirmCallback=cb; confirmModal.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function closeConfirmModal(){ confirmModal.classList.add('hidden'); document.body.style.overflow=''; confirmCallback=null; }
+    confirmOk.onclick=()=>{ if(confirmCallback) confirmCallback(true); closeConfirmModal(); };
+    confirmCancel.onclick=()=>{ if(confirmCallback) confirmCallback(false); closeConfirmModal(); };
+    confirmModal.onclick=e=>{ if(e.target===confirmModal) closeConfirmModal(); };
+
+    function showToast(msg,dur=2500){ let t=document.getElementById('toast'); t.textContent=msg; t.classList.remove('opacity-0'); t.classList.add('opacity-100'); clearTimeout(window.toastTimer); window.toastTimer=setTimeout(()=>{ t.classList.remove('opacity-100'); t.classList.add('opacity-0'); },dur); }
+
+    function loadData(){ try{ orders=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); }catch(e){ orders=[]; } orders.forEach(o=>{ if(!o.currency) o.currency='USD'; if(o.cardId===undefined) o.cardId=null; }); try{ cards=JSON.parse(localStorage.getItem(CARDS_KEY)||'[]'); }catch(e){ cards=[]; } }
+    function saveOrders(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(orders)); }
+    function saveCards(){ localStorage.setItem(CARDS_KEY,JSON.stringify(cards)); }
+
+    function getCardBalance(cardId){ let card=cards.find(c=>c.id===cardId); if(!card) return 0; let spent=orders.filter(o=>o.cardId===cardId).reduce((s,o)=>s+(parseFloat(o.price)||0),0); return Math.max(0,card.amount-spent); }
+    function populateCardSelect(){ let sel=document.getElementById('cardSelect'); sel.innerHTML=''; if(cards.length===0){ sel.innerHTML='<option value="">-- Aucune carte --</option>'; document.getElementById('noCardWarning').classList.remove('hidden'); }else{ document.getElementById('noCardWarning').classList.add('hidden'); cards.forEach(c=>{ let bal=getCardBalance(c.id); let opt=document.createElement('option'); opt.value=c.id; opt.textContent=`${c.personName} (reste €${bal.toFixed(2)})`; sel.appendChild(opt); }); } }
+    function toggleCardField(){ let row=document.getElementById('cardSelectionRow'); if(document.getElementById('currencySelect').value==='EUR'){ row.classList.remove('hidden'); populateCardSelect(); }else{ row.classList.add('hidden'); document.getElementById('cardSelect').value=''; } }
+
+    function updateCharts(){
+      let inTransit=orders.filter(o=>o.status==='In Transit').length, delivered=orders.filter(o=>o.status==='Delivered').length;
+      let ctx1=document.getElementById('statusChart')?.getContext('2d'); if(statusChart) statusChart.destroy();
+      if(ctx1) statusChart=new Chart(ctx1,{type:'pie',data:{labels:['En transit','Livré'],datasets:[{data:[inTransit,delivered],backgroundColor:['#38bdf8','#4ade80'],borderColor:'#1e293b',borderWidth:2}]},options:{responsive:true,plugins:{legend:{labels:{color:'#cbd5e1'}}}}});
+      let usd=0,eur=0,tnd=0; orders.forEach(o=>{let a=parseFloat(o.price)||0; if(o.currency==='USD') usd+=a; else if(o.currency==='EUR') eur+=a; else if(o.currency==='TND') tnd+=a;});
+      let ctx2=document.getElementById('currencyChart')?.getContext('2d'); if(currencyChart) currencyChart.destroy();
+      if(ctx2) currencyChart=new Chart(ctx2,{type:'bar',data:{labels:['USD','EUR','TND'],datasets:[{label:'Total dépensé',data:[usd,eur,tnd],backgroundColor:['#818cf8','#c084fc','#fbbf24'],borderWidth:1}]},options:{responsive:true,scales:{y:{beginAtZero:true,ticks:{color:'#94a3b8'},grid:{color:'#334155'}},x:{ticks:{color:'#94a3b8'}}},plugins:{legend:{display:false}}}});
     }
 
-    // (الكود البرمجي السابق كما هو، بدون أي تغيير)
-    (function() {
-      const STORAGE_KEY = 'aliexpress_orders';
-      const CARDS_KEY = 'virtual_cards';
-      let orders = [];
-      let cards = [];
-      let currentEditId = null;
-      let currentCardFilter = null;
+    function updateStats(){
+      let inTransit=orders.filter(o=>o.status==='In Transit').length, delivered=orders.filter(o=>o.status==='Delivered').length;
+      let totalUSD=0,totalEUR=0,totalTND=0; orders.forEach(o=>{let a=parseFloat(o.price)||0; if(o.currency==='USD') totalUSD+=a; else if(o.currency==='EUR') totalEUR+=a; else if(o.currency==='TND') totalTND+=a;});
+      document.getElementById('inTransitCount').textContent=inTransit; document.getElementById('deliveredCount').textContent=delivered;
+      document.getElementById('totalBudgetUSD').textContent=`$${totalUSD.toFixed(2)}`; document.getElementById('totalBudgetEUR').textContent=`€${totalEUR.toFixed(2)}`; document.getElementById('totalBudgetTND').textContent=`${totalTND.toFixed(2)} DT`;
+      document.getElementById('activeCountBadge').textContent=inTransit; document.getElementById('archivedCountBadge').textContent=delivered;
+      if(delivered>0) document.getElementById('archiveSection').classList.remove('hidden'); else document.getElementById('archiveSection').classList.add('hidden');
+    }
 
-      let confirmCallback = null;
-      const confirmModal = document.getElementById('confirmModal');
-      const confirmMessage = document.getElementById('confirmMessage');
-      const confirmOkBtn = document.getElementById('confirmOkBtn');
-      const confirmCancelBtn = document.getElementById('confirmCancelBtn');
+    function formatDate(d){ return d?new Date(d).toLocaleDateString('fr-FR',{year:'numeric',month:'short',day:'numeric'}):'—'; }
+    function getStatusBadge(s){ return s==='In Transit'?'<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-900/50 text-blue-300">✈️ En transit</span>':'<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-900/50 text-green-300">✅ Livré</span>'; }
+    function escapeHTML(str){ return String(str).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+    function generateId(){ return Date.now().toString(36)+Math.random().toString(36).substring(2,7); }
+    function formatPrice(p,c){ if(p===undefined||p===null||p==='') return ''; let n=parseFloat(p).toFixed(2); if(c==='EUR') return `€${n}`; if(c==='TND') return `${n} DT`; return `$${n}`; }
+    function isTunisianTracking(num){ let up=num.toUpperCase(); return (up.startsWith('UA')&&up.endsWith('VU'))||(up.startsWith('RR')&&up.endsWith('AE'))||(up.includes('TN')); }
 
-      function customConfirm(message, callback) {
-        confirmMessage.textContent = message;
-        confirmCallback = callback;
-        confirmModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
-      function closeConfirmModal() {
-        confirmModal.classList.add('hidden');
-        document.body.style.overflow = '';
-        confirmCallback = null;
-      }
-      confirmOkBtn.addEventListener('click', () => {
-        if (confirmCallback) confirmCallback(true);
-        closeConfirmModal();
-      });
-      confirmCancelBtn.addEventListener('click', () => {
-        if (confirmCallback) confirmCallback(false);
-        closeConfirmModal();
-      });
-      confirmModal.addEventListener('click', (e) => {
-        if (e.target === confirmModal) closeConfirmModal();
-      });
+    function renderCards(){
+      let container=document.getElementById('cardsContainer'), noMsg=document.getElementById('noCardsMessage');
+      container.innerHTML='';
+      if(cards.length===0){ noMsg.classList.remove('hidden'); }else{ noMsg.classList.add('hidden'); cards.forEach(card=>{ let bal=getCardBalance(card.id); let el=document.createElement('div'); el.className='warm-card bg-slate-800 rounded-xl p-4 flex flex-col gap-2 cursor-pointer'; el.innerHTML=`<div class="flex justify-between"><span class="font-bold">👤 ${escapeHTML(card.personName)}</span><button class="delete-card-btn text-red-400">🗑️</button></div><div class="text-sm">💰 Montant : €${card.amount.toFixed(2)}<br>💸 Reste : <span class="font-bold ${bal>0?'text-emerald-400':'text-red-500'}">€${bal.toFixed(2)}</span></div>`; el.addEventListener('click',(e)=>{ if(!e.target.closest('.delete-card-btn')) applyCardFilter(card.id); }); el.querySelector('.delete-card-btn').addEventListener('click',(e)=>{ e.stopPropagation(); customConfirm('Supprimer cette carte ?',(ok)=>{ if(ok){ cards=cards.filter(c=>c.id!==card.id); saveCards(); if(currentCardFilter===card.id) clearCardFilter(); renderCards(); updateStats(); updateCharts(); showToast('Carte supprimée'); } }); }); container.appendChild(el); }); } populateCardSelect(); }
 
-      const activeOrdersContainer = document.getElementById('activeOrdersContainer');
-      const activeEmptyState = document.getElementById('activeEmptyState');
-      const archivedOrdersContainer = document.getElementById('archivedOrdersContainer');
-      const archivedEmptyState = document.getElementById('archivedEmptyState');
-      const archiveSection = document.getElementById('archiveSection');
-      const toggleArchiveBtn = document.getElementById('toggleArchiveBtn');
-      const archiveToggleIcon = document.getElementById('archiveToggleIcon');
-      const activeCountBadge = document.getElementById('activeCountBadge');
-      const archivedCountBadge = document.getElementById('archivedCountBadge');
-      const inTransitCountEl = document.getElementById('inTransitCount');
-      const deliveredCountEl = document.getElementById('deliveredCount');
-      const totalBudgetUSDEl = document.getElementById('totalBudgetUSD');
-      const totalBudgetEUREl = document.getElementById('totalBudgetEUR');
-      const totalBudgetTNDEl = document.getElementById('totalBudgetTND');
-      const searchInput = document.getElementById('searchInput');
-      const orderModal = document.getElementById('orderModal');
-      const orderForm = document.getElementById('orderForm');
-      const modalTitle = document.getElementById('modalTitle');
-      const orderIdInput = document.getElementById('orderId');
-      const productNameInput = document.getElementById('productName');
-      const priceInput = document.getElementById('price');
-      const currencySelect = document.getElementById('currencySelect');
-      const cardSelect = document.getElementById('cardSelect');
-      const cardSelectionRow = document.getElementById('cardSelectionRow');
-      const noCardWarning = document.getElementById('noCardWarning');
-      const statusSelect = document.getElementById('statusSelect');
-      const trackingNumberInput = document.getElementById('trackingNumber');
-      const notesInput = document.getElementById('notes');
-      const toast = document.getElementById('toast');
-      const toastMessage = document.getElementById('toastMessage');
-      const importFileInput = document.getElementById('importFileInput');
-      const cardsContainer = document.getElementById('cardsContainer');
-      const noCardsMessage = document.getElementById('noCardsMessage');
-      const cardModal = document.getElementById('cardModal');
-      const cardForm = document.getElementById('cardForm');
-      const cardPersonName = document.getElementById('cardPersonName');
-      const cardAmount = document.getElementById('cardAmount');
-      const activeCardFilter = document.getElementById('activeCardFilter');
-      const activeCardFilterText = document.getElementById('activeCardFilterText');
-      const clearCardFilterBtn = document.getElementById('clearCardFilterBtn');
+    function applyCardFilter(cardId){ currentCardFilter=cardId; document.getElementById('activeCardFilterText').textContent=`Achats de : ${cards.find(c=>c.id===cardId)?.personName}`; document.getElementById('activeCardFilter').classList.remove('hidden'); renderOrders(document.getElementById('searchInput').value); showToast('Filtré par carte'); }
+    function clearCardFilter(){ currentCardFilter=null; document.getElementById('activeCardFilter').classList.add('hidden'); renderOrders(document.getElementById('searchInput').value); }
 
-      let statusChart, currencyChart;
-      let archiveVisible = false;
+    function attachOrderEvents(el,id){ el.querySelector('.toggle-status-btn')?.addEventListener('click',e=>{ e.stopPropagation(); toggleOrderStatus(id); }); el.querySelector('.edit-order-btn')?.addEventListener('click',e=>{ e.stopPropagation(); openEditModal(id); }); el.querySelector('.delete-order-btn')?.addEventListener('click',e=>{ e.stopPropagation(); deleteOrder(id); }); }
 
-      function showToast(msg, dur=2500) {
-        toastMessage.textContent = msg;
-        toast.classList.remove('opacity-0'); toast.classList.add('opacity-100');
-        clearTimeout(window.toastTimer);
-        window.toastTimer = setTimeout(() => { toast.classList.remove('opacity-100'); toast.classList.add('opacity-0'); }, dur);
-      }
+    function createOrderElement(order){
+      let el=document.createElement('div'); el.className='order-row grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 py-4 items-center';
+      let priceDisp=order.price?formatPrice(order.price,order.currency):'', showTrack=isTunisianTracking(order.trackingNumber);
+      el.innerHTML=`<div><span class="text-slate-400 text-sm md:hidden">Produit</span><div class="font-semibold">${escapeHTML(order.productName)}</div>${priceDisp?`<div class="text-xs text-slate-400">${priceDisp}</div>`:''}</div>
+        <div><span class="text-slate-400 text-sm md:hidden">N° suivi</span><div class="flex gap-1 items-center"><span class="text-sm font-mono bg-slate-700 px-2 py-1 rounded">${escapeHTML(order.trackingNumber)}</span><button class="copy-tracking-btn text-slate-400 hover:text-white" title="Copier le numéro">📋</button>${showTrack?'<button class="track-btn text-blue-400 hover:text-blue-300" title="Suivre sur poste.tn">🔍</button>':''}</div></div>
+        <div><span class="text-slate-400 text-sm md:hidden">Statut</span>${getStatusBadge(order.status)}</div>
+        <div><span class="text-slate-400 text-sm md:hidden">Date</span><span class="text-sm">${formatDate(order.date)}</span></div>
+        <div class="flex gap-2"><button class="toggle-status-btn px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600">🔄</button><button class="edit-order-btn px-3 py-1 rounded-lg bg-blue-900/30 hover:bg-blue-800/50 text-blue-400">✏️</button><button class="delete-order-btn px-3 py-1 rounded-lg bg-red-900/30 hover:bg-red-800/50 text-red-400">🗑️</button></div>`;
+      attachOrderEvents(el,order.id); return el;
+    }
 
-      function loadData() {
-        try { orders = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { orders = []; }
-        orders.forEach(o => { if (!o.currency) o.currency = 'USD'; if (!o.cardId) o.cardId = null; });
-        try { cards = JSON.parse(localStorage.getItem(CARDS_KEY) || '[]'); } catch(e) { cards = []; }
-      }
+    function renderOrders(filter=''){
+      let all=orders; if(currentCardFilter) all=all.filter(o=>o.cardId===currentCardFilter);
+      let f=filter.trim().toLowerCase(); if(f) all=all.filter(o=>o.productName.toLowerCase().includes(f)||o.trackingNumber.toLowerCase().includes(f));
+      let active=all.filter(o=>o.status==='In Transit'), archived=all.filter(o=>o.status==='Delivered');
+      let activeContainer=document.getElementById('activeOrdersContainer'), activeEmpty=document.getElementById('activeEmptyState');
+      activeContainer.innerHTML=''; if(active.length===0) activeEmpty.classList.remove('hidden'); else{ activeEmpty.classList.add('hidden'); active.forEach(o=>activeContainer.appendChild(createOrderElement(o))); }
+      let archivedContainer=document.getElementById('archivedOrdersContainer'), archivedEmpty=document.getElementById('archivedEmptyState');
+      archivedContainer.innerHTML=''; if(archived.length===0) archivedEmpty.classList.remove('hidden'); else{ archivedEmpty.classList.add('hidden'); archived.forEach(o=>archivedContainer.appendChild(createOrderElement(o))); }
+      if(archiveVisible){ archivedContainer.classList.remove('hidden'); document.getElementById('archiveToggleIcon').textContent='▲'; }else{ archivedContainer.classList.add('hidden'); document.getElementById('archiveToggleIcon').textContent='▼'; }
+      updateStats(); updateCharts();
+    }
 
-      function saveOrders() { localStorage.setItem(STORAGE_KEY, JSON.stringify(orders)); }
-      function saveCards() { localStorage.setItem(CARDS_KEY, JSON.stringify(cards)); }
+    function deleteOrder(id){ customConfirm('Supprimer cette commande ?',(ok)=>{ if(ok){ orders=orders.filter(o=>o.id!==id); saveOrders(); renderOrders(document.getElementById('searchInput').value); renderCards(); showToast('Commande supprimée'); } }); }
+    function toggleOrderStatus(id){ let o=orders.find(o=>o.id===id); if(o){ o.status=o.status==='In Transit'?'Delivered':'In Transit'; saveOrders(); renderOrders(document.getElementById('searchInput').value); renderCards(); showToast('Statut modifié'); } }
+    function openEditModal(id){ let o=orders.find(o=>o.id===id); if(!o) return; currentEditId=id; document.getElementById('orderId').value=o.id; document.getElementById('productName').value=o.productName||''; document.getElementById('price').value=o.price||''; document.getElementById('currencySelect').value=o.currency||'USD'; document.getElementById('statusSelect').value=o.status; document.getElementById('trackingNumber').value=o.trackingNumber||''; document.getElementById('notes').value=o.notes||''; toggleCardField(); if(o.currency==='EUR' && o.cardId) document.getElementById('cardSelect').value=o.cardId; document.getElementById('modalTitle').textContent='Modifier la commande'; document.getElementById('orderModal').classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function resetForm(){ document.getElementById('orderForm').reset(); document.getElementById('orderId').value=''; currentEditId=null; document.getElementById('modalTitle').textContent='Ajouter une commande'; document.getElementById('statusSelect').value='In Transit'; document.getElementById('currencySelect').value='USD'; document.getElementById('cardSelectionRow').classList.add('hidden'); document.getElementById('cardSelect').value=''; }
+    function openAddModal(){ resetForm(); document.getElementById('orderModal').classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function closeOrderModal(){ document.getElementById('orderModal').classList.add('hidden'); document.body.style.overflow=''; resetForm(); }
 
-      function getCardBalance(cardId) {
-        const card = cards.find(c => c.id === cardId);
-        if (!card) return 0;
-        const spent = orders.filter(o => o.cardId === cardId).reduce((sum, o) => sum + (parseFloat(o.price)||0), 0);
-        return Math.max(0, card.amount - spent);
-      }
+    function saveOrder(e){ e.preventDefault(); let name=document.getElementById('productName').value.trim(), track=document.getElementById('trackingNumber').value.trim(); if(!name||!track){ showToast('Produit et N° de suivi requis'); return; } let price=parseFloat(document.getElementById('price').value)||0; let currency=document.getElementById('currencySelect').value; let cardId=null; if(currency==='EUR'){ if(cards.length===0){ showToast('Veuillez ajouter une carte d\'abord'); return; } cardId=document.getElementById('cardSelect').value; if(!cardId){ showToast('Sélectionnez une carte'); return; } let bal=getCardBalance(cardId); if(price>bal){ showToast('Solde insuffisant'); return; } } let status=document.getElementById('statusSelect').value, notes=document.getElementById('notes').value.trim(); let trackingExists=orders.some(o=>o.trackingNumber===track && (!currentEditId || o.id!==currentEditId)); if(trackingExists){ showToast('⚠️ Ce numéro de suivi existe déjà'); return; } if(currentEditId){ let idx=orders.findIndex(o=>o.id===currentEditId); if(idx>-1){ orders[idx]={...orders[idx], productName:name, price, currency, cardId, status, trackingNumber:track, notes}; showToast('Commande mise à jour'); } }else{ orders.unshift({ id:generateId(), productName:name, price, currency, cardId, status, trackingNumber:track, notes, date:new Date().toISOString() }); showToast('Commande ajoutée'); } saveOrders(); renderOrders(document.getElementById('searchInput').value); renderCards(); closeOrderModal(); }
 
-      function populateCardSelect() {
-        cardSelect.innerHTML = '';
-        if (cards.length === 0) {
-          cardSelect.innerHTML = '<option value="">-- Aucune carte --</option>';
-          noCardWarning.classList.remove('hidden');
-        } else {
-          noCardWarning.classList.add('hidden');
-          cards.forEach(card => {
-            const balance = getCardBalance(card.id);
-            const opt = document.createElement('option');
-            opt.value = card.id;
-            opt.textContent = `${card.personName} (reste €${balance.toFixed(2)})`;
-            cardSelect.appendChild(opt);
-          });
-        }
-      }
+    function openCardModal(){ document.getElementById('cardModal').classList.remove('hidden'); document.body.style.overflow='hidden'; }
+    function closeCardModal(){ document.getElementById('cardModal').classList.add('hidden'); document.body.style.overflow=''; document.getElementById('cardForm').reset(); }
+    function addCard(e){ e.preventDefault(); let person=document.getElementById('cardPersonName').value.trim(), amount=parseFloat(document.getElementById('cardAmount').value); if(!person||isNaN(amount)||amount<=0){ showToast('Données invalides'); return; } cards.push({id:generateId(), personName:person, amount}); saveCards(); renderCards(); closeCardModal(); showToast('Carte ajoutée'); }
+    function exportToJSON(){ if(!orders.length&&!cards.length){ showToast('Aucune donnée'); return; } let data={orders,cards}; let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`suivi-commandes-${new Date().toISOString().slice(0,10)}.json`; a.click(); showToast('Export réussi'); }
+    function importFromJSON(file){ let reader=new FileReader(); reader.onload=e=>{ try{ let data=JSON.parse(e.target.result); if(data.orders){ data.orders.forEach(o=>{ if(!o.currency) o.currency='USD'; if(o.cardId===undefined) o.cardId=null; let alreadyExists=orders.some(ex=>ex.trackingNumber===o.trackingNumber); if(!alreadyExists){ if(!o.id) o.id=generateId(); orders.push(o); } }); saveOrders(); } if(data.cards){ data.cards.forEach(c=>{ if(!cards.some(ex=>ex.id===c.id)) cards.push(c); }); saveCards(); } renderOrders(document.getElementById('searchInput').value); renderCards(); showToast('Import terminé'); }catch(err){ showToast('Échec de l\'import'); } }; reader.readAsText(file); }
+    function triggerImport(){ document.getElementById('importFileInput').click(); }
 
-      function toggleCardField() {
-        if (currencySelect.value === 'EUR') {
-          cardSelectionRow.classList.remove('hidden');
-          populateCardSelect();
-        } else {
-          cardSelectionRow.classList.add('hidden');
-          cardSelect.value = '';
-        }
-      }
-
-      function updateCharts() {
-        const ctx1 = document.getElementById('statusChart')?.getContext('2d');
-        const ctx2 = document.getElementById('currencyChart')?.getContext('2d');
-        if (!ctx1 || !ctx2) return;
-
-        const inTransit = orders.filter(o => o.status === 'In Transit').length;
-        const delivered = orders.filter(o => o.status === 'Delivered').length;
-
-        if (statusChart) statusChart.destroy();
-        statusChart = new Chart(ctx1, {
-          type: 'pie',
-          data: {
-            labels: ['En transit', 'Livré'],
-            datasets: [{
-              data: [inTransit, delivered],
-              backgroundColor: ['#38bdf8', '#4ade80'],
-              borderColor: '#1e293b',
-              borderWidth: 2,
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: { legend: { labels: { color: '#cbd5e1' } } }
-          }
-        });
-
-        let usd = 0, eur = 0, tnd = 0;
-        orders.forEach(o => {
-          const amt = parseFloat(o.price)||0;
-          if (o.currency === 'USD') usd += amt;
-          else if (o.currency === 'EUR') eur += amt;
-          else if (o.currency === 'TND') tnd += amt;
-        });
-
-        if (currencyChart) currencyChart.destroy();
-        currencyChart = new Chart(ctx2, {
-          type: 'bar',
-          data: {
-            labels: ['USD', 'EUR', 'TND'],
-            datasets: [{
-              label: 'Total dépensé',
-              data: [usd, eur, tnd],
-              backgroundColor: ['#818cf8', '#c084fc', '#fbbf24'],
-              borderColor: '#1e293b',
-              borderWidth: 1,
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-              y: { beginAtZero: true, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } },
-              x: { ticks: { color: '#94a3b8' } }
-            },
-            plugins: { legend: { display: false } }
-          }
-        });
-      }
-
-      function updateCardFilterUI() {
-        if (currentCardFilter) {
-          const card = cards.find(c => c.id === currentCardFilter);
-          if (card) {
-            activeCardFilterText.textContent = `Achats de : ${card.personName}`;
-            activeCardFilter.classList.remove('hidden');
-          } else {
-            currentCardFilter = null;
-            activeCardFilter.classList.add('hidden');
-          }
-        } else {
-          activeCardFilter.classList.add('hidden');
-        }
-      }
-
-      function applyCardFilter(cardId) {
-        currentCardFilter = cardId;
-        updateCardFilterUI();
-        renderOrders(searchInput.value);
-        showToast(`🔎 Filtré par carte`);
-      }
-
-      function clearCardFilter() {
-        currentCardFilter = null;
-        updateCardFilterUI();
-        renderOrders(searchInput.value);
-      }
-
-      function isTunisianTracking(number) {
-        const up = number.toUpperCase();
-        return (up.startsWith('UA') && up.endsWith('VU')) || (up.startsWith('RR') && up.endsWith('AE'));
-      }
-
-      function renderCards() {
-        cardsContainer.innerHTML = '';
-        if (cards.length === 0) {
-          noCardsMessage.classList.remove('hidden');
-        } else {
-          noCardsMessage.classList.add('hidden');
-          cards.forEach(card => {
-            const balance = getCardBalance(card.id);
-            const cardEl = document.createElement('div');
-            cardEl.className = 'warm-card bg-slate-800 rounded-xl shadow-sm border p-4 flex flex-col gap-2 transition-smooth cursor-pointer';
-            cardEl.innerHTML = `
-              <div class="flex justify-between items-start">
-                <span class="font-bold text-slate-200">👤 ${escapeHTML(card.personName)}</span>
-                <button class="delete-card-btn text-red-400 hover:text-red-600 text-sm z-10" data-card-id="${card.id}">🗑️</button>
-              </div>
-              <div class="text-sm text-slate-400">
-                <p>💰 Montant : <span class="font-semibold text-slate-300">€${card.amount.toFixed(2)}</span></p>
-                <p>💸 Reste : <span class="font-bold ${balance > 0 ? 'text-emerald-400' : 'text-red-500'}">€${balance.toFixed(2)}</span></p>
-              </div>
-            `;
-            cardEl.addEventListener('click', (e) => {
-              if (!e.target.closest('.delete-card-btn')) applyCardFilter(card.id);
-            });
-            cardEl.querySelector('.delete-card-btn').addEventListener('click', (e) => {
-              e.stopPropagation();
-              customConfirm('Supprimer cette carte ?', (ok) => {
-                if (ok) {
-                  cards = cards.filter(c => c.id !== card.id);
-                  saveCards();
-                  if (currentCardFilter === card.id) clearCardFilter();
-                  renderCards(); updateStats(); updateCharts();
-                  showToast('🗑️ Carte supprimée');
-                }
-              });
-            });
-            cardsContainer.appendChild(cardEl);
-          });
-        }
-        populateCardSelect();
-      }
-
-      function updateStats() {
-        const inTransit = orders.filter(o => o.status === 'In Transit').length;
-        const delivered = orders.filter(o => o.status === 'Delivered').length;
-        let totalUSD = 0, totalEUR = 0, totalTND = 0;
-        orders.forEach(o => {
-          const amt = parseFloat(o.price)||0;
-          if (o.currency === 'USD') totalUSD += amt;
-          else if (o.currency === 'EUR') totalEUR += amt;
-          else if (o.currency === 'TND') totalTND += amt;
-        });
-        inTransitCountEl.textContent = inTransit;
-        deliveredCountEl.textContent = delivered;
-        totalBudgetUSDEl.textContent = `$${totalUSD.toFixed(2)}`;
-        totalBudgetEUREl.textContent = `€${totalEUR.toFixed(2)}`;
-        totalBudgetTNDEl.textContent = `${totalTND.toFixed(2)} DT`;
-        activeCountBadge.textContent = inTransit;
-        archivedCountBadge.textContent = delivered;
-
-        if (delivered > 0) {
-          archiveSection.classList.remove('hidden');
-        } else {
-          archiveSection.classList.add('hidden');
-        }
-      }
-
-      function formatDate(dateString) { return dateString ? new Date(dateString).toLocaleDateString('fr-FR',{year:'numeric',month:'short',day:'numeric'}) : '—'; }
-      function getStatusBadge(s) { return s==='In Transit'?'<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-900/50 text-blue-300">✈️ En transit</span>':'<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-900/50 text-green-300">✅ Livré</span>'; }
-      function escapeHTML(str) { return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-      function generateId() { return Date.now().toString(36)+Math.random().toString(36).substring(2,7); }
-      function formatPrice(price, currency) { if(price===undefined||price===null||price==='') return ''; const n=parseFloat(price).toFixed(2); if(currency==='EUR') return `€${n}`; if(currency==='TND') return `${n} DT`; return `$${n}`; }
-
-      function attachOrderEvents(el, id) {
-        el.querySelector('.toggle-status-btn')?.addEventListener('click', e=>{ e.stopPropagation(); toggleOrderStatus(id); });
-        el.querySelector('.edit-order-btn')?.addEventListener('click', e=>{ e.stopPropagation(); openEditModal(id); });
-        el.querySelector('.delete-order-btn')?.addEventListener('click', e=>{ e.stopPropagation(); deleteOrder(id); });
-      }
-
-      activeOrdersContainer.addEventListener('click', (e) => {
-        const copyBtn = e.target.closest('.copy-tracking-btn');
-        const trackBtn = e.target.closest('.track-btn');
+    function bindEvents(){
+      document.getElementById('openAddModalBtn').addEventListener('click',openAddModal);
+      document.getElementById('closeModalBtn').addEventListener('click',closeOrderModal);
+      document.getElementById('cancelModalBtn').addEventListener('click',closeOrderModal);
+      document.getElementById('orderModal').addEventListener('click',e=>{if(e.target===document.getElementById('orderModal')) closeOrderModal();});
+      document.getElementById('orderForm').addEventListener('submit',saveOrder);
+      document.getElementById('searchInput').addEventListener('input',e=>renderOrders(e.target.value));
+      document.getElementById('exportBtn').addEventListener('click',exportToJSON);
+      document.getElementById('importBtn').addEventListener('click',triggerImport);
+      document.getElementById('importFileInput').addEventListener('change',e=>{if(e.target.files[0]){ importFromJSON(e.target.files[0]); e.target.value=''; }});
+      document.addEventListener('keydown',e=>{if(e.key==='Escape' && !document.getElementById('orderModal').classList.contains('hidden')) closeOrderModal();});
+      document.getElementById('openCardModalBtn').addEventListener('click',openCardModal);
+      document.getElementById('closeCardModalBtn').addEventListener('click',closeCardModal);
+      document.getElementById('cancelCardBtn').addEventListener('click',closeCardModal);
+      document.getElementById('cardModal').addEventListener('click',e=>{if(e.target===document.getElementById('cardModal')) closeCardModal();});
+      document.getElementById('cardForm').addEventListener('submit',addCard);
+      document.addEventListener('keydown',e=>{if(e.key==='Escape' && !document.getElementById('cardModal').classList.contains('hidden')) closeCardModal();});
+      document.getElementById('currencySelect').addEventListener('change',toggleCardField);
+      document.getElementById('clearCardFilterBtn').addEventListener('click',clearCardFilter);
+      document.getElementById('toggleArchiveBtn').addEventListener('click',()=>{ archiveVisible=!archiveVisible; renderOrders(document.getElementById('searchInput').value); });
+      // Gestionnaire global pour les boutons Copier et Suivre
+      document.body.addEventListener('click', (e) => {
+        let copyBtn = e.target.closest('.copy-tracking-btn');
         if (copyBtn) {
-          e.stopPropagation();
-          const trackingEl = copyBtn.parentElement.querySelector('span.font-mono');
-          const trackingNumber = trackingEl ? trackingEl.textContent.trim() : '';
-          if (trackingNumber) navigator.clipboard.writeText(trackingNumber).then(() => showToast('📋 Numéro copié'));
+          let span = copyBtn.parentElement.querySelector('span.font-mono');
+          if (span) {
+            navigator.clipboard.writeText(span.textContent.trim());
+            showToast('📋 Numéro copié');
+          }
           return;
         }
+        let trackBtn = e.target.closest('.track-btn');
         if (trackBtn) {
-          e.stopPropagation();
-          const trackingEl = trackBtn.parentElement.querySelector('span.font-mono');
-          const trackingNumber = trackingEl ? trackingEl.textContent.trim() : '';
-          if (trackingNumber) {
-            navigator.clipboard.writeText(trackingNumber).then(() => {
-              window.open('http://www.e-suivi.poste.tn/fr/suivi.html', '_blank');
-              showToast('🔍 Numéro copié, collez-le sur le site poste.tn');
-            });
+          let span = trackBtn.parentElement.querySelector('span.font-mono');
+          if (span) {
+            navigator.clipboard.writeText(span.textContent.trim());
+            window.open('http://www.e-suivi.poste.tn/fr/suivi.html', '_blank');
+            showToast('🔍 Numéro copié, ouvrez poste.tn');
           }
-          return;
         }
       });
+    }
 
-      archivedOrdersContainer.addEventListener('click', (e) => {
-        const copyBtn = e.target.closest('.copy-tracking-btn');
-        const trackBtn = e.target.closest('.track-btn');
-        if (copyBtn) {
-          e.stopPropagation();
-          const trackingEl = copyBtn.parentElement.querySelector('span.font-mono');
-          const trackingNumber = trackingEl ? trackingEl.textContent.trim() : '';
-          if (trackingNumber) navigator.clipboard.writeText(trackingNumber).then(() => showToast('📋 Numéro copié'));
-          return;
-        }
-        if (trackBtn) {
-          e.stopPropagation();
-          const trackingEl = trackBtn.parentElement.querySelector('span.font-mono');
-          const trackingNumber = trackingEl ? trackingEl.textContent.trim() : '';
-          if (trackingNumber) {
-            navigator.clipboard.writeText(trackingNumber).then(() => {
-              window.open('http://www.e-suivi.poste.tn/fr/suivi.html', '_blank');
-              showToast('🔍 Numéro copié, collez-le sur le site poste.tn');
-            });
-          }
-          return;
-        }
-      });
-
-      function createOrderElement(order) {
-        const el = document.createElement('div');
-        el.className = 'order-row grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4 px-4 md:px-6 py-4 items-center';
-        const priceDisp = order.price ? formatPrice(order.price, order.currency) : '';
-        const showTrackBtn = isTunisianTracking(order.trackingNumber);
-        el.innerHTML = `
-          <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Produit</span><span class="font-semibold text-slate-100 truncate">${escapeHTML(order.productName)}</span>${priceDisp?`<span class="text-xs text-slate-400">${priceDisp}</span>`:''}</div>
-          <div class="flex flex-col">
-            <span class="text-sm text-slate-400 md:hidden">N° suivi</span>
-            <div class="flex items-center gap-1">
-              <span class="text-sm font-mono bg-slate-700 px-2 py-1 rounded text-slate-300">${escapeHTML(order.trackingNumber)}</span>
-              <button class="copy-tracking-btn text-slate-400 hover:text-slate-200 text-xs" title="Copier">📋</button>
-              ${showTrackBtn ? '<button class="track-btn text-blue-400 hover:text-blue-300 text-xs" title="Suivre sur poste.tn">🔍</button>' : ''}
-            </div>
-          </div>
-          <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Statut</span>${getStatusBadge(order.status)}</div>
-          <div class="flex flex-col"><span class="text-sm text-slate-400 md:hidden">Date</span><span class="text-sm text-slate-400">${formatDate(order.date)}</span></div>
-          <div class="flex gap-2 md:justify-end mt-2 md:mt-0">
-            <button class="toggle-status-btn text-xs px-3 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300">🔄</button>
-            <button class="edit-order-btn text-xs px-3 py-1.5 rounded-lg bg-blue-900/30 hover:bg-blue-800/50 text-blue-400">✏️</button>
-            <button class="delete-order-btn text-xs px-3 py-1.5 rounded-lg bg-red-900/30 hover:bg-red-800/50 text-red-400">🗑️</button>
-          </div>`;
-        attachOrderEvents(el, order.id);
-        return el;
-      }
-
-      function renderOrders(filter='') {
-        let allOrders = orders;
-        if (currentCardFilter) {
-          allOrders = allOrders.filter(o => o.cardId === currentCardFilter);
-        }
-        const f = filter.trim().toLowerCase();
-        if (f !== '') {
-          allOrders = allOrders.filter(o => o.productName.toLowerCase().includes(f) || o.trackingNumber.toLowerCase().includes(f));
-        }
-
-        const activeOrders = allOrders.filter(o => o.status === 'In Transit');
-        const archivedOrders = allOrders.filter(o => o.status === 'Delivered');
-
-        activeOrdersContainer.innerHTML = '';
-        if (activeOrders.length === 0) {
-          activeEmptyState.classList.remove('hidden');
-        } else {
-          activeEmptyState.classList.add('hidden');
-          activeOrders.forEach(order => {
-            activeOrdersContainer.appendChild(createOrderElement(order));
-          });
-        }
-
-        archivedOrdersContainer.innerHTML = '';
-        if (archivedOrders.length === 0) {
-          archivedEmptyState.classList.remove('hidden');
-        } else {
-          archivedEmptyState.classList.add('hidden');
-          archivedOrders.forEach(order => {
-            archivedOrdersContainer.appendChild(createOrderElement(order));
-          });
-        }
-
-        if (archiveVisible) {
-          archivedOrdersContainer.classList.remove('hidden');
-          archiveToggleIcon.textContent = '▲';
-        } else {
-          archivedOrdersContainer.classList.add('hidden');
-          archiveToggleIcon.textContent = '▼';
-        }
-
-        updateStats();
-        updateCharts();
-      }
-
-      function deleteOrder(id) {
-        customConfirm('Supprimer cette commande ?', (ok) => {
-          if (ok) {
-            orders = orders.filter(o=>o.id!==id);
-            saveOrders();
-            renderOrders(searchInput.value);
-            renderCards();
-            showToast('🗑️ Commande supprimée');
-          }
-        });
-      }
-
-      function openEditModal(id) {
-        const o = orders.find(o=>o.id===id); if(!o) return;
-        currentEditId = id;
-        orderIdInput.value = o.id; productNameInput.value = o.productName||''; priceInput.value = o.price||'';
-        currencySelect.value = o.currency||'USD'; statusSelect.value = o.status;
-        trackingNumberInput.value = o.trackingNumber||''; notesInput.value = o.notes||'';
-        toggleCardField();
-        if(o.currency==='EUR' && o.cardId) cardSelect.value = o.cardId;
-        modalTitle.textContent = 'Modifier la commande';
-        orderModal.classList.remove('hidden'); document.body.style.overflow = 'hidden';
-      }
-
-      function toggleOrderStatus(id) {
-        const o = orders.find(o=>o.id===id); if(!o) return;
-        o.status = o.status==='In Transit'?'Delivered':'In Transit';
-        saveOrders(); renderOrders(searchInput.value); renderCards(); showToast('🔄 Statut modifié');
-      }
-
-      function resetForm() {
-        orderForm.reset(); orderIdInput.value = ''; currentEditId = null;
-        modalTitle.textContent = 'Ajouter une commande'; statusSelect.value = 'In Transit'; currencySelect.value = 'USD';
-        cardSelectionRow.classList.add('hidden'); cardSelect.value = '';
-      }
-
-      function openAddModal() { resetForm(); orderModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-      function closeOrderModal() { orderModal.classList.add('hidden'); document.body.style.overflow = ''; resetForm(); }
-
-      function saveOrder(e) {
-        e.preventDefault();
-        const name = productNameInput.value.trim(), track = trackingNumberInput.value.trim();
-        if(!name||!track) { showToast('⚠️ Produit et N° de suivi requis'); return; }
-        const price = parseFloat(priceInput.value)||0;
-        const currency = currencySelect.value;
-        let cardId = null;
-        if (currency === 'EUR') {
-          if (cards.length === 0) { showToast('⚠️ Veuillez dʼabord ajouter une carte'); return; }
-          cardId = cardSelect.value;
-          if (!cardId) { showToast('⚠️ Sélectionnez une carte'); return; }
-          const bal = getCardBalance(cardId);
-          if (price > bal) { showToast('⚠️ Solde insuffisant'); return; }
-        }
-        const status = statusSelect.value, notes = notesInput.value.trim();
-        if(currentEditId) {
-          const idx = orders.findIndex(o=>o.id===currentEditId);
-          if(idx>-1) { orders[idx] = {...orders[idx], productName:name, price, currency, cardId, status, trackingNumber:track, notes}; showToast('✅ Commande mise à jour'); }
-        } else {
-          orders.unshift({ id:generateId(), productName:name, price, currency, cardId, status, trackingNumber:track, notes, date: new Date().toISOString() });
-          showToast('🎉 Commande ajoutée');
-        }
-        saveOrders(); renderOrders(searchInput.value); renderCards(); closeOrderModal();
-      }
-
-      function openCardModal() { cardModal.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-      function closeCardModal() { cardModal.classList.add('hidden'); document.body.style.overflow = ''; cardForm.reset(); }
-
-      function addCard(e) {
-        e.preventDefault();
-        const person = cardPersonName.value.trim();
-        const amount = parseFloat(cardAmount.value);
-        if(!person || isNaN(amount) || amount <= 0) { showToast('⚠️ Données invalides'); return; }
-        cards.push({ id: generateId(), personName: person, amount });
-        saveCards(); renderCards(); closeCardModal(); showToast('💳 Carte ajoutée');
-      }
-
-      function exportToJSON() {
-        if(!orders.length && !cards.length) { showToast('⚠️ Aucune donnée'); return; }
-        const data = { orders, cards };
-        const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-        a.download = `suivi-commandes-${new Date().toISOString().slice(0,10)}.json`; a.click();
-        showToast('📥 Export réussi');
-      }
-
-      function importFromJSON(file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-          try {
-            const data = JSON.parse(e.target.result);
-            if(data.orders) {
-              data.orders.forEach(o => {
-                if(!o.currency) o.currency='USD'; if(!o.cardId) o.cardId=null;
-                if(!orders.some(x=>x.trackingNumber===o.trackingNumber && x.productName===o.productName && x.date===o.date)) {
-                  if(!o.id) o.id = generateId(); orders.push(o);
-                }
-              });
-              saveOrders();
-            }
-            if(data.cards) {
-              data.cards.forEach(c => { if(!cards.some(x=>x.id===c.id)) cards.push(c); });
-              saveCards();
-            }
-            renderOrders(searchInput.value); renderCards();
-          } catch { showToast('❌ Échec de lʼimport'); }
-        };
-        reader.readAsText(file);
-      }
-      function triggerImport() { importFileInput.click(); }
-
-      function bindEvents() {
-        document.getElementById('openAddModalBtn').addEventListener('click', openAddModal);
-        document.getElementById('closeModalBtn').addEventListener('click', closeOrderModal);
-        document.getElementById('cancelModalBtn').addEventListener('click', closeOrderModal);
-        orderModal.addEventListener('click', e => { if(e.target===orderModal) closeOrderModal(); });
-        orderForm.addEventListener('submit', saveOrder);
-        searchInput.addEventListener('input', e => renderOrders(e.target.value));
-        document.getElementById('exportBtn').addEventListener('click', exportToJSON);
-        document.getElementById('importBtn').addEventListener('click', triggerImport);
-        importFileInput.addEventListener('change', e => { if(e.target.files[0]) { importFromJSON(e.target.files[0]); importFileInput.value=''; } });
-        document.addEventListener('keydown', e => { if(e.key==='Escape' && !orderModal.classList.contains('hidden')) closeOrderModal(); });
-
-        document.getElementById('openCardModalBtn').addEventListener('click', openCardModal);
-        document.getElementById('closeCardModalBtn').addEventListener('click', closeCardModal);
-        document.getElementById('cancelCardBtn').addEventListener('click', closeCardModal);
-        cardModal.addEventListener('click', e => { if(e.target===cardModal) closeCardModal(); });
-        cardForm.addEventListener('submit', addCard);
-        document.addEventListener('keydown', e => { if(e.key==='Escape' && !cardModal.classList.contains('hidden')) closeCardModal(); });
-
-        currencySelect.addEventListener('change', toggleCardField);
-        clearCardFilterBtn.addEventListener('click', clearCardFilter);
-
-        toggleArchiveBtn.addEventListener('click', () => {
-          archiveVisible = !archiveVisible;
-          renderOrders(searchInput.value);
-        });
-      }
-
-      window.addEventListener('DOMContentLoaded', () => {
-        loadData(); bindEvents();
-        renderCards(); renderOrders();
-        updateCardFilterUI();
-      });
-    })();
-  </script>
+    window.addEventListener('DOMContentLoaded',()=>{ loadData(); bindEvents(); renderCards(); renderOrders(); document.getElementById('activeCardFilter').classList.add('hidden'); });
+  })();
+</script>
 </body>
 </html>
