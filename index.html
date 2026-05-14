@@ -3,652 +3,618 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>تتبع الطرود | AliExpress Style</title>
-    <!-- Font Awesome 6 (مجاني للأيقونات) -->
+    <title>مدير البطاقات والمشتريات | شامل</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Tahoma', system-ui, -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            font-family: 'Segoe UI', system-ui, Tahoma, sans-serif;
         }
-
         body {
             background-color: #0a0c10;
             color: #eef2ff;
-            padding: 1.5rem;
-            transition: all 0.2s ease;
+            padding: 1.2rem;
         }
-
-        /* الحاوية الرئيسية */
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
+        }
+        /* header */
+        .header-area {
             background: #0f1117;
             border-radius: 28px;
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.6);
-            padding: 1.8rem 1.5rem 2rem;
-            border: 1px solid rgba(255, 107, 0, 0.2);
-        }
-
-        /* الرأس + الإجمالي */
-        .header-area {
+            padding: 1rem 1.8rem;
+            margin-bottom: 1.8rem;
+            border: 1px solid rgba(255, 107, 0, 0.3);
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid #2a2e3a;
-            padding-bottom: 1.2rem;
         }
-
         .title h1 {
-            font-size: 1.7rem;
-            font-weight: 700;
+            font-size: 1.6rem;
             background: linear-gradient(135deg, #FF6B00, #ff9142);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            letter-spacing: -0.3px;
         }
-
-        .title p {
-            font-size: 0.8rem;
-            color: #9ca3af;
-            margin-top: 5px;
-        }
-
-        /* بطاقة الإجمالي */
-        .total-card {
-            background: #1a1d26;
-            border-radius: 32px;
-            padding: 0.8rem 1.5rem;
+        .action-buttons {
             display: flex;
-            gap: 1.8rem;
+            gap: 10px;
             flex-wrap: wrap;
-            justify-content: center;
-            border-left: 3px solid #FF6B00;
-            box-shadow: 0 8px 16px -6px rgba(0,0,0,0.4);
         }
-
-        .total-item {
-            text-align: center;
+        .action-btn {
+            background: #1e2330;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 40px;
+            color: #FFB27A;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
         }
-
-        .total-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #b9c3db;
+        .action-btn i {
+            margin-left: 5px;
         }
-
+        .action-btn:hover {
+            background: #FF6B00;
+            color: #0f1117;
+        }
+        .total-cards {
+            display: flex;
+            gap: 1.5rem;
+            background: #1a1d26;
+            padding: 0.5rem 1.5rem;
+            border-radius: 60px;
+        }
         .total-amount {
-            font-size: 1.9rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: #FF6B00;
-            line-height: 1.2;
         }
-
-        .total-amount small {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #cbd5e6;
-        }
-
-        /* أزرار JSON */
-        .json-actions {
-            display: flex;
-            gap: 0.8rem;
-        }
-
-        .json-btn {
-            background: #262b36;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            color: #FFE8D9;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .json-btn i {
-            color: #FF6B00;
-        }
-
-        .json-btn:hover {
-            background: #FF6B00;
-            color: #0f1117;
-            transform: translateY(-2px);
-        }
-
-        .json-btn:hover i {
-            color: #0f1117;
-        }
-
-        /* نموذج الإضافة */
-        .add-form {
-            background: #13161f;
-            border-radius: 32px;
-            padding: 1.2rem 1.5rem;
-            margin-bottom: 2rem;
+        /* dashboard */
+        .dashboard {
             display: flex;
             flex-wrap: wrap;
-            align-items: flex-end;
-            gap: 1rem;
-            border: 1px solid #2c2f3a;
+            gap: 1.5rem;
         }
-
-        .form-group {
-            flex: 1;
-            min-width: 140px;
+        .cards-section {
+            flex: 1.2;
+            min-width: 260px;
+            background: #0f1117;
+            border-radius: 24px;
+            padding: 1.2rem;
+            border: 1px solid #262b36;
         }
-
-        .form-group label {
-            display: block;
-            font-size: 0.7rem;
+        .purchases-section {
+            flex: 2.5;
+            min-width: 300px;
+            background: #0f1117;
+            border-radius: 24px;
+            padding: 1.2rem;
+        }
+        .section-title {
+            font-size: 1.2rem;
             font-weight: 600;
-            color: #FFB27A;
-            margin-bottom: 0.3rem;
-            letter-spacing: 0.3px;
+            border-right: 4px solid #FF6B00;
+            padding-right: 12px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
         }
-
-        .form-group input, .form-group select {
-            width: 100%;
-            background: #20232e;
-            border: 1px solid #353a48;
-            padding: 0.7rem 1rem;
+        .cards-list {
+            max-height: 450px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .card-item {
+            background: #181c26;
             border-radius: 20px;
-            color: white;
-            font-size: 0.9rem;
-            outline: none;
-            transition: all 0.2s;
+            padding: 0.8rem;
+            border-left: 3px solid #FF6B00;
         }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: #FF6B00;
-            box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.3);
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
         }
-
-        .btn-add {
+        .card-balance {
+            font-weight: bold;
+            color: #FFB27A;
+        }
+        .btn-icon {
+            background: #252b38;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 30px;
+            color: #ddd;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+        .btn-primary {
             background: #FF6B00;
             border: none;
-            padding: 0.7rem 1.8rem;
-            border-radius: 40px;
+            padding: 8px 20px;
+            border-radius: 30px;
             font-weight: bold;
-            color: #0f1117;
             cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            margin-top: 1.2rem;
         }
-
-        .btn-add:hover {
-            background: #ff8733;
-            transform: scale(1.02);
-            box-shadow: 0 6px 14px rgba(255, 107, 0, 0.3);
-        }
-
-        /* حاوية الجدول */
-        .table-wrapper {
-            overflow-x: auto;
+        .purchase-form {
+            background: #131720;
             border-radius: 24px;
-            background: #0c0f16;
-            margin-top: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-
+        .form-field {
+            flex: 1;
+            min-width: 120px;
+        }
+        .form-field input, .form-field select {
+            width: 100%;
+            background: #202430;
+            border: 1px solid #353b48;
+            padding: 8px 12px;
+            border-radius: 20px;
+            color: white;
+        }
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .filter-bar input, .filter-bar select {
+            background: #202430;
+            border: 1px solid #3a4050;
+            padding: 6px 12px;
+            border-radius: 30px;
+            color: white;
+        }
         .track-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
-            min-width: 550px;
+            font-size: 0.85rem;
         }
-
-        .track-table th {
+        .track-table th, .track-table td {
+            padding: 10px 6px;
             text-align: right;
-            padding: 1rem 1rem;
-            background: #1a1e28;
-            color: #FFB27A;
-            font-weight: 600;
-            border-bottom: 1px solid #2d313e;
+            border-bottom: 1px solid #232732;
         }
-
-        .track-table td {
-            padding: 1rem 1rem;
-            border-bottom: 1px solid #22262f;
-            vertical-align: middle;
-        }
-
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
             background: #1e232f;
-            padding: 0.3rem 1rem;
+            padding: 3px 10px;
             border-radius: 40px;
-            font-size: 0.8rem;
-            font-weight: 500;
         }
-
-        .delete-btn {
-            background: transparent;
-            border: none;
-            color: #ff6b6b;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: 0.2s;
-            padding: 6px 8px;
-            border-radius: 50%;
+        .modal {
+            display: none;
+            position: fixed;
+            top:0; left:0;
+            width:100%; height:100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
-
-        .delete-btn:hover {
-            background: #2a1c1c;
-            color: #ff3a3a;
-            transform: scale(1.1);
+        .modal-content {
+            background: #141824;
+            padding: 1.5rem;
+            border-radius: 32px;
+            width: 90%;
+            max-width: 450px;
         }
-
-        .price-style {
-            font-weight: 600;
-            color: #FFB27A;
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #FF6B00;
+            color: #0a0c10;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: bold;
+            z-index: 2000;
+            display: none;
         }
-
-        /* استجابة للهواتف */
         @media (max-width: 780px) {
-            body {
-                padding: 0.8rem;
-            }
-            .container {
-                padding: 1rem;
-            }
-            .header-area {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .total-card {
-                justify-content: space-between;
-            }
-            .add-form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .btn-add {
-                margin-top: 0.5rem;
-                justify-content: center;
-            }
-            .track-table th, .track-table td {
-                padding: 0.7rem 0.8rem;
-                font-size: 0.8rem;
-            }
-            .total-amount {
-                font-size: 1.4rem;
-            }
-        }
-
-        /* أيقونات صغيرة */
-        .fa-trash-alt, .fa-file-export, .fa-file-import {
-            pointer-events: none;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.7rem;
-            color: #5f6a7a;
+            .dashboard { flex-direction: column; }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <!-- رأس الصفحة + الإجمالي + ازرار json -->
     <div class="header-area">
         <div class="title">
-            <h1><i class="fas fa-box-open" style="color:#FF6B00; margin-left: 8px;"></i>AliTrack</h1>
-            <p>تتبع الطرود • شحن سريع • AliExpress style</p>
+            <h1><i class="fas fa-credit-card"></i> VirtualCards + Tracker</h1>
+            <p>بطاقات متعددة | يورو/دولار | حفظ تلقائي ويدوي</p>
         </div>
-        <div class="total-card">
-            <div class="total-item">
-                <div class="total-label">💰 إجمالي الإنفاق (USD)</div>
-                <div class="total-amount" id="totalUSD">$0.00</div>
-            </div>
-            <div class="total-item">
-                <div class="total-label">💶 إجمالي الإنفاق (EUR)</div>
-                <div class="total-amount" id="totalEUR">€0.00</div>
-            </div>
+        <div class="action-buttons">
+            <button id="saveDataBtn" class="action-btn"><i class="fas fa-save"></i> حفظ يدوي</button>
+            <button id="exportJsonBtn" class="action-btn"><i class="fas fa-file-export"></i> تصدير JSON</button>
+            <button id="importJsonBtn" class="action-btn"><i class="fas fa-file-import"></i> استيراد JSON</button>
+            <input type="file" id="importFileInput" accept=".json" style="display:none">
+            <button id="resetDataBtn" class="action-btn" style="background:#2c1a1a;"><i class="fas fa-trash-restore"></i> إعادة ضبط</button>
         </div>
-        <div class="json-actions">
-            <button class="json-btn" id="exportBtn"><i class="fas fa-download"></i> تصدير JSON</button>
-            <button class="json-btn" id="importBtn"><i class="fas fa-upload"></i> استيراد JSON</button>
-            <input type="file" id="importFileInput" accept=".json" style="display: none;">
+        <div class="total-cards">
+            <div><span class="total-amount" id="totalUSD">$0.00</span><br>إجمالي USD</div>
+            <div><span class="total-amount" id="totalEUR">€0.00</span><br>إجمالي EUR</div>
         </div>
     </div>
 
-    <!-- نموذج إضافة منتج جديد -->
-    <div class="add-form">
-        <div class="form-group">
-            <label><i class="fas fa-tag"></i> اسم المنتج / وصف الطرد</label>
-            <input type="text" id="productName" placeholder="مثال: سماعات بلوتوث" autocomplete="off">
+    <div class="dashboard">
+        <div class="cards-section">
+            <div class="section-title">💳 البطاقات <button id="openCardModalBtn" class="btn-icon" style="background:#FF6B00;">+ إضافة</button></div>
+            <div id="cardsContainer" class="cards-list"></div>
+            <button id="quickAddCard" class="btn-primary" style="width:100%; margin-top:1rem;"><i class="fas fa-plus"></i> بطاقة جديدة</button>
         </div>
-        <div class="form-group">
-            <label><i class="fas fa-dollar-sign"></i> السعر (USD)</label>
-            <input type="number" id="productPrice" step="0.01" placeholder="0.00" value="0.00">
-        </div>
-        <div class="form-group">
-            <label><i class="fas fa-truck-fast"></i> حالة الشحن</label>
-            <select id="productStatus">
-                <option value="في الطريق">🚚 في الطريق</option>
-                <option value="في الجمارك">🛃 في الجمارك</option>
-                <option value="تم التوصيل">✅ تم التوصيل</option>
-            </select>
-        </div>
-        <button class="btn-add" id="addProductBtn"><i class="fas fa-plus-circle"></i> إضافة طرد</button>
-    </div>
 
-    <!-- جدول الطرود -->
-    <div class="table-wrapper">
-        <table class="track-table" id="trackingTable">
-            <thead>
-                <tr>
-                    <th>المنتج / الوصف</th>
-                    <th>السعر ($)</th>
-                    <th>حالة الشحن</th>
-                    <th style="width: 60px;"></th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <!-- سيتم تعبئته بواسطة JavaScript -->
-                <tr><td colspan="4" style="text-align:center;">جاري تحميل البيانات...</td></tr>
-            </tbody>
-        </table>
+        <div class="purchases-section">
+            <div class="section-title">➕ إضافة شراء</div>
+            <div class="purchase-form">
+                <div class="form-field"><label>المنتج</label><input type="text" id="prodName" placeholder="اسم المنتج"></div>
+                <div class="form-field"><label>المبلغ</label><input type="number" id="prodAmount" step="0.01" placeholder="0.00"></div>
+                <div class="form-field"><label>البطاقة</label><select id="cardSelect"></select></div>
+                <div class="form-field"><label>الحالة</label><select id="statusSelect"><option>في الطريق</option><option>في الجمارك</option><option>تم التوصيل</option><option>تم الشحن</option><option>قيد الانتظار</option></select></div>
+                <button id="addPurchaseBtn" class="btn-primary"><i class="fas fa-cart-plus"></i> إضافة</button>
+            </div>
+
+            <div class="section-title">📋 المشتريات <span style="font-size:0.8rem;"><i class="fas fa-filter"></i> بحث</span></div>
+            <div class="filter-bar">
+                <input type="text" id="searchInput" placeholder="🔍 بحث بالمنتج أو البطاقة">
+                <select id="filterStatus"><option value="">جميع الحالات</option><option>في الطريق</option><option>في الجمارك</option><option>تم التوصيل</option><option>تم الشحن</option><option>قيد الانتظار</option></select>
+                <button id="clearFilterBtn" class="btn-icon">مسح</button>
+            </div>
+            <div class="table-wrapper" style="overflow-x:auto;">
+                <table class="track-table" id="purchasesTable">
+                    <thead><tr><th>المنتج</th><th>المبلغ</th><th>البطاقة</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+                    <tbody id="purchasesBody"></tbody>
+                </table>
+            </div>
+            <div style="margin-top:1rem; background:#10141e; border-radius:20px; padding:0.7rem;" id="statsArea">
+                <i class="fas fa-chart-pie"></i> <strong>إحصائيات</strong>: <span id="statsText">0 مشتريات، 0 بطاقات</span>
+            </div>
+        </div>
     </div>
-    <footer>
-        <i class="fas fa-moon"></i> وضع ليلي | أيقونات تعبيرية لكل حالة | دعم عملات USD / EUR بسعر صرف 1 USD = 0.92 EUR
-    </footer>
 </div>
+<div id="toastMsg" class="toast"></div>
+
+<!-- مودال البطاقة -->
+<div id="cardModal" class="modal"><div class="modal-content"><h3 id="modalTitle">بطاقة جديدة</h3><input type="hidden" id="editingCardId"><input type="text" id="cardName" placeholder="الاسم"><select id="cardCurrency"><option value="USD">دولار USD</option><option value="EUR">يورو EUR</option></select><input type="number" id="cardBalance" placeholder="الرصيد الأولي"><div class="modal-buttons" style="display:flex; gap:10px; margin-top:15px;"><button id="saveCardBtn" class="btn-primary">حفظ</button><button id="closeModalBtn" class="btn-icon">إلغاء</button></div></div></div>
+
+<!-- مودال تعديل الشراء -->
+<div id="editPurchaseModal" class="modal"><div class="modal-content"><h3>تعديل الشراء</h3><input type="hidden" id="editPurchaseId"><input type="text" id="editProdName" placeholder="المنتج"><input type="number" id="editProdAmount" step="0.01" placeholder="المبلغ"><select id="editCardId"></select><select id="editStatus"><option>في الطريق</option><option>في الجمارك</option><option>تم التوصيل</option><option>تم الشحن</option><option>قيد الانتظار</option></select><div style="display:flex; gap:10px; margin-top:15px;"><button id="updatePurchaseBtn" class="btn-primary">تحديث</button><button id="closeEditModalBtn" class="btn-icon">إلغاء</button></div></div></div>
 
 <script>
-    // ------------------- التهيئة و المتغيرات -------------------
-    // سعر صرف ثابت (1 دولار = 0.92 يورو)
+    // ------------------- الإعدادات الأساسية -------------------
+    const STORAGE_KEY = "full_app_data_v2";
     const EXCHANGE_RATE = 0.92;
+    let cards = [];
+    let purchases = [];
+    let nextCardId = 1, nextPurchaseId = 1;
+    let currentFilter = { search: "", status: "" };
 
-    // مصفوفة الطرود الرئيسية
-    let parcels = [];
-
-    // ID تلقائي متزايد
-    let nextId = 1;
-
-    // دالة لتعيين أيقونة تعبيرية لكل حالة (حتى الحالات الإضافية مثل تم الشحن، قيد الانتظار، تم الاستلام)
-    function getStatusIcon(statusText) {
-        const statusMap = {
-            "في الطريق": "🚚",
-            "في الجمارك": "🛃",
-            "تم التوصيل": "✅",
-            "تم الشحن": "✈️",
-            "قيد الانتظار": "⏳",
-            "تم الاستلام": "📦✅",
-            "شحن": "📦",
-        };
-        // البحث المباشر
-        if (statusMap[statusText]) return statusMap[statusText];
-        // إرجاع أيقونة افتراضية إذا كانت حالة غير متوقعة
-        return "📦";
+    // حفظ كامل للبيانات
+    function persistData() {
+        const data = { cards, purchases, nextCardId, nextPurchaseId };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        showToast("✅ تم حفظ البيانات بنجاح");
     }
 
-    // دالة عرض الجدول بالكامل مع أيقونات وحذف
-    function renderTable() {
-        const tbody = document.getElementById('tableBody');
-        if (!tbody) return;
-
-        if (parcels.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:2rem;">📭 لا توجد طرود بعد، أضف طرداً جديداً</td></tr>`;
-            return;
-        }
-
-        let html = '';
-        for (let p of parcels) {
-            const icon = getStatusIcon(p.status);
-            // عرض الحالة مع النص والأيقونة
-            const statusDisplay = `<div class="status-badge"><span style="font-size:1.2rem;">${icon}</span> ${p.status}</div>`;
-            html += `
-                <tr data-id="${p.id}">
-                    <td><strong>${escapeHtml(p.name)}</strong></td>
-                    <td class="price-style">$${p.price.toFixed(2)}</td>
-                    <td>${statusDisplay}</td>
-                    <td><button class="delete-btn" data-id="${p.id}" title="حذف الطرد"><i class="fas fa-trash-alt"></i></button></td>
-                </tr>
-            `;
-        }
-        tbody.innerHTML = html;
-
-        // إضافة مستمعي أحداث الحذف لكل زر
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const id = parseInt(btn.getAttribute('data-id'));
-                deleteParcelById(id);
-            });
-        });
-    }
-
-    // دالة لحماية النصوص من XSS
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
-        });
-    }
-
-    // تحديث إجمالي الإنفاق بالدولار واليورو
-    function updateTotalSpending() {
-        const totalUSD = parcels.reduce((sum, p) => sum + p.price, 0);
-        const totalEUR = totalUSD * EXCHANGE_RATE;
-        const usdElement = document.getElementById('totalUSD');
-        const eurElement = document.getElementById('totalEUR');
-        if (usdElement) usdElement.innerHTML = `$${totalUSD.toFixed(2)}`;
-        if (eurElement) eurElement.innerHTML = `€${totalEUR.toFixed(2)}`;
-    }
-
-    // حذف طرد حسب id
-    function deleteParcelById(id) {
-        parcels = parcels.filter(p => p.id !== id);
-        // إعادة حساب nextId إن أمكن (لكن ليس ضروريا)
-        if (parcels.length > 0) {
-            const maxId = Math.max(...parcels.map(p => p.id));
-            nextId = maxId + 1;
+    // تحميل البيانات
+    function loadData() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                cards = data.cards || [];
+                purchases = data.purchases || [];
+                nextCardId = data.nextCardId || (cards.length ? Math.max(...cards.map(c=>c.id)) + 1 : 1);
+                nextPurchaseId = data.nextPurchaseId || (purchases.length ? Math.max(...purchases.map(p=>p.id)) + 1 : 1);
+            } catch(e) { console.error(e); setDefaultData(); }
         } else {
-            nextId = 1;
+            setDefaultData();
         }
-        renderTable();
-        updateTotalSpending();
+        // تحديث المعرفات إن لزم
+        if(cards.length === 0) nextCardId = 1;
+        if(purchases.length === 0) nextPurchaseId = 1;
     }
 
-    // إضافة منتج جديد
-    function addNewProduct(name, price, status) {
-        if (!name || name.trim() === "") {
-            alert("❌ الرجاء إ填写 اسم المنتج أو وصف الطرد");
-            return false;
+    function setDefaultData() {
+        cards = [
+            { id: 1, name: "بطاقة التسوق", currency: "USD", balance: 500 },
+            { id: 2, name: "بطاقة السفر", currency: "EUR", balance: 300 }
+        ];
+        purchases = [
+            { id: 1, productName: "سماعات", amount: 45.99, cardId: 1, status: "تم التوصيل", originalCurrency: "USD" },
+            { id: 2, productName: "حقيبة", amount: 60, cardId: 2, status: "في الطريق", originalCurrency: "EUR" }
+        ];
+        nextCardId = 3; nextPurchaseId = 3;
+    }
+
+    // عرض البطاقات
+    function renderCards() {
+        const container = document.getElementById('cardsContainer');
+        if(cards.length === 0) { container.innerHTML = "<div style='text-align:center'>لا توجد بطاقات</div>"; return; }
+        let html = "";
+        cards.forEach(card => {
+            const balanceStr = card.currency === 'USD' ? `$${card.balance.toFixed(2)}` : `€${card.balance.toFixed(2)}`;
+            html += `<div class="card-item"><div class="card-header"><span><i class="fas fa-credit-card"></i> ${escapeHtml(card.name)}</span><span class="card-balance">${balanceStr}</span></div>
+            <div class="card-actions"><button class="btn-icon edit-card" data-id="${card.id}"><i class="fas fa-edit"></i> تعديل</button>
+            <button class="btn-icon add-balance" data-id="${card.id}"><i class="fas fa-plus-circle"></i> إيداع</button>
+            <button class="btn-icon delete-card" data-id="${card.id}" style="color:#ff8a8a;"><i class="fas fa-trash"></i> حذف</button></div></div>`;
+        });
+        container.innerHTML = html;
+        attachCardEvents();
+    }
+
+    function attachCardEvents() {
+        document.querySelectorAll('.edit-card').forEach(btn => btn.addEventListener('click', (e) => openCardModal(parseInt(btn.dataset.id))));
+        document.querySelectorAll('.add-balance').forEach(btn => btn.addEventListener('click', (e) => addBalanceToCard(parseInt(btn.dataset.id))));
+        document.querySelectorAll('.delete-card').forEach(btn => btn.addEventListener('click', (e) => { if(confirm("حذف البطاقة وجميع مشترياتها؟")) deleteCardAndPurchases(parseInt(btn.dataset.id)); }));
+    }
+
+    function addBalanceToCard(cardId) {
+        let val = parseFloat(prompt("أدخل المبلغ المراد إضافته:"));
+        if(isNaN(val) || val<=0) return;
+        let card = cards.find(c=>c.id === cardId);
+        if(card) { card.balance += val; persistData(); renderCards(); updateTotalsAndStats(); }
+    }
+
+    function deleteCardAndPurchases(cardId) {
+        purchases = purchases.filter(p => p.cardId !== cardId);
+        cards = cards.filter(c => c.id !== cardId);
+        if(!cards.length) nextCardId = 1;
+        else nextCardId = Math.max(...cards.map(c=>c.id)) + 1;
+        persistData();
+        renderAll();
+    }
+
+    function openCardModal(editingId = null) {
+        const modal = document.getElementById('cardModal');
+        document.getElementById('modalTitle').innerText = editingId ? "تعديل البطاقة" : "بطاقة جديدة";
+        document.getElementById('editingCardId').value = editingId || "";
+        if(editingId) {
+            let card = cards.find(c=>c.id === editingId);
+            if(card) { document.getElementById('cardName').value = card.name; document.getElementById('cardCurrency').value = card.currency; document.getElementById('cardBalance').value = card.balance; }
+        } else { document.getElementById('cardName').value = ""; document.getElementById('cardCurrency').value = "USD"; document.getElementById('cardBalance').value = ""; }
+        modal.style.display = 'flex';
+    }
+
+    function saveCardFromModal() {
+        let id = document.getElementById('editingCardId').value;
+        let name = document.getElementById('cardName').value.trim();
+        let currency = document.getElementById('cardCurrency').value;
+        let balance = parseFloat(document.getElementById('cardBalance').value);
+        if(!name) { alert("اسم البطاقة مطلوب"); return; }
+        if(isNaN(balance)) balance = 0;
+        if(id) {
+            let card = cards.find(c=>c.id == id);
+            if(card) { card.name = name; card.currency = currency; card.balance = balance; }
+        } else {
+            cards.push({ id: nextCardId++, name, currency, balance });
         }
-        let priceNum = parseFloat(price);
-        if (isNaN(priceNum) || priceNum < 0) {
-            alert("⚠️ السعر غير صالح، أدخل رقماً موجباً");
-            return false;
-        }
-        // التأكد من أن الحالة ضمن المتاح (يمكن أن تكون من القائمة المنسدلة أو أي حالة)
-        const newParcel = {
-            id: nextId++,
-            name: name.trim(),
-            price: priceNum,
-            status: status,
-        };
-        parcels.push(newParcel);
-        renderTable();
-        updateTotalSpending();
+        persistData();
+        closeCardModal();
+        renderAll();
+    }
+
+    function closeCardModal() { document.getElementById('cardModal').style.display = 'none'; }
+
+    // إضافة شراء
+    function addPurchase(product, amount, cardId, status) {
+        if(!product.trim()) { alert("أدخل اسم المنتج"); return false; }
+        if(isNaN(amount) || amount <= 0) { alert("مبلغ صالح"); return false; }
+        let card = cards.find(c=>c.id == cardId);
+        if(!card) { alert("بطاقة غير موجودة"); return false; }
+        if(card.balance < amount) { alert(`رصيد غير كافٍ! الرصيد: ${card.currency === 'USD' ? '$' : '€'}${card.balance.toFixed(2)}`); return false; }
+        card.balance -= amount;
+        let newPurchase = { id: nextPurchaseId++, productName: product.trim(), amount, cardId: card.id, status, originalCurrency: card.currency };
+        purchases.push(newPurchase);
+        persistData();
+        renderAll();
         return true;
     }
 
-    // تصدير البيانات إلى ملف JSON
-    function exportToJSON() {
-        if (parcels.length === 0) {
-            alert("📭 لا توجد بيانات لتصديرها، أضف بعض الطرود أولاً.");
-            return;
+    function deletePurchase(purchaseId) {
+        let purchase = purchases.find(p=>p.id === purchaseId);
+        if(purchase) {
+            let card = cards.find(c=>c.id === purchase.cardId);
+            if(card) card.balance += purchase.amount;
+            purchases = purchases.filter(p=>p.id !== purchaseId);
+            persistData();
+            renderAll();
         }
-        const dataStr = JSON.stringify(parcels, null, 2);
-        const blob = new Blob([dataStr], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `parcels_${new Date().toISOString().slice(0,19)}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
     }
 
-    // استيراد البيانات من ملف JSON (يحل محل الجدول الحالي)
-    function importFromJSON(file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
+    function openEditPurchase(purchaseId) {
+        let purchase = purchases.find(p=>p.id === purchaseId);
+        if(!purchase) return;
+        document.getElementById('editPurchaseId').value = purchase.id;
+        document.getElementById('editProdName').value = purchase.productName;
+        document.getElementById('editProdAmount').value = purchase.amount;
+        document.getElementById('editStatus').value = purchase.status;
+        updateCardSelectForEdit();
+        setTimeout(()=>{ document.getElementById('editCardId').value = purchase.cardId; }, 20);
+        document.getElementById('editPurchaseModal').style.display = 'flex';
+    }
+
+    function updateCardSelectForEdit() {
+        let select = document.getElementById('editCardId');
+        select.innerHTML = "";
+        cards.forEach(c => { let opt = document.createElement('option'); opt.value = c.id; opt.textContent = `${c.name} (${c.currency})`; select.appendChild(opt); });
+    }
+
+    function updatePurchaseFromModal() {
+        let id = parseInt(document.getElementById('editPurchaseId').value);
+        let newName = document.getElementById('editProdName').value.trim();
+        let newAmount = parseFloat(document.getElementById('editProdAmount').value);
+        let newStatus = document.getElementById('editStatus').value;
+        let newCardId = parseInt(document.getElementById('editCardId').value);
+        if(!newName || isNaN(newAmount) || newAmount<=0) { alert("بيانات غير صالحة"); return; }
+        let oldPurchase = purchases.find(p=>p.id === id);
+        if(!oldPurchase) return;
+        let oldCard = cards.find(c=>c.id === oldPurchase.cardId);
+        let newCard = cards.find(c=>c.id === newCardId);
+        if(!newCard) return;
+        // استعادة الرصيد القديم
+        if(oldCard) oldCard.balance += oldPurchase.amount;
+        if(newCard.balance < newAmount) {
+            if(oldCard) oldCard.balance -= oldPurchase.amount;
+            alert("رصيد غير كافٍ في البطاقة الجديدة");
+            return;
+        }
+        newCard.balance -= newAmount;
+        oldPurchase.productName = newName;
+        oldPurchase.amount = newAmount;
+        oldPurchase.cardId = newCardId;
+        oldPurchase.status = newStatus;
+        oldPurchase.originalCurrency = newCard.currency;
+        persistData();
+        renderAll();
+        document.getElementById('editPurchaseModal').style.display = 'none';
+    }
+
+    // عرض المشتريات مع فلتر
+    function renderPurchases() {
+        let filtered = purchases.filter(p => {
+            let card = cards.find(c=>c.id === p.cardId);
+            let cardName = card ? card.name : "";
+            let matchSearch = p.productName.includes(currentFilter.search) || cardName.includes(currentFilter.search);
+            let matchStatus = currentFilter.status ? p.status === currentFilter.status : true;
+            return matchSearch && matchStatus;
+        });
+        let tbody = document.getElementById('purchasesBody');
+        if(filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="5">لا توجد مشتريات</td></tr>'; return; }
+        let html = "";
+        filtered.forEach(p => {
+            let card = cards.find(c=>c.id === p.cardId);
+            let cur = card ? card.currency : "USD";
+            let amountStr = cur === 'USD' ? `$${p.amount.toFixed(2)}` : `€${p.amount.toFixed(2)}`;
+            let icon = { "في الطريق":"🚚","في الجمارك":"🛃","تم التوصيل":"✅","تم الشحن":"✈️","قيد الانتظار":"⏳" }[p.status] || "📦";
+            html += `<tr><td>${escapeHtml(p.productName)}</td><td>${amountStr}</td><td>${card ? escapeHtml(card.name) : "محذوفة"}</td><td><div class="status-badge">${icon} ${p.status}</div></td>
+            <td><button class="edit-purchase" data-id="${p.id}" style="background:none; border:none; color:#FFB27A; cursor:pointer;"><i class="fas fa-pen"></i></button>
+            <button class="delete-purchase" data-id="${p.id}" style="background:none; border:none; color:#ff6b6b; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>`;
+        });
+        tbody.innerHTML = html;
+        document.querySelectorAll('.edit-purchase').forEach(btn => btn.addEventListener('click', (e) => openEditPurchase(parseInt(btn.dataset.id))));
+        document.querySelectorAll('.delete-purchase').forEach(btn => btn.addEventListener('click', (e) => { if(confirm("حذف الشراء؟")) deletePurchase(parseInt(btn.dataset.id)); }));
+    }
+
+    function updateTotalsAndStats() {
+        let totalUSD = 0;
+        purchases.forEach(p => {
+            let card = cards.find(c=>c.id === p.cardId);
+            let cur = card ? card.currency : "USD";
+            if(cur === "USD") totalUSD += p.amount;
+            else totalUSD += p.amount / EXCHANGE_RATE;
+        });
+        let totalEUR = totalUSD * EXCHANGE_RATE;
+        document.getElementById('totalUSD').innerHTML = `$${totalUSD.toFixed(2)}`;
+        document.getElementById('totalEUR').innerHTML = `€${totalEUR.toFixed(2)}`;
+        document.getElementById('statsText').innerHTML = `📊 ${purchases.length} مشتريات | ${cards.length} بطاقات | إجمالي USD: $${totalUSD.toFixed(2)}`;
+    }
+
+    function updateCardSelect() {
+        let select = document.getElementById('cardSelect');
+        select.innerHTML = "";
+        cards.forEach(c => { let opt = document.createElement('option'); opt.value = c.id; opt.textContent = `${c.name} (${c.currency} - رصيد: ${c.currency === 'USD' ? '$' : '€'}${c.balance.toFixed(2)})`; select.appendChild(opt); });
+        if(cards.length === 0) select.innerHTML = '<option disabled>أضف بطاقة أولاً</option>';
+    }
+
+    function renderAll() {
+        renderCards();
+        renderPurchases();
+        updateCardSelect();
+        updateTotalsAndStats();
+    }
+
+    // استيراد/تصدير JSON
+    function exportJSON() {
+        let exportData = { cards, purchases, nextCardId, nextPurchaseId, version: 2 };
+        let dataStr = JSON.stringify(exportData, null, 2);
+        let blob = new Blob([dataStr], {type: "application/json"});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = `backup_${new Date().toISOString().slice(0,19)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("📁 تم تصدير الملف");
+    }
+
+    function importJSON(file) {
+        let reader = new FileReader();
+        reader.onload = (e) => {
             try {
-                const importedData = JSON.parse(evt.target.result);
-                if (!Array.isArray(importedData)) {
-                    throw new Error("الملف لا يحتوي على مصفوفة صحيحة");
-                }
-                // التحقق من صحة الحقول الأساسية لكل عنصر
-                let validParcels = [];
-                let maxIdFound = 0;
-                for (let item of importedData) {
-                    if (item.name && typeof item.name === 'string' && 
-                        typeof item.price === 'number' && 
-                        item.status && typeof item.status === 'string') {
-                        // تأكد من صحة السعر
-                        let priceValid = item.price >= 0;
-                        if (priceValid) {
-                            const newItem = {
-                                id: (typeof item.id === 'number' && item.id > 0) ? item.id : maxIdFound + 1,
-                                name: item.name,
-                                price: item.price,
-                                status: item.status,
-                            };
-                            if (newItem.id > maxIdFound) maxIdFound = newItem.id;
-                            validParcels.push(newItem);
-                        } else {
-                            console.warn("سعر غير صالح لـ :", item.name);
-                        }
-                    } else {
-                        console.warn("عنصر غير مكتمل، تم تخطيه:", item);
-                    }
-                }
-                if (validParcels.length === 0) {
-                    alert("⚠️ الملف لا يحتوي على بيانات صالحة (تأكد من وجود name, price, status)");
-                    return;
-                }
-                // ترتيب المصفوفة وضمان عدم تداخل id
-                // إعادة تعيين ids متسقة
-                let sortedById = [...validParcels].sort((a,b) => a.id - b.id);
-                let newParcels = [];
-                let currentId = 1;
-                for (let p of sortedById) {
-                    newParcels.push({
-                        ...p,
-                        id: currentId++
-                    });
-                }
-                parcels = newParcels;
-                nextId = currentId;
-                renderTable();
-                updateTotalSpending();
-                alert(`✅ تم استيراد ${parcels.length} طرد بنجاح.`);
-            } catch (err) {
-                console.error(err);
-                alert("❌ خطأ في قراءة ملف JSON: تأكد من صيغته");
-            }
+                let data = JSON.parse(e.target.result);
+                if(data.cards && data.purchases) {
+                    cards = data.cards;
+                    purchases = data.purchases;
+                    nextCardId = data.nextCardId || (cards.length ? Math.max(...cards.map(c=>c.id)) + 1 : 1);
+                    nextPurchaseId = data.nextPurchaseId || (purchases.length ? Math.max(...purchases.map(p=>p.id)) + 1 : 1);
+                    persistData();
+                    renderAll();
+                    showToast("✅ استيراد ناجح");
+                } else throw new Error("صيغة غير صحيحة");
+            } catch(err) { alert("ملف غير صالح"); }
         };
-        reader.onerror = () => alert("خطأ في قراءة الملف");
         reader.readAsText(file);
     }
 
-    // ------------------- تهيئة البيانات الافتراضية (تلبية متطلبات الجدول: تم الشحن، قيد الانتظار، تم الاستلام) -------------------
-    function loadDefaultData() {
-        // عينات مطابقة للطلب: تم الشحن، قيد الانتظار، تم الاستلام وأيضاً حالات القائمة المنسدلة (في الطريق، الجمارك، تم التوصيل)
-        const defaultParcels = [
-            { id: 1, name: "📱 هاتف شاومي 12", price: 299.99, status: "تم الشحن" },
-            { id: 2, name: "🎧 سماعة لاسلكية Pro", price: 45.50, status: "قيد الانتظار" },
-            { id: 3, name: "⌚ ساعة ذكية رياضية", price: 89.99, status: "تم الاستلام" },
-            { id: 4, name: "📦 شاحن سريع 65W", price: 25.99, status: "في الطريق" },
-            { id: 5, name: "🛃 حقيبة ظهر عصرية", price: 39.90, status: "في الجمارك" },
-            { id: 6, name: "🏠 طقم أواني منزلي", price: 119.00, status: "تم التوصيل" }
-        ];
-        parcels = defaultParcels.map(p => ({ ...p }));
-        nextId = parcels.length > 0 ? Math.max(...parcels.map(p => p.id)) + 1 : 1;
-        renderTable();
-        updateTotalSpending();
+    function resetData() {
+        if(confirm("هل أنت متأكد؟ ستفقد كل البيانات الحالية.")) {
+            localStorage.removeItem(STORAGE_KEY);
+            setDefaultData();
+            persistData();
+            renderAll();
+            showToast("🔄 تمت إعادة الضبط إلى البيانات الافتراضية");
+        }
     }
 
-    // ------------------- ربط الأحداث -------------------
+    function showToast(msg) {
+        let toast = document.getElementById('toastMsg');
+        toast.innerText = msg;
+        toast.style.display = "block";
+        setTimeout(() => { toast.style.display = "none"; }, 2000);
+    }
+
+    // الأحداث
     document.addEventListener('DOMContentLoaded', () => {
-        // تحميل البيانات الافتراضية
-        loadDefaultData();
-
-        // زر إضافة منتج
-        const addBtn = document.getElementById('addProductBtn');
-        const nameInput = document.getElementById('productName');
-        const priceInput = document.getElementById('productPrice');
-        const statusSelect = document.getElementById('productStatus');
-
-        addBtn.addEventListener('click', () => {
-            const name = nameInput.value.trim();
-            let price = priceInput.value.trim();
-            const status = statusSelect.value;
-            if (name === "") {
-                alert("✏️ من فضلك أدخل اسم المنتج أو وصف الطرد");
-                nameInput.focus();
-                return;
-            }
-            let priceNum = parseFloat(price);
-            if (isNaN(priceNum) || priceNum < 0) {
-                alert("💰 السعر يجب أن يكون رقماً موجباً (مثال: 49.99)");
-                priceInput.value = "";
-                priceInput.focus();
-                return;
-            }
-            addNewProduct(name, priceNum, status);
-            // مسح الحقول مع إبقاء السعر لسهولة الإضافة
-            nameInput.value = "";
-            priceInput.value = "";
-            nameInput.focus();
+        loadData();
+        renderAll();
+        document.getElementById('saveDataBtn').addEventListener('click', () => { persistData(); showToast("تم الحفظ اليدوي"); });
+        document.getElementById('exportJsonBtn').addEventListener('click', exportJSON);
+        document.getElementById('importJsonBtn').addEventListener('click', () => document.getElementById('importFileInput').click());
+        document.getElementById('importFileInput').addEventListener('change', (e) => { if(e.target.files[0]) importJSON(e.target.files[0]); e.target.value = ''; });
+        document.getElementById('resetDataBtn').addEventListener('click', resetData);
+        document.getElementById('addPurchaseBtn').addEventListener('click', () => {
+            let name = document.getElementById('prodName').value;
+            let amount = parseFloat(document.getElementById('prodAmount').value);
+            let cardId = document.getElementById('cardSelect').value;
+            let status = document.getElementById('statusSelect').value;
+            if(addPurchase(name, amount, cardId, status)) { document.getElementById('prodName').value = ""; document.getElementById('prodAmount').value = ""; }
         });
-
-        // تصدير JSON
-        const exportBtn = document.getElementById('exportBtn');
-        exportBtn.addEventListener('click', exportToJSON);
-
-        // استيراد JSON
-        const importBtn = document.getElementById('importBtn');
-        const fileInput = document.getElementById('importFileInput');
-        importBtn.addEventListener('click', () => {
-            fileInput.click();
-        });
-        fileInput.addEventListener('change', (event) => {
-            if (event.target.files && event.target.files.length > 0) {
-                const selectedFile = event.target.files[0];
-                importFromJSON(selectedFile);
-                fileInput.value = ''; // إعادة تعيين لتكرار استيراد نفس الملف
-            }
-        });
+        document.getElementById('openCardModalBtn').addEventListener('click', () => openCardModal());
+        document.getElementById('quickAddCard').addEventListener('click', () => openCardModal());
+        document.getElementById('saveCardBtn').addEventListener('click', saveCardFromModal);
+        document.getElementById('closeModalBtn').addEventListener('click', closeCardModal);
+        document.getElementById('updatePurchaseBtn').addEventListener('click', updatePurchaseFromModal);
+        document.getElementById('closeEditModalBtn').addEventListener('click', () => document.getElementById('editPurchaseModal').style.display = 'none');
+        document.getElementById('searchInput').addEventListener('input', (e) => { currentFilter.search = e.target.value; renderPurchases(); });
+        document.getElementById('filterStatus').addEventListener('change', (e) => { currentFilter.status = e.target.value; renderPurchases(); });
+        document.getElementById('clearFilterBtn').addEventListener('click', () => { document.getElementById('searchInput').value = ""; document.getElementById('filterStatus').value = ""; currentFilter = { search: "", status: "" }; renderPurchases(); });
+        window.addEventListener('click', (e) => { if(e.target.classList.contains('modal')) { closeCardModal(); document.getElementById('editPurchaseModal').style.display = 'none'; } });
     });
+    function escapeHtml(str) { return String(str).replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 </script>
 </body>
 </html>
