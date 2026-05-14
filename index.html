@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>نظام البطاقات المتعددة | دعم عملات مختلفة للشراء</title>
+    <title>نظام البطاقات المتعددة | تحسين تجربة المستخدم</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui; }
@@ -12,32 +12,47 @@
         .header-area { background: #0f1117; border-radius: 28px; padding: 0.8rem 1.5rem; margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.8rem; border: 1px solid rgba(255,107,0,0.3); }
         .title h1 { font-size: 1.4rem; background: linear-gradient(135deg, #FF6B00, #ff9142); background-clip: text; -webkit-background-clip: text; color: transparent; }
         .action-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
-        .action-btn { background: #1e2330; border: none; padding: 6px 12px; border-radius: 30px; color: #FFB27A; cursor: pointer; font-size: 0.8rem; }
+        .action-btn { background: #1e2330; border: none; padding: 6px 12px; border-radius: 30px; color: #FFB27A; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        .action-btn:hover { background: #FF6B00; color: #0a0c10; }
         .total-cards { display: flex; gap: 1rem; background: #1a1d26; padding: 0.3rem 1rem; border-radius: 50px; }
         .total-amount { font-size: 1.3rem; font-weight: bold; color: #FF6B00; }
         .dashboard { display: flex; flex-wrap: wrap; gap: 1.2rem; }
-        .cards-section { flex: 1.2; min-width: 250px; background: #0f1117; border-radius: 24px; padding: 1rem; }
-        .purchases-section { flex: 2.5; min-width: 300px; background: #0f1117; border-radius: 24px; padding: 1rem; }
+        .cards-section { flex: 1.2; min-width: 250px; background: #0f1117; border-radius: 24px; padding: 1rem; border: 1px solid #262b36; }
+        .purchases-section { flex: 2.5; min-width: 300px; background: #0f1117; border-radius: 24px; padding: 1rem; border: 1px solid #262b36; }
         .section-title { font-size: 1.1rem; border-right: 4px solid #FF6B00; padding-right: 10px; margin-bottom: 0.8rem; display: flex; justify-content: space-between; }
         .cards-list { max-height: 400px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.7rem; }
         .card-item { background: #181c26; border-radius: 18px; padding: 0.7rem; border-left: 3px solid #FF6B00; }
         .card-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
         .card-balance { font-weight: bold; color: #FFB27A; }
-        .btn-icon { background: #252b38; border: none; padding: 4px 8px; border-radius: 30px; color: #ddd; font-size: 0.7rem; cursor: pointer; margin-left: 5px; }
-        .btn-primary { background: #FF6B00; border: none; padding: 6px 14px; border-radius: 30px; font-weight: bold; cursor: pointer; }
+        .btn-icon { background: #252b38; border: none; padding: 5px 12px; border-radius: 30px; color: #ddd; font-size: 0.75rem; cursor: pointer; transition: 0.2s; margin-left: 8px; }
+        .btn-icon i { margin-left: 4px; }
+        .btn-icon:hover { background: #3a4155; }
+        .btn-edit { background: #2a2f3e; color: #FFB27A; }
+        .btn-edit:hover { background: #FF6B00; color: #0a0c10; }
+        .btn-delete { background: #3a1e1e; color: #ff8a8a; }
+        .btn-delete:hover { background: #c0392b; color: white; }
+        .btn-primary { background: #FF6B00; border: none; padding: 6px 14px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-primary:hover { transform: scale(1.02); background: #ff8733; }
         .purchase-form { background: #131720; border-radius: 20px; padding: 1rem; margin-bottom: 1.2rem; display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; }
         .form-field { flex: 1; min-width: 110px; }
         .form-field label { font-size: 0.65rem; color: #FFB27A; display: block; }
         .form-field input, .form-field select { width: 100%; background: #202430; border: 1px solid #353b48; padding: 6px 10px; border-radius: 20px; color: white; font-size: 0.8rem; }
         .filter-bar { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
-        .filter-bar input, .filter-bar select { background: #202430; padding: 5px 10px; border-radius: 30px; color: white; }
+        .filter-bar input, .filter-bar select { background: #202430; padding: 5px 10px; border-radius: 30px; color: white; border: 1px solid #353b48; }
         .track-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        .track-table th, .track-table td { padding: 8px 5px; text-align: right; border-bottom: 1px solid #232732; }
-        .status-badge { display: inline-flex; align-items: center; gap: 4px; background: #1e232f; padding: 2px 8px; border-radius: 40px; }
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: #141824; padding: 1.2rem; border-radius: 28px; width: 90%; max-width: 420px; }
+        .track-table th, .track-table td { padding: 10px 5px; text-align: right; border-bottom: 1px solid #232732; vertical-align: middle; }
+        .status-badge { display: inline-flex; align-items: center; gap: 4px; background: #1e232f; padding: 3px 10px; border-radius: 40px; }
+        .action-buttons-cell { display: flex; gap: 12px; align-items: center; justify-content: flex-start; }
+        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: #141824; padding: 1.5rem; border-radius: 28px; width: 90%; max-width: 420px; border-top: 4px solid #FF6B00; }
+        .modal input, .modal select { margin: 8px 0; }
         .toast { position: fixed; bottom: 20px; left: 20px; background: #FF6B00; color: #0a0c10; padding: 8px 16px; border-radius: 40px; font-weight: bold; display: none; z-index: 2000; }
-        @media (max-width: 780px) { .dashboard { flex-direction: column; } }
+        .confirm-delete-modal { background: #1e1a24; border-radius: 24px; padding: 1rem; text-align: center; max-width: 320px; }
+        @media (max-width: 780px) {
+            .dashboard { flex-direction: column; }
+            .action-buttons-cell { gap: 8px; }
+            .btn-icon { padding: 4px 10px; font-size: 0.7rem; margin-left: 4px; }
+        }
     </style>
 </head>
 <body>
@@ -51,7 +66,7 @@
             <input type="file" id="importFileInput" accept=".json" style="display:none">
             <button id="resetDataBtn" class="action-btn" style="background:#2c1a1a;"><i class="fas fa-trash-restore"></i> إعادة ضبط</button>
         </div>
-        <div class="total-carts">
+        <div class="total-cards">
             <div><span class="total-amount" id="totalUSD">$0.00</span><br>إجمالي الإنفاق (USD)</div>
             <div><span class="total-amount" id="totalEUR">€0.00</span><br>إجمالي الإنفاق (EUR)</div>
         </div>
@@ -59,9 +74,9 @@
 
     <div class="dashboard">
         <div class="cards-section">
-            <div class="section-title">💳 بطاقاتي <button id="openCardModalBtn" class="btn-icon" style="background:#FF6B00;">+ إضافة</button></div>
+            <div class="section-title">💳 بطاقاتي <button id="openCardModalBtn" class="btn-icon" style="background:#FF6B00; color:#0f1117;"><i class="fas fa-plus"></i> إضافة</button></div>
             <div id="cardsContainer" class="cards-list"></div>
-            <button id="quickAddCard" class="btn-primary" style="width:100%; margin-top:0.8rem;"><i class="fas fa-plus"></i> بطاقة جديدة</button>
+            <button id="quickAddCard" class="btn-primary" style="width:100%; margin-top:0.8rem;"><i class="fas fa-plus-circle"></i> بطاقة جديدة</button>
         </div>
 
         <div class="purchases-section">
@@ -76,13 +91,15 @@
             </div>
             <div class="section-title">📋 سجل المشتريات <span style="font-size:0.7rem;"><i class="fas fa-search"></i></span></div>
             <div class="filter-bar">
-                <input type="text" id="searchInput" placeholder="بحث بالمنتج أو البطاقة">
+                <input type="text" id="searchInput" placeholder="🔍 بحث بالمنتج أو البطاقة">
                 <select id="filterStatus"><option value="">جميع الحالات</option><option>في الطريق</option><option>في الجمارك</option><option>تم التوصيل</option><option>تم الشحن</option><option>قيد الانتظار</option></select>
                 <button id="clearFilterBtn" class="btn-icon">مسح</button>
             </div>
             <div style="overflow-x: auto;">
                 <table class="track-table" id="purchasesTable">
-                    <thead><tr><th>المنتج</th><th>المبلغ الأصلي</th><th>خصم من البطاقة</th><th>البطاقة</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+                    <thead>
+                        <tr><th>المنتج</th><th>المبلغ الأصلي</th><th>خصم من البطاقة</th><th>البطاقة</th><th>الحالة</th><th>إجراءات</th></tr>
+                    </thead>
                     <tbody id="purchasesBody"></tbody>
                 </table>
             </div>
@@ -102,14 +119,13 @@
 
 <script>
     // ------------------- الإعدادات -------------------
-    const STORAGE_KEY = "currency_flex_app";
-    const EXCHANGE_RATE = 0.92; // 1 USD = 0.92 EUR (ثابت، يمكن تعديله مستقبلاً)
+    const STORAGE_KEY = "currency_flex_app_v4";
+    const EXCHANGE_RATE = 0.92; // 1 USD = 0.92 EUR
     let cards = [];
     let purchases = [];
     let nextCardId = 1, nextPurchaseId = 1;
     let currentFilter = { search: "", status: "" };
 
-    // تحويل العملة: من عملة إلى أخرى
     function convert(amount, fromCurrency, toCurrency) {
         if (fromCurrency === toCurrency) return amount;
         if (fromCurrency === "USD" && toCurrency === "EUR") return amount * EXCHANGE_RATE;
@@ -117,7 +133,6 @@
         return amount;
     }
 
-    // حفظ البيانات
     function persistData() {
         const data = { cards, purchases, nextCardId, nextPurchaseId };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -139,29 +154,34 @@
 
     function setDefaultData() {
         cards = [
-            { id: 1, name: "بطاقة تونس", currency: "EUR", balance: 500 },
-            { id: 2, name: "بطاقة أمريكية", currency: "USD", balance: 300 }
+            { id: 1, name: "Badr May 2026", currency: "EUR", balance: 500 },
+            { id: 2, name: "Ahmed May 2026", currency: "EUR", balance: 300 }
         ];
         purchases = [
-            { id: 1, productName: "هاتف", originalAmount: 200, originalCurrency: "USD", cardId: 1, status: "تم التوصيل", deductedAmount: convert(200, "USD", "EUR"), deductedCurrency: "EUR" },
-            { id: 2, productName: "سماعات", originalAmount: 50, originalCurrency: "EUR", cardId: 2, status: "في الطريق", deductedAmount: convert(50, "EUR", "USD"), deductedCurrency: "USD" }
+            { id: 1, productName: "S25ULTRA Purple", originalAmount: 1.10, originalCurrency: "USD", cardId: 1, status: "في الطريق", deductedAmount: convert(1.10, "USD", "EUR"), deductedCurrency: "EUR" },
+            { id: 2, productName: "S26ULTRA Blue/Noir", originalAmount: 3.78, originalCurrency: "USD", cardId: 1, status: "في الطريق", deductedAmount: convert(3.78, "USD", "EUR"), deductedCurrency: "EUR" },
+            { id: 3, productName: "Redmi note 15 4g Purple", originalAmount: 4.35, originalCurrency: "EUR", cardId: 1, status: "في الطريق", deductedAmount: 4.35, deductedCurrency: "EUR" },
+            { id: 4, productName: "Poco x7 pro", originalAmount: 2.18, originalCurrency: "USD", cardId: 1, status: "في الطريق", deductedAmount: convert(2.18, "USD", "EUR"), deductedCurrency: "EUR" },
+            { id: 5, productName: "Poco 8pro/F7 pro", originalAmount: 4.30, originalCurrency: "USD", cardId: 1, status: "في الطريق", deductedAmount: convert(4.30, "USD", "EUR"), deductedCurrency: "EUR" },
+            { id: 6, productName: "Infinix GT 30 PRO", originalAmount: 1.80, originalCurrency: "EUR", cardId: 2, status: "في الطريق", deductedAmount: 1.80, deductedCurrency: "EUR" },
+            { id: 7, productName: "Google pixel 9 pro/ Honor X7c", originalAmount: 3.70, originalCurrency: "EUR", cardId: 2, status: "في الطريق", deductedAmount: 3.70, deductedCurrency: "EUR" },
+            { id: 8, productName: "S23Fe", originalAmount: 3.35, originalCurrency: "EUR", cardId: 2, status: "في الطريق", deductedAmount: 3.35, deductedCurrency: "EUR" },
+            { id: 9, productName: "iPhone 16 pro max", originalAmount: 1.95, originalCurrency: "EUR", cardId: 2, status: "في الطريق", deductedAmount: 1.95, deductedCurrency: "EUR" }
         ];
-        nextCardId = 3; nextPurchaseId = 3;
+        nextCardId = 3; nextPurchaseId = 10;
     }
 
-    // إضافة شراء جديد مع تحويل العملة
+    // إضافة شراء جديد
     function addPurchase(product, amount, purchaseCurr, cardId, status) {
         if (!product.trim()) { alert("أدخل اسم المنتج"); return false; }
         if (isNaN(amount) || amount <= 0) { alert("مبلغ صالح"); return false; }
         let card = cards.find(c => c.id == cardId);
         if (!card) { alert("بطاقة غير موجودة"); return false; }
-        // تحويل المبلغ إلى عملة البطاقة
         let convertedAmount = convert(amount, purchaseCurr, card.currency);
         if (card.balance < convertedAmount) {
             alert(`رصيد غير كافٍ! رصيد البطاقة: ${card.currency === 'USD' ? '$' : '€'}${card.balance.toFixed(2)}، المبلغ المطلوب بعد التحويل: ${card.currency === 'USD' ? '$' : '€'}${convertedAmount.toFixed(2)}`);
             return false;
         }
-        // خصم الرصيد
         card.balance -= convertedAmount;
         let newPurchase = {
             id: nextPurchaseId++,
@@ -179,17 +199,23 @@
         return true;
     }
 
-    function deletePurchase(purchaseId) {
-        let purchase = purchases.find(p => p.id === purchaseId);
-        if (purchase) {
-            let card = cards.find(c => c.id === purchase.cardId);
-            if (card) {
-                // إعادة الرصيد بنفس القيمة التي تم خصمها (بعملة البطاقة)
-                card.balance += purchase.deductedAmount;
+    // حذف شراء مع رسالة تأكيد
+    function deletePurchaseWithConfirm(purchaseId) {
+        // عرض رسالة تأكيد مخصصة قبل الحذف
+        if (confirm("⚠️ هل أنت متأكد من حذف هذه العملية؟\nلا يمكن التراجع عن هذا الإجراء.")) {
+            let purchase = purchases.find(p => p.id === purchaseId);
+            if (purchase) {
+                let card = cards.find(c => c.id === purchase.cardId);
+                if (card) {
+                    card.balance += purchase.deductedAmount;
+                }
+                purchases = purchases.filter(p => p.id !== purchaseId);
+                persistData();
+                renderAll();
+                showToast("🗑️ تم حذف الشراء بنجاح");
             }
-            purchases = purchases.filter(p => p.id !== purchaseId);
-            persistData();
-            renderAll();
+        } else {
+            showToast("❌ تم إلغاء الحذف");
         }
     }
 
@@ -206,18 +232,14 @@
         let oldCard = cards.find(c => c.id === oldPurchase.cardId);
         let newCard = cards.find(c => c.id === newCardId);
         if (!newCard) return;
-        // استعادة الرصيد القديم
         if (oldCard) oldCard.balance += oldPurchase.deductedAmount;
-        // حساب الخصم الجديد
         let newDeducted = convert(newAmount, newCurr, newCard.currency);
         if (newCard.balance < newDeducted) {
-            // إعادة الخصم القديم
             if (oldCard) oldCard.balance -= oldPurchase.deductedAmount;
             alert(`رصيد غير كافٍ في البطاقة الجديدة. المطلوب: ${newCard.currency === 'USD' ? '$' : '€'}${newDeducted.toFixed(2)}`);
             return;
         }
         newCard.balance -= newDeducted;
-        // تحديث الشراء
         oldPurchase.productName = newName;
         oldPurchase.originalAmount = newAmount;
         oldPurchase.originalCurrency = newCurr;
@@ -228,9 +250,9 @@
         persistData();
         renderAll();
         document.getElementById('editPurchaseModal').style.display = 'none';
+        showToast("✏️ تم تعديل الشراء");
     }
 
-    // عرض البطاقات
     function renderCards() {
         const container = document.getElementById('cardsContainer');
         if (cards.length === 0) { container.innerHTML = "<div style='text-align:center'>لا توجد بطاقات</div>"; return; }
@@ -238,21 +260,21 @@
         cards.forEach(card => {
             let balanceStr = card.currency === 'USD' ? `$${card.balance.toFixed(2)}` : `€${card.balance.toFixed(2)}`;
             html += `<div class="card-item"><div class="card-header"><span><i class="fas fa-credit-card"></i> ${escapeHtml(card.name)}</span><span class="card-balance">${balanceStr}</span></div>
-            <div><button class="btn-icon edit-card" data-id="${card.id}">✏️ تعديل</button>
-            <button class="btn-icon add-balance" data-id="${card.id}">➕ إيداع</button>
-            <button class="btn-icon delete-card" data-id="${card.id}" style="color:#ff8a8a;">🗑️ حذف</button></div></div>`;
+            <div><button class="btn-icon btn-edit edit-card" data-id="${card.id}"><i class="fas fa-edit"></i> تعديل</button>
+            <button class="btn-icon add-balance" data-id="${card.id}"><i class="fas fa-plus-circle"></i> إيداع</button>
+            <button class="btn-icon btn-delete delete-card" data-id="${card.id}"><i class="fas fa-trash-alt"></i> حذف</button></div></div>`;
         });
         container.innerHTML = html;
         document.querySelectorAll('.edit-card').forEach(btn => btn.addEventListener('click', (e) => openCardModal(parseInt(btn.dataset.id))));
         document.querySelectorAll('.add-balance').forEach(btn => btn.addEventListener('click', (e) => addBalanceToCard(parseInt(btn.dataset.id))));
-        document.querySelectorAll('.delete-card').forEach(btn => btn.addEventListener('click', (e) => { if(confirm("حذف البطاقة وجميع مشترياتها؟")) deleteCardAndPurchases(parseInt(btn.dataset.id)); }));
+        document.querySelectorAll('.delete-card').forEach(btn => btn.addEventListener('click', (e) => { if(confirm("⚠️ حذف البطاقة سيؤدي إلى حذف جميع مشترياتها المرتبطة. هل أنت متأكد؟")) deleteCardAndPurchases(parseInt(btn.dataset.id)); }));
     }
 
     function addBalanceToCard(cardId) {
         let amount = parseFloat(prompt("أدخل المبلغ المراد إضافته (بنفس عملة البطاقة):"));
         if (isNaN(amount) || amount <= 0) return;
         let card = cards.find(c => c.id === cardId);
-        if (card) { card.balance += amount; persistData(); renderAll(); }
+        if (card) { card.balance += amount; persistData(); renderAll(); showToast(`➕ تمت إضافة ${card.currency === 'USD' ? '$' : '€'}${amount.toFixed(2)}`); }
     }
 
     function deleteCardAndPurchases(cardId) {
@@ -262,6 +284,7 @@
         else nextCardId = Math.max(...cards.map(c=>c.id)) + 1;
         persistData();
         renderAll();
+        showToast("🗑️ تم حذف البطاقة وجميع مشترياتها");
     }
 
     function openCardModal(editId = null) {
@@ -299,10 +322,10 @@
         persistData();
         closeCardModal();
         renderAll();
+        showToast("💾 تم حفظ البطاقة");
     }
     function closeCardModal() { document.getElementById('cardModal').style.display = 'none'; }
 
-    // عرض المشتريات مع التصفية
     function renderPurchases() {
         let filtered = purchases.filter(p => {
             let card = cards.find(c => c.id === p.cardId);
@@ -312,7 +335,7 @@
             return matchSearch && matchStatus;
         });
         let tbody = document.getElementById('purchasesBody');
-        if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="6">لا توجد مشتريات</td></tr>'; return; }
+        if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="6">لا توجد مشتريات مطابقة</td></tr>'; return; }
         let html = "";
         filtered.forEach(p => {
             let card = cards.find(c => c.id === p.cardId);
@@ -321,18 +344,20 @@
             let deductedStr = p.deductedCurrency === 'USD' ? `$${p.deductedAmount.toFixed(2)}` : `€${p.deductedAmount.toFixed(2)}`;
             let icon = { "في الطريق":"🚚","في الجمارك":"🛃","تم التوصيل":"✅","تم الشحن":"✈️","قيد الانتظار":"⏳" }[p.status] || "📦";
             html += `<tr>
-                <td>${escapeHtml(p.productName)}</td>
+                <td><strong>${escapeHtml(p.productName)}</strong></td>
                 <td>${originalStr}</td>
-                <td style="font-size:0.75rem; color:#ccc;">${deductedStr}</td>
+                <td style="font-size:0.75rem; color:#FFB27A;">${deductedStr}</td>
                 <td>${escapeHtml(cardName)} (${p.deductedCurrency})</td>
                 <td><div class="status-badge">${icon} ${p.status}</div></td>
-                <td><button class="edit-purchase" data-id="${p.id}" style="background:none; border:none; color:#FFB27A; cursor:pointer;"><i class="fas fa-pen"></i></button>
-                <button class="delete-purchase" data-id="${p.id}" style="background:none; border:none; color:#ff6b6b; cursor:pointer;"><i class="fas fa-trash"></i></button></td>
+                <td class="action-buttons-cell">
+                    <button class="btn-icon btn-edit edit-purchase" data-id="${p.id}" title="تعديل"><i class="fas fa-edit"></i> تعديل</button>
+                    <button class="btn-icon btn-delete delete-purchase" data-id="${p.id}" title="حذف"><i class="fas fa-trash-alt"></i> حذف</button>
+                </td>
             </tr>`;
         });
         tbody.innerHTML = html;
         document.querySelectorAll('.edit-purchase').forEach(btn => btn.addEventListener('click', (e) => openEditPurchaseModal(parseInt(btn.dataset.id))));
-        document.querySelectorAll('.delete-purchase').forEach(btn => btn.addEventListener('click', (e) => { if(confirm("حذف الشراء؟")) deletePurchase(parseInt(btn.dataset.id)); }));
+        document.querySelectorAll('.delete-purchase').forEach(btn => btn.addEventListener('click', (e) => deletePurchaseWithConfirm(parseInt(btn.dataset.id))));
     }
 
     function openEditPurchaseModal(purchaseId) {
@@ -342,13 +367,10 @@
         document.getElementById('editProdName').value = p.productName;
         document.getElementById('editProdAmount').value = p.originalAmount;
         document.getElementById('editPurchaseCurrency').value = p.originalCurrency;
-        document.getElementById('editStatus').value = p.status;
-        // تحديث قائمة البطاقات في المودال
         let selectCard = document.getElementById('editCardId');
         selectCard.innerHTML = "";
         cards.forEach(c => { let opt = document.createElement('option'); opt.value = c.id; opt.textContent = `${c.name} (${c.currency})`; selectCard.appendChild(opt); });
         selectCard.value = p.cardId;
-        // تعبئة حالات الشحن
         let statusSelect = document.getElementById('editStatus');
         let statuses = ["في الطريق", "في الجمارك", "تم التوصيل", "تم الشحن", "قيد الانتظار"];
         statusSelect.innerHTML = "";
@@ -362,12 +384,11 @@
             if (p.originalCurrency === "USD") totalUSD += p.originalAmount;
             else totalEUR += p.originalAmount;
         });
-        // تحويل اليورو إلى دولار للإجمالي الموحد
         let totalUSDEquivalent = totalUSD + (totalEUR / EXCHANGE_RATE);
         let totalEUREquivalent = totalEUR + (totalUSD * EXCHANGE_RATE);
         document.getElementById('totalUSD').innerHTML = `$${totalUSDEquivalent.toFixed(2)}`;
         document.getElementById('totalEUR').innerHTML = `€${totalEUREquivalent.toFixed(2)}`;
-        document.getElementById('statsText').innerHTML = `📦 ${purchases.length} عملية شراء | 💳 ${cards.length} بطاقة | إجمالي مشتريات بالدولار: $${totalUSD.toFixed(2)} | باليورو: €${totalEUR.toFixed(2)}`;
+        document.getElementById('statsText').innerHTML = `📦 ${purchases.length} عملية شراء | 💳 ${cards.length} بطاقة | إجمالي بالدولار: $${totalUSD.toFixed(2)} | باليورو: €${totalEUR.toFixed(2)}`;
     }
 
     function updateCardSelect() {
@@ -389,15 +410,14 @@
         updateTotalsAndStats();
     }
 
-    // استيراد/تصدير JSON
     function exportJSON() {
-        let exportData = { cards, purchases, nextCardId, nextPurchaseId, version: 3 };
+        let exportData = { cards, purchases, nextCardId, nextPurchaseId, version: 4 };
         let dataStr = JSON.stringify(exportData, null, 2);
         let blob = new Blob([dataStr], {type: "application/json"});
         let url = URL.createObjectURL(blob);
         let a = document.createElement('a');
         a.href = url;
-        a.download = `backup_currency_${new Date().toISOString().slice(0,19)}.json`;
+        a.download = `backup_${new Date().toISOString().slice(0,19)}.json`;
         a.click();
         URL.revokeObjectURL(url);
         showToast("📁 تم تصدير الملف");
@@ -421,23 +441,23 @@
         reader.readAsText(file);
     }
     function resetData() {
-        if(confirm("إعادة الضبط ستفقد كل البيانات الحالية")) {
+        if(confirm("⚠️ هل أنت متأكد من إعادة ضبط البيانات؟ ستفقد جميع البطاقات والمشتريات الحالية.")) {
             localStorage.removeItem(STORAGE_KEY);
             setDefaultData();
             persistData();
             renderAll();
-            showToast("تمت إعادة الضبط");
+            showToast("🔄 تمت إعادة الضبط إلى البيانات الافتراضية");
         }
     }
     function showToast(msg) {
         let toast = document.getElementById('toastMsg');
         toast.innerText = msg;
         toast.style.display = "block";
-        setTimeout(() => toast.style.display = "none", 2000);
+        setTimeout(() => toast.style.display = "none", 2200);
     }
     function escapeHtml(str) { return String(str).replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
 
-    // الأحداث
+    // ربط الأحداث
     document.addEventListener('DOMContentLoaded', () => {
         loadData();
         renderAll();
